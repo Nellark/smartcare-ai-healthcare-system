@@ -1,0 +1,16 @@
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/bin/Debug/net8.0/SmartCare.Application.deps.json
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/bin/Debug/net8.0/SmartCare.Application.dll
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/bin/Debug/net8.0/SmartCare.Application.pdb
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/bin/Debug/net8.0/SmartCare.Domain.dll
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/bin/Debug/net8.0/SmartCare.Domain.pdb
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/obj/Debug/net8.0/SmartCare.Application.csproj.AssemblyReference.cache
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/obj/Debug/net8.0/SmartCare.Application.GeneratedMSBuildEditorConfig.editorconfig
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/obj/Debug/net8.0/SmartCare.Application.AssemblyInfoInputs.cache
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/obj/Debug/net8.0/SmartCare.Application.AssemblyInfo.cs
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/obj/Debug/net8.0/SmartCare.Application.csproj.CoreCompileInputs.cache
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/obj/Debug/net8.0/SmartCare.Application.sourcelink.json
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/obj/Debug/net8.0/SmartCar.7E67D3C8.Up2Date
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/obj/Debug/net8.0/SmartCare.Application.dll
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/obj/Debug/net8.0/refint/SmartCare.Application.dll
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/obj/Debug/net8.0/SmartCare.Application.pdb
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/obj/Debug/net8.0/ref/SmartCare.Application.dll

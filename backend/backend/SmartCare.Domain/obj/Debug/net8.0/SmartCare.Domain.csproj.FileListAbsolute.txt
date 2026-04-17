@@ -1,0 +1,12 @@
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/bin/Debug/net8.0/SmartCare.Domain.deps.json
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/bin/Debug/net8.0/SmartCare.Domain.dll
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/bin/Debug/net8.0/SmartCare.Domain.pdb
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/obj/Debug/net8.0/SmartCare.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/obj/Debug/net8.0/SmartCare.Domain.AssemblyInfoInputs.cache
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/obj/Debug/net8.0/SmartCare.Domain.AssemblyInfo.cs
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/obj/Debug/net8.0/SmartCare.Domain.csproj.CoreCompileInputs.cache
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/obj/Debug/net8.0/SmartCare.Domain.sourcelink.json
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/obj/Debug/net8.0/SmartCare.Domain.dll
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/obj/Debug/net8.0/refint/SmartCare.Domain.dll
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/obj/Debug/net8.0/SmartCare.Domain.pdb
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/obj/Debug/net8.0/ref/SmartCare.Domain.dll

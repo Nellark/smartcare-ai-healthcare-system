@@ -1,0 +1,94 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0": {
+      "SmartCare.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/SmartCare.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SmartCare.Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "SmartCare.Domain/1.0.0": {
+      "type": "project",
+      "path": "../SmartCare.Domain/SmartCare.Domain.csproj",
+      "msbuildProject": "../SmartCare.Domain/SmartCare.Domain.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "SmartCare.Domain >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "/Users/damacm1156/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/SmartCare.Application.csproj",
+      "projectName": "SmartCare.Application",
+      "projectPath": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/SmartCare.Application.csproj",
+      "packagesPath": "/Users/damacm1156/.nuget/packages/",
+      "outputPath": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/Users/damacm1156/.nuget/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "projectReferences": {
+            "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/SmartCare.Domain.csproj": {
+              "projectPath": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/SmartCare.Domain.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      }
+    },
+    "frameworks": {
+      "net8.0": {
+        "targetAlias": "net8.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.414/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

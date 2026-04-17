@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCare.API", "SmartCare.API\SmartCare.API.csproj", "{F1D33615-2CF9-4D70-8578-799AC53E597F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCare.Application", "SmartCare.Application\SmartCare.Application.csproj", "{23B70BEF-D674-40AF-9BDF-C813FE993529}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCare.Domain", "SmartCare.Domain\SmartCare.Domain.csproj", "{8BE236CE-CEE5-4A26-9C15-E2540DC0A1AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCare.Infrastructure", "SmartCare.Infrastructure\SmartCare.Infrastructure.csproj", "{BBEFF512-0B8B-43BF-BF34-637CE294729D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F1D33615-2CF9-4D70-8578-799AC53E597F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1D33615-2CF9-4D70-8578-799AC53E597F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1D33615-2CF9-4D70-8578-799AC53E597F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1D33615-2CF9-4D70-8578-799AC53E597F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23B70BEF-D674-40AF-9BDF-C813FE993529}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23B70BEF-D674-40AF-9BDF-C813FE993529}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23B70BEF-D674-40AF-9BDF-C813FE993529}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23B70BEF-D674-40AF-9BDF-C813FE993529}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BE236CE-CEE5-4A26-9C15-E2540DC0A1AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BE236CE-CEE5-4A26-9C15-E2540DC0A1AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BE236CE-CEE5-4A26-9C15-E2540DC0A1AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BE236CE-CEE5-4A26-9C15-E2540DC0A1AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBEFF512-0B8B-43BF-BF34-637CE294729D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBEFF512-0B8B-43BF-BF34-637CE294729D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBEFF512-0B8B-43BF-BF34-637CE294729D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBEFF512-0B8B-43BF-BF34-637CE294729D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

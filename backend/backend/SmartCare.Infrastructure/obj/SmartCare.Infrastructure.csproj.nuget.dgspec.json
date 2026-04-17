@@ -1,0 +1,190 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure/SmartCare.Infrastructure.csproj": {}
+  },
+  "projects": {
+    "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/SmartCare.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/SmartCare.Application.csproj",
+        "projectName": "SmartCare.Application",
+        "projectPath": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/SmartCare.Application.csproj",
+        "packagesPath": "/Users/damacm1156/.nuget/packages/",
+        "outputPath": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/damacm1156/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/SmartCare.Domain.csproj": {
+                "projectPath": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/SmartCare.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.414/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/SmartCare.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/SmartCare.Domain.csproj",
+        "projectName": "SmartCare.Domain",
+        "projectPath": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/SmartCare.Domain.csproj",
+        "packagesPath": "/Users/damacm1156/.nuget/packages/",
+        "outputPath": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/damacm1156/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.414/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure/SmartCare.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure/SmartCare.Infrastructure.csproj",
+        "projectName": "SmartCare.Infrastructure",
+        "projectPath": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure/SmartCare.Infrastructure.csproj",
+        "packagesPath": "/Users/damacm1156/.nuget/packages/",
+        "outputPath": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/damacm1156/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/SmartCare.Application.csproj": {
+                "projectPath": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/SmartCare.Application.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.414/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
