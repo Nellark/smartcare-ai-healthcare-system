@@ -1,0 +1,22 @@
+import { Routes } from '@angular/router';
+
+export const PATIENT_ROUTES: Routes = [
+  {
+    path: '',
+    loadComponent: () =>
+      import('./patient-list/patient-list.component')
+        .then(m => m.PatientListComponent)
+  },
+  {
+    path: 'new',
+    loadComponent: () =>
+      import('./patient-form/patient-form.component')
+        .then(m => m.PatientFormComponent)
+  },
+  {
+    path: 'edit/:id',
+    loadComponent: () =>
+      import('./patient-form/patient-form.component')
+        .then(m => m.PatientFormComponent)
+  }
+];

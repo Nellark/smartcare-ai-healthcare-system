@@ -1,0 +1,65 @@
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <h2>Patients</h2>
+    <a routerLink="/patients/new" class="btn">+ Add Patient</a>
+  </div>
+
+  <!-- Search -->
+  <div class="search-box">
+    <input
+      type="text"
+      placeholder="Search patients by name, email or phone..."
+      [(ngModel)]="searchTerm"
+      (input)="applyFilter()"
+    />
+  </div>
+
+  <!-- Table -->
+  <table class="enterprise-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>DOB</th>
+        <th>Gender</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let p of paginatedPatients">
+        <td>{{ p.firstName }} {{ p.lastName }}</td>
+        <td>{{ p.dateOfBirth }}</td>
+        <td>{{ p.gender }}</td>
+        <td>{{ p.phone }}</td>
+        <td>{{ p.email }}</td>
+        <td>
+          <button [routerLink]="['/patients/edit', p.id]">Edit</button>
+          <button (click)="deletePatient(p.id)">Delete</button>
+        </td>
+      </tr>
+
+      <tr *ngIf="paginatedPatients.length === 0">
+        <td colspan="6" class="empty">No patients found</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <button (click)="prevPage()" [disabled]="currentPage === 1">
+      Prev
+    </button>
+
+    <span>Page {{ currentPage }} of {{ totalPages() }}</span>
+
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages()">
+      Next
+    </button>
+  </div>
+
+</div>
+

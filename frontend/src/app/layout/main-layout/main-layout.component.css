@@ -1,0 +1,41 @@
+.layout-container {
+  display: flex;
+  height: 100vh;
+  background: #f4f6f9;
+}
+
+/* Sidebar fixed */
+.sidebar {
+  width: 260px;
+  background: #0f172a; /* dark enterprise navy */
+  color: white;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+/* Main section */
+.main {
+  margin-left: 260px;
+  width: calc(100% - 260px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  height: 64px;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
+/* Content area */
+.content {
+  padding: 20px;
+  overflow-y: auto;
+  height: calc(100vh - 64px);
+}
