@@ -8,13 +8,4 @@ import { RouterModule } from '@angular/router';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent {
-
-  testClick() {
-    console.log('clicked dashboard');
-  }
-
-  logClick(label: string) {
-    console.log(label);
-  }
-}
+export class SidebarComponent {}
