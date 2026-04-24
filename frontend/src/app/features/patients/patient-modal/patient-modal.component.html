@@ -1,0 +1,118 @@
+<app-modal 
+  [isVisible]="isVisible" 
+  [title]="isEditMode ? 'Edit Patient' : 'Add New Patient'" 
+  (close)="onClose()">
+  
+  <form [formGroup]="patientForm" (ngSubmit)="onSave()">
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="firstName">First Name *</label>
+        <input 
+          id="firstName"
+          type="text" 
+          formControlName="firstName" 
+          class="form-control"
+          [class.invalid]="firstName?.invalid && firstName?.touched"
+          placeholder="Enter first name">
+        <div class="error-message" *ngIf="firstName?.invalid && firstName?.touched">
+          <span *ngIf="firstName?.errors?.['required']">First name is required</span>
+          <span *ngIf="firstName?.errors?.['maxlength']">First name cannot exceed 50 characters</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name *</label>
+        <input 
+          id="lastName"
+          type="text" 
+          formControlName="lastName" 
+          class="form-control"
+          [class.invalid]="lastName?.invalid && lastName?.touched"
+          placeholder="Enter last name">
+        <div class="error-message" *ngIf="lastName?.invalid && lastName?.touched">
+          <span *ngIf="lastName?.errors?.['required']">Last name is required</span>
+          <span *ngIf="lastName?.errors?.['maxlength']">Last name cannot exceed 50 characters</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input 
+          id="email"
+          type="email" 
+          formControlName="email" 
+          class="form-control"
+          [class.invalid]="email?.invalid && email?.touched"
+          placeholder="Enter email address">
+        <div class="error-message" *ngIf="email?.invalid && email?.touched">
+          <span *ngIf="email?.errors?.['required']">Email is required</span>
+          <span *ngIf="email?.errors?.['email']">Please enter a valid email address</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="dateOfBirth">Date of Birth *</label>
+        <input 
+          id="dateOfBirth"
+          type="date" 
+          formControlName="dateOfBirth" 
+          class="form-control"
+          [class.invalid]="dateOfBirth?.invalid && dateOfBirth?.touched">
+        <div class="error-message" *ngIf="dateOfBirth?.invalid && dateOfBirth?.touched">
+          <span *ngIf="dateOfBirth?.errors?.['required']">Date of birth is required</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number *</label>
+        <input 
+          id="phoneNumber"
+          type="tel" 
+          formControlName="phoneNumber" 
+          class="form-control"
+          [class.invalid]="phoneNumber?.invalid && phoneNumber?.touched"
+          placeholder="Enter phone number">
+        <div class="error-message" *ngIf="phoneNumber?.invalid && phoneNumber?.touched">
+          <span *ngIf="phoneNumber?.errors?.['required']">Phone number is required</span>
+          <span *ngIf="phoneNumber?.errors?.['maxlength']">Phone number cannot exceed 20 characters</span>
+        </div>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="address">Address *</label>
+        <textarea 
+          id="address"
+          formControlName="address" 
+          class="form-control"
+          [class.invalid]="address?.invalid && address?.touched"
+          placeholder="Enter full address"
+          rows="3"></textarea>
+        <div class="error-message" *ngIf="address?.invalid && address?.touched">
+          <span *ngIf="address?.errors?.['required']">Address is required</span>
+          <span *ngIf="address?.errors?.['maxlength']">Address cannot exceed 200 characters</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="error-message global" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <div class="form-actions">
+      <button 
+        type="button" 
+        class="btn btn-secondary" 
+        (click)="onClose()"
+        [disabled]="isLoading">
+        Cancel
+      </button>
+      <button 
+        type="submit" 
+        class="btn btn-primary"
+        [disabled]="isLoading || patientForm.invalid">
+        <span *ngIf="!isLoading">{{ isEditMode ? 'Update Patient' : 'Create Patient' }}</span>
+        <span *ngIf="isLoading">{{ isEditMode ? 'Updating...' : 'Creating...' }}</span>
+      </button>
+    </div>
+  </form>
+</app-modal>

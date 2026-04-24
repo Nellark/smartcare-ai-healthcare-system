@@ -1,21 +1,5 @@
 <div class="form-container">
 
-  <h2>Add Patient</h2>
-
-  <input [(ngModel)]="patient.firstName" placeholder="First Name" />
-  <input [(ngModel)]="patient.lastName" placeholder="Last Name" />
-  <input [(ngModel)]="patient.dateOfBirth" type="date" />
-  <input [(ngModel)]="patient.gender" placeholder="Gender" />
-  <input [(ngModel)]="patient.phone" placeholder="Phone" />
-  <input [(ngModel)]="patient.email" placeholder="Email" />
-  <input [(ngModel)]="patient.address" placeholder="Address" />
-
-  <button (click)="save()">Save Patient</button>
-
-</div>
-
-<div class="form-container">
-
   <h2>
     {{ isEditMode ? 'Edit Patient' : 'Add Patient' }}
   </h2>
@@ -23,8 +7,7 @@
   <input [(ngModel)]="patient.firstName" placeholder="First Name" />
   <input [(ngModel)]="patient.lastName" placeholder="Last Name" />
   <input [(ngModel)]="patient.dateOfBirth" type="date" />
-  <input [(ngModel)]="patient.gender" placeholder="Gender" />
-  <input [(ngModel)]="patient.phone" placeholder="Phone" />
+  <input [(ngModel)]="patient.phoneNumber" placeholder="Phone" />
   <input [(ngModel)]="patient.email" placeholder="Email" />
   <input [(ngModel)]="patient.address" placeholder="Address" />
 

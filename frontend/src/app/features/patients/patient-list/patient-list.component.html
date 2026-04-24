@@ -6,8 +6,18 @@
     <a routerLink="/patients/new" class="btn">+ Add Patient</a>
   </div>
 
+  <!-- Error Message -->
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading" *ngIf="isLoading">
+    Loading patients...
+  </div>
+
   <!-- Search -->
-  <div class="search-box">
+  <div class="search-box" *ngIf="!isLoading">
     <input
       type="text"
       placeholder="Search patients by name, email or phone..."
@@ -17,12 +27,12 @@
   </div>
 
   <!-- Table -->
-  <table class="enterprise-table">
+  <table class="enterprise-table" *ngIf="!isLoading">
     <thead>
       <tr>
         <th>Name</th>
-        <th>DOB</th>
-        <th>Gender</th>
+        <th>Date of Birth</th>
+        <th>Age</th>
         <th>Phone</th>
         <th>Email</th>
         <th>Actions</th>
@@ -32,13 +42,13 @@
     <tbody>
       <tr *ngFor="let p of paginatedPatients">
         <td>{{ p.firstName }} {{ p.lastName }}</td>
-        <td>{{ p.dateOfBirth }}</td>
-        <td>{{ p.gender }}</td>
-        <td>{{ p.phone }}</td>
+        <td>{{ formatDate(p.dateOfBirth) }}</td>
+        <td>{{ p.age }}</td>
+        <td>{{ p.phoneNumber }}</td>
         <td>{{ p.email }}</td>
         <td>
-          <button [routerLink]="['/patients/edit', p.id]">Edit</button>
-          <button (click)="deletePatient(p.id)">Delete</button>
+          <a class="btn-edit" routerLink="/patients/edit/{{ p.id }}">Edit</a>
+          <button class="btn-delete" (click)="deletePatient(p.id)">Delete</button>
         </td>
       </tr>
 
@@ -49,7 +59,7 @@
   </table>
 
   <!-- Pagination -->
-  <div class="pagination">
+  <div class="pagination" *ngIf="!isLoading && totalPages() > 1">
     <button (click)="prevPage()" [disabled]="currentPage === 1">
       Prev
     </button>
@@ -61,5 +71,5 @@
     </button>
   </div>
 
-</div>
+  </div>
 

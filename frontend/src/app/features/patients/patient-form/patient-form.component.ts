@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PatientService } from '../../../core/services/patient.service';
-import { Patient } from '../../../core/models/patient.model';
+import { Patient, CreatePatientRequest } from '../../../core/models/patient.model';
 
 @Component({
   selector: 'app-patient-form',
@@ -14,19 +14,17 @@ import { Patient } from '../../../core/models/patient.model';
 })
 export class PatientFormComponent implements OnInit {
 
-  patient: Patient = {
-    id: 0,
+  patient: CreatePatientRequest = {
     firstName: '',
     lastName: '',
-    dateOfBirth: '',
-    gender: '',
-    phone: '',
     email: '',
+    dateOfBirth: '',
+    phoneNumber: '',
     address: ''
   };
 
   isEditMode = false;
-  patientId: number | null = null;
+  patientId: string | null = null;
 
   constructor(
     private patientService: PatientService,
@@ -35,7 +33,7 @@ export class PatientFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.patientId = Number(this.route.snapshot.paramMap.get('id'));
+    this.patientId = this.route.snapshot.paramMap.get('id');
 
     if (this.patientId) {
       this.isEditMode = true;
@@ -43,22 +41,40 @@ export class PatientFormComponent implements OnInit {
     }
   }
 
-  loadPatient(id: number) {
-    this.patientService.getById(id).subscribe(data => {
-      this.patient = data;
+  loadPatient(id: string) {
+    this.patientService.getById(id).subscribe(response => {
+      if (response.success) {
+        const patientData = response.data;
+        this.patient = {
+          firstName: patientData.firstName,
+          lastName: patientData.lastName,
+          email: patientData.email,
+          dateOfBirth: patientData.dateOfBirth,
+          phoneNumber: patientData.phoneNumber,
+          address: patientData.address
+        };
+      }
     });
   }
 
   save() {
     if (this.isEditMode && this.patientId) {
-      this.patientService.update(this.patientId, this.patient).subscribe(() => {
-        alert('Patient updated successfully');
-        this.router.navigate(['/patients']);
+      this.patientService.update(this.patientId, this.patient).subscribe(response => {
+        if (response.success) {
+          alert('Patient updated successfully');
+          this.router.navigate(['/patients']);
+        } else {
+          alert('Failed to update patient: ' + response.message);
+        }
       });
     } else {
-      this.patientService.create(this.patient).subscribe(() => {
-        alert('Patient created successfully');
-        this.router.navigate(['/patients']);
+      this.patientService.create(this.patient).subscribe(response => {
+        if (response.success) {
+          alert('Patient created successfully');
+          this.router.navigate(['/patients']);
+        } else {
+          alert('Failed to create patient: ' + response.message);
+        }
       });
     }
   }

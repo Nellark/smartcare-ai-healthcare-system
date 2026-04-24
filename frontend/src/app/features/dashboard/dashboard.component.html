@@ -1,7 +1,79 @@
 <div class="dashboard">
 
-  <div class="card">Patients: 120</div>
-  <div class="card">Appointments: 45</div>
-  <div class="card">Doctors: 12</div>
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h2>SmartCare Dashboard</h2>
+    <button class="refresh-btn" (click)="refreshDashboard()" [disabled]="isLoading">
+      {{ isLoading ? 'Loading...' : 'Refresh' }}
+    </button>
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading" *ngIf="isLoading && !dashboardStats">
+    Loading dashboard data...
+  </div>
+
+  <!-- Dashboard Content -->
+  <div class="dashboard-content" *ngIf="!isLoading || dashboardStats">
+    
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card patients">
+        <div class="stat-icon">👥</div>
+        <div class="stat-content">
+          <h3>{{ dashboardStats?.totalPatients || 0 }}</h3>
+          <p>Total Patients</p>
+        </div>
+      </div>
+
+      <div class="stat-card appointments">
+        <div class="stat-icon">📅</div>
+        <div class="stat-content">
+          <h3>{{ dashboardStats?.totalAppointments || 0 }}</h3>
+          <p>Total Appointments</p>
+        </div>
+      </div>
+
+      <div class="stat-card doctors">
+        <div class="stat-icon">👨‍⚕️</div>
+        <div class="stat-content">
+          <h3>{{ dashboardStats?.totalDoctors || 0 }}</h3>
+          <p>Total Doctors</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Patients -->
+    <div class="recent-patients" *ngIf="recentPatients.length > 0">
+      <h3>Recent Patients</h3>
+      <div class="patients-list">
+        <div class="patient-item" *ngFor="let patient of recentPatients">
+          <div class="patient-info">
+            <h4>{{ patient.firstName }} {{ patient.lastName }}</h4>
+            <p>{{ patient.email }}</p>
+            <small>Added: {{ formatDate(patient.createdAt || patient.dateOfBirth) }}</small>
+          </div>
+          <div class="patient-age">
+            <span class="age-badge">Age: {{ patient.age }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="dashboardStats && dashboardStats.totalPatients === 0">
+      <div class="empty-content">
+        <h3>No Patients Yet</h3>
+        <p>Start by adding your first patient to the SmartCare system.</p>
+        <button class="add-patient-btn" routerLink="/patients">Add First Patient</button>
+      </div>
+    </div>
+
+  </div>
 
 </div>
