@@ -1,3 +1,10 @@
+using MediatR;
+using SmartCare.Application.Common.DTOs;
+using SmartCare.Domain.Repositories;
+using SmartCare.Domain.Services;
+using SmartCare.Domain.ValueObjects;
+using AutoMapper;
+
 namespace SmartCare.Application.Patients.Commands;
 
 public record CreatePatientCommand(

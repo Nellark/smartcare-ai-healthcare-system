@@ -1,3 +1,7 @@
+using SmartCare.Domain.Common;
+using SmartCare.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
+
 namespace SmartCare.Infrastructure.Persistence.Repositories;
 
 public class GenericRepository<T, TId> : IRepository<T, TId>

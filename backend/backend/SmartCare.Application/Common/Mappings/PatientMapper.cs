@@ -1,3 +1,5 @@
+using SmartCare.Application.Common.DTOs;
+
 namespace SmartCare.Application.Common.Mappings;
 
 public static class PatientMapper

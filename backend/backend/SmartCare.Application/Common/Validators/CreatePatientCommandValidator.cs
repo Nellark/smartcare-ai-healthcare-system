@@ -1,3 +1,6 @@
+using FluentValidation;
+using SmartCare.Application.Patients.Commands;
+
 namespace SmartCare.Application.Common.Validators;
 
 public class CreatePatientCommandValidator : AbstractValidator<CreatePatientCommand>

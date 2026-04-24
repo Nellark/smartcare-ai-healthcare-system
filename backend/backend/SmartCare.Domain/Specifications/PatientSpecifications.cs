@@ -1,3 +1,7 @@
+using System.Linq.Expressions;
+using SmartCare.Domain.Entities;
+using SmartCare.Domain.ValueObjects;
+
 namespace SmartCare.Domain.Specifications;
 
 public static class PatientSpecifications

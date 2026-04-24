@@ -1,3 +1,9 @@
+using MediatR;
+using SmartCare.Application.Common.DTOs;
+using SmartCare.Domain.Repositories;
+using SmartCare.Domain.Services;
+using AutoMapper;
+
 namespace SmartCare.Application.Patients.Commands;
 
 public record DeletePatientCommand(Guid Id) : IRequest<ApiResponse>;
@@ -35,7 +41,7 @@ public class DeletePatientCommandHandler : IRequestHandler<DeletePatientCommand,
             await _patientRepository.DeleteAsync(patientId, cancellationToken);
             await _patientRepository.SaveChangesAsync(cancellationToken);
 
-            return ApiResponse.Success("Patient deleted successfully");
+            return ApiResponse.CreateSuccess("Patient deleted successfully");
         }
         catch (Exception ex)
         {

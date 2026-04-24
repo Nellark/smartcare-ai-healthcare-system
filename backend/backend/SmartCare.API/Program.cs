@@ -1,7 +1,13 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SmartCare.Application;
+using SmartCare.Application.Common.DTOs;
 using SmartCare.Infrastructure;
 using SmartCare.API.Middleware;
+using SmartCare.API.Health;
+using SmartCare.Infrastructure.Persistence;
 using Serilog;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,7 +75,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 // Add health checks
 builder.Services.AddHealthChecks()
-    .AddDbContextCheck<SmartCareDbContext>();
+    .AddCheck<SmartCareDbContextHealthCheck>("SmartCareDbContext");
 
 var app = builder.Build();
 
@@ -102,7 +108,7 @@ app.MapHealthChecks("/health");
 // Initialize database
 try
 {
-    await app.InitializeDatabaseAsync();
+    await app.Services.InitializeDatabaseAsync();
     app.Logger.LogInformation("Database initialized successfully");
 }
 catch (Exception ex)

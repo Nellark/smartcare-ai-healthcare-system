@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using SmartCare.Domain.ValueObjects;
+using SmartCare.Infrastructure.Persistence.Entities;
+
 namespace SmartCare.Infrastructure.Persistence;
 
 public static class DataSeed

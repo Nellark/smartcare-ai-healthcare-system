@@ -1,3 +1,8 @@
+using MediatR;
+using SmartCare.Application.Common.DTOs;
+using SmartCare.Domain.Repositories;
+using AutoMapper;
+
 namespace SmartCare.Application.Patients.Queries;
 
 public record GetAllPatientsQuery : IRequest<ApiResponse<IReadOnlyList<PatientDto>>>;

@@ -1,3 +1,6 @@
+using SmartCare.Domain.Common;
+using SmartCare.Domain.ValueObjects;
+
 namespace SmartCare.Domain.Events;
 
 public sealed class MedicalRecordUpdatedEvent : IDomainEvent

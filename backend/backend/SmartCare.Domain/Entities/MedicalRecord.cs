@@ -1,3 +1,6 @@
+using SmartCare.Domain.Common;
+using SmartCare.Domain.ValueObjects;
+
 namespace SmartCare.Domain.Entities;
 
 public sealed class MedicalRecord : Entity<MedicalRecordId>

@@ -1,3 +1,5 @@
+using SmartCare.Domain.ValueObjects;
+
 namespace SmartCare.Infrastructure.Persistence.Entities;
 
 public class PatientEntity : IAuditableEntity

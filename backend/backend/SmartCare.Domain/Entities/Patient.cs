@@ -1,3 +1,7 @@
+using SmartCare.Domain.Common;
+using SmartCare.Domain.ValueObjects;
+using SmartCare.Domain.Events;
+
 namespace SmartCare.Domain.Entities;
 
 public sealed class Patient : AggregateRoot<PatientId>

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SmartCare.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4b3f63d3fbe73a06d81462cc79381b5b2dff82bb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7e1ea3244d28e9783267fe6d5c65e062f6672530")]
 [assembly: System.Reflection.AssemblyProductAttribute("SmartCare.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SmartCare.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

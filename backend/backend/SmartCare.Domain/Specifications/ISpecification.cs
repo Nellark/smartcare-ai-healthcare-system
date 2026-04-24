@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 namespace SmartCare.Domain.Specifications;
 
 public interface ISpecification<T, TResult>

@@ -1,3 +1,6 @@
+using SmartCare.Application.Common.DTOs;
+using System.Text.Json;
+
 namespace SmartCare.API.Middleware;
 
 public class ExceptionHandlingMiddleware

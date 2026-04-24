@@ -1,3 +1,7 @@
+using AutoMapper;
+using SmartCare.Application.Common.DTOs;
+using SmartCare.Application.Patients.Commands;
+
 namespace SmartCare.Application.Common.Mappings;
 
 public class MappingProfile : Profile

@@ -16,3 +16,5 @@
 /Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure/obj/Debug/net8.0/refint/SmartCare.Infrastructure.dll
 /Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure/obj/Debug/net8.0/SmartCare.Infrastructure.pdb
 /Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure/obj/Debug/net8.0/ref/SmartCare.Infrastructure.dll
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure/bin/Debug/net8.0/SmartCare.Infrastructure.runtimeconfig.json
+/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure/obj/Debug/net8.0/SmartCare.Infrastructure.genruntimeconfig.cache

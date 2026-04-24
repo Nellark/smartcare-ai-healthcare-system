@@ -1,3 +1,9 @@
+using MediatR;
+using SmartCare.Application.Common.DTOs;
+using SmartCare.Domain.Repositories;
+using SmartCare.Domain.Services;
+using AutoMapper;
+
 namespace SmartCare.Application.Patients.Commands;
 
 public record AddMedicalRecordCommand(

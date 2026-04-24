@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using SmartCare.Domain.ValueObjects;
+using SmartCare.Infrastructure.Persistence.Entities;
+
 namespace SmartCare.Infrastructure.Persistence;
 
 public class SmartCareDbContext : DbContext
@@ -27,7 +31,7 @@ public class SmartCareDbContext : DbContext
             entity.HasKey(e => e.Id);
             
             entity.Property(e => e.Id)
-                .HasConversion(id => id.Value, value => new PatientId(value));
+                .HasConversion(id => id.Value, value => PatientId.FromGuid(value));
 
             entity.Property(e => e.FirstName)
                 .IsRequired()
@@ -66,7 +70,7 @@ public class SmartCareDbContext : DbContext
             entity.HasKey(e => e.Id);
             
             entity.Property(e => e.Id)
-                .HasConversion(id => id.Value, value => new MedicalRecordId(value));
+                .HasConversion(id => id.Value, value => MedicalRecordId.FromGuid(value));
 
             entity.Property(e => e.Diagnosis)
                 .IsRequired()

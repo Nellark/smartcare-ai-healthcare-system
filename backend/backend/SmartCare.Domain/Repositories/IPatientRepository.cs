@@ -1,3 +1,6 @@
+using SmartCare.Domain.Entities;
+using SmartCare.Domain.ValueObjects;
+
 namespace SmartCare.Domain.Repositories;
 
 public interface IPatientRepository

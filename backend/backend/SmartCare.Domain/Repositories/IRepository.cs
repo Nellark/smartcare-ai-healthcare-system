@@ -1,3 +1,5 @@
+using SmartCare.Domain.Common;
+
 namespace SmartCare.Domain.Repositories;
 
 public interface IRepository<T, TId> where T : Entity<TId> where TId : notnull

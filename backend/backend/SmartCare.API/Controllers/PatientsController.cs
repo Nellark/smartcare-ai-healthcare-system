@@ -1,3 +1,9 @@
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using SmartCare.Application.Common.DTOs;
+using SmartCare.Application.Patients.Commands;
+using SmartCare.Application.Patients.Queries;
+
 namespace SmartCare.API.Controllers;
 
 [ApiController]

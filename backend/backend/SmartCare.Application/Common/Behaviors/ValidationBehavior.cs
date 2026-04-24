@@ -1,3 +1,7 @@
+using MediatR;
+using FluentValidation;
+using SmartCare.Application.Common.DTOs;
+
 namespace SmartCare.Application.Common.Behaviors;
 
 public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
@@ -29,14 +33,8 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 
         if (failures.Any())
         {
-            var response = new TResponse
-            {
-                Success = false,
-                Message = "Validation failed",
-                Errors = failures.Select(f => f.ErrorMessage).ToList()
-            };
-            
-            return response;
+            var response = ApiResponse.ErrorResult("Validation failed", failures.Select(f => f.ErrorMessage).ToList());
+            return (TResponse)(object)response;
         }
 
         return await next();

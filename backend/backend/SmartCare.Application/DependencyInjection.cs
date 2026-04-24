@@ -1,3 +1,8 @@
+using Microsoft.Extensions.DependencyInjection;
+using MediatR;
+using FluentValidation;
+using SmartCare.Application.Common.Behaviors;
+
 namespace SmartCare.Application;
 
 public static class DependencyInjection

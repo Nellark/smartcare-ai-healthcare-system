@@ -1,3 +1,7 @@
+using SmartCare.Domain.Common;
+using SmartCare.Domain.ValueObjects;
+using SmartCare.Domain.Entities;
+
 namespace SmartCare.Domain.Services;
 
 public interface IPatientDomainService

@@ -29,9 +29,15 @@ public class ApiResponse<T>
     }
 }
 
-public class ApiResponse : ApiResponse<object>
+public class ApiResponse
 {
-    public static ApiResponse Success(string? message = null)
+    public bool Success { get; set; }
+    public object? Data { get; set; }
+    public string? Message { get; set; }
+    public List<string> Errors { get; set; } = new();
+    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+
+    public static ApiResponse CreateSuccess(string? message = null)
     {
         return new ApiResponse
         {
@@ -40,7 +46,7 @@ public class ApiResponse : ApiResponse<object>
         };
     }
 
-    public static new ApiResponse ErrorResult(string message, List<string>? errors = null)
+    public static ApiResponse ErrorResult(string message, List<string>? errors = null)
     {
         return new ApiResponse
         {

@@ -1,3 +1,11 @@
+using System.Reflection;
+using SmartCare.Domain.Entities;
+using SmartCare.Domain.Repositories;
+using SmartCare.Domain.ValueObjects;
+using SmartCare.Infrastructure.Persistence.Entities;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+
 namespace SmartCare.Infrastructure.Persistence.Repositories;
 
 public class PatientRepository : IPatientRepository

@@ -1,3 +1,5 @@
+using SmartCare.Domain.Common;
+
 namespace SmartCare.Domain.ValueObjects;
 
 public sealed class Email : ValueObject
