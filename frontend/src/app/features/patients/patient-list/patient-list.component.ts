@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { PatientService } from '../../../core/services/patient.service';
 import { Patient } from '../../../core/models/patient.model';
 
@@ -12,7 +13,7 @@ import { Patient } from '../../../core/models/patient.model';
   templateUrl: './patient-list.component.html',
   styleUrls: ['./patient-list.component.css']
 })
-export class PatientListComponent implements OnInit {
+export class PatientListComponent implements OnInit, OnDestroy {
 
   patients: Patient[] = [];
   filteredPatients: Patient[] = [];
@@ -24,11 +25,28 @@ export class PatientListComponent implements OnInit {
   // pagination
   currentPage = 1;
   pageSize = 5;
+  private readonly searchTermChanged$ = new Subject<string>();
+  private readonly destroy$ = new Subject<void>();
 
   constructor(private patientService: PatientService) {}
 
   ngOnInit(): void {
     this.loadPatients();
+    this.searchTermChanged$
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((term) => {
+        this.searchPatients(term);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.searchTermChanged$.complete();
   }
 
   loadPatients() {
@@ -39,7 +57,8 @@ export class PatientListComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           this.patients = response.data;
-          this.applyFilter();
+          this.filteredPatients = response.data;
+          this.currentPage = 1;
         } else {
           this.errorMessage = response.message || 'Failed to load patients';
         }
@@ -52,16 +71,37 @@ export class PatientListComponent implements OnInit {
     });
   }
 
-  applyFilter() {
-    const term = this.searchTerm.toLowerCase();
+  onSearchTermChange() {
+    this.searchTermChanged$.next(this.searchTerm);
+  }
 
-    this.filteredPatients = this.patients.filter(p =>
-      `${p.firstName} ${p.lastName}`.toLowerCase().includes(term) ||
-      p.email.toLowerCase().includes(term) ||
-      p.phoneNumber.includes(term)
-    );
+  private searchPatients(searchTerm: string) {
+    const term = searchTerm.trim();
 
-    this.currentPage = 1; // reset page on search
+    if (!term) {
+      this.loadPatients();
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.patientService.search(term).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.patients = response.data;
+          this.filteredPatients = response.data;
+          this.currentPage = 1;
+        } else {
+          this.errorMessage = response.message || 'Failed to search patients';
+        }
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMessage = 'An error occurred while searching patients';
+        this.isLoading = false;
+      }
+    });
   }
 
   get paginatedPatients() {
@@ -91,7 +131,7 @@ export class PatientListComponent implements OnInit {
       this.patientService.delete(id).subscribe({
         next: (response) => {
           if (response.success) {
-            this.loadPatients();
+            this.searchPatients(this.searchTerm);
           } else {
             this.errorMessage = response.message || 'Failed to delete patient';
           }

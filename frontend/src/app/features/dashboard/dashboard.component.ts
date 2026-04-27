@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { DashboardService, DashboardStats } from '../../core/services/dashboard.service';
-import { PatientService } from '../../core/services/patient.service';
+import { DashboardService } from '../../core/services/dashboard.service';
+import { DashboardStats } from '../../core/models/dashboard.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,10 +16,7 @@ export class DashboardComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
 
-  constructor(
-    private dashboardService: DashboardService,
-    private patientService: PatientService
-  ) {}
+  constructor(private dashboardService: DashboardService) {}
 
   ngOnInit(): void {
     this.loadDashboardStats();
@@ -29,10 +26,10 @@ export class DashboardComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.patientService.getAll().subscribe({
+    this.dashboardService.getDashboardStats().subscribe({
       next: (response) => {
         if (response.success) {
-          this.dashboardStats = this.dashboardService.calculateStats(response.data);
+          this.dashboardStats = response.data;
         } else {
           this.errorMessage = response.message || 'Failed to load dashboard data';
           this.dashboardStats = null;
@@ -53,6 +50,10 @@ export class DashboardComponent implements OnInit {
 
   get recentPatients() {
     return this.dashboardStats?.recentPatients || [];
+  }
+
+  get recentAppointments() {
+    return this.dashboardStats?.recentAppointments || [];
   }
 
   formatDate(dateString: string): string {

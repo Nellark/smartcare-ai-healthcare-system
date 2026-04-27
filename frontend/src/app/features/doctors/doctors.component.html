@@ -1,4 +1,85 @@
-<div class="doctors-container">
-  <h2>Doctors</h2>
-  <p>Doctor management functionality coming soon...</p>
+<div class="module-page">
+  <div class="module-header">
+    <div>
+      <h2>Doctors</h2>
+      <p>Manage the doctor roster, specialties, and licensing details.</p>
+    </div>
+    <button type="button" class="secondary-btn" (click)="resetForm()">New Doctor</button>
+  </div>
+
+  <div class="module-toolbar">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (input)="onSearchChange()"
+      placeholder="Search by specialty"
+      class="search-input"
+    />
+  </div>
+
+  <div class="notice error" *ngIf="errorMessage">{{ errorMessage }}</div>
+  <div class="notice loading" *ngIf="isLoading">Loading doctors...</div>
+
+  <div class="module-grid" *ngIf="!isLoading">
+    <section class="panel">
+      <h3>{{ editingDoctorId ? 'Edit Doctor' : 'Add Doctor' }}</h3>
+      <form (ngSubmit)="saveDoctor()" class="stacked-form">
+        <label>
+          First name
+          <input name="firstName" [(ngModel)]="doctorForm.firstName" required />
+        </label>
+        <label>
+          Last name
+          <input name="lastName" [(ngModel)]="doctorForm.lastName" required />
+        </label>
+        <label>
+          Email
+          <input name="email" type="email" [(ngModel)]="doctorForm.email" required />
+        </label>
+        <label>
+          Specialty
+          <input name="specialty" [(ngModel)]="doctorForm.specialty" required />
+        </label>
+        <label>
+          Phone number
+          <input name="phoneNumber" [(ngModel)]="doctorForm.phoneNumber" required />
+        </label>
+        <label>
+          License number
+          <input name="licenseNumber" [(ngModel)]="doctorForm.licenseNumber" required />
+        </label>
+        <div class="form-actions">
+          <button type="submit" class="primary-btn">Save</button>
+          <button type="button" class="ghost-btn" (click)="resetForm()">Clear</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel table-panel">
+      <div class="panel-header">
+        <h3>Doctor List</h3>
+        <span>{{ doctors.length }} doctors</span>
+      </div>
+
+      <div class="empty-state compact" *ngIf="doctors.length === 0">
+        No doctors found.
+      </div>
+
+      <div class="table-list" *ngIf="doctors.length > 0">
+        <article class="table-row" *ngFor="let doctor of doctors">
+          <div>
+            <strong>{{ doctor.firstName }} {{ doctor.lastName }}</strong>
+            <div class="muted">{{ doctor.email }}</div>
+          </div>
+          <div>{{ doctor.specialty }}</div>
+          <div>{{ doctor.phoneNumber }}</div>
+          <div>{{ doctor.licenseNumber }}</div>
+          <div class="row-actions">
+            <button type="button" class="ghost-btn" (click)="editDoctor(doctor)">Edit</button>
+            <button type="button" class="danger-btn" (click)="deleteDoctor(doctor.id)">Delete</button>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
 </div>

@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Patient, CreatePatientRequest, ApiResponse } from '../models/patient.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PatientService {
 
-  private baseUrl = 'http://localhost:5255/api/patients';
+  private readonly baseUrl = `${environment.apiBaseUrl}/patients`;
 
   constructor(private http: HttpClient) {}
 
@@ -32,7 +33,9 @@ export class PatientService {
     return this.http.delete<ApiResponse<null>>(`${this.baseUrl}/${id}`);
   }
 
-  searchByName(firstName: string, lastName: string): Observable<ApiResponse<Patient[]>> {
-    return this.http.get<ApiResponse<Patient[]>>(`${this.baseUrl}/search?firstName=${firstName}&lastName=${lastName}`);
+  search(searchTerm: string): Observable<ApiResponse<Patient[]>> {
+    return this.http.get<ApiResponse<Patient[]>>(
+      `${this.baseUrl}/search?searchTerm=${encodeURIComponent(searchTerm)}`
+    );
   }
 }

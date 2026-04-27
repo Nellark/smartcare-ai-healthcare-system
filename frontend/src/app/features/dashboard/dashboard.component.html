@@ -2,10 +2,18 @@
 
   <!-- Header -->
   <div class="dashboard-header">
-    <h2>SmartCare Dashboard</h2>
-    <button class="refresh-btn" (click)="refreshDashboard()" [disabled]="isLoading">
-      {{ isLoading ? 'Loading...' : 'Refresh' }}
-    </button>
+    <div class="header-copy">
+      <h2>SmartCare Dashboard</h2>
+      <p>Monitor patient activity and jump straight into common workflows.</p>
+    </div>
+
+    <div class="header-actions">
+      <a class="secondary-btn" routerLink="/patients">View Patients</a>
+      <a class="primary-btn" routerLink="/patients/new">Add Patient</a>
+      <button class="refresh-btn" (click)="refreshDashboard()" [disabled]="isLoading">
+        {{ isLoading ? 'Loading...' : 'Refresh' }}
+      </button>
+    </div>
   </div>
 
   <!-- Error Message -->
@@ -23,36 +31,43 @@
     
     <!-- Stats Cards -->
     <div class="stats-grid">
-      <div class="stat-card patients">
+      <a class="stat-card patients" routerLink="/patients">
         <div class="stat-icon">👥</div>
         <div class="stat-content">
           <h3>{{ dashboardStats?.totalPatients || 0 }}</h3>
           <p>Total Patients</p>
         </div>
-      </div>
+      </a>
 
-      <div class="stat-card appointments">
+      <a class="stat-card appointments" routerLink="/appointments">
         <div class="stat-icon">📅</div>
         <div class="stat-content">
           <h3>{{ dashboardStats?.totalAppointments || 0 }}</h3>
           <p>Total Appointments</p>
         </div>
-      </div>
+      </a>
 
-      <div class="stat-card doctors">
+      <a class="stat-card doctors" routerLink="/doctors">
         <div class="stat-icon">👨‍⚕️</div>
         <div class="stat-content">
           <h3>{{ dashboardStats?.totalDoctors || 0 }}</h3>
           <p>Total Doctors</p>
         </div>
-      </div>
+      </a>
     </div>
 
     <!-- Recent Patients -->
     <div class="recent-patients" *ngIf="recentPatients.length > 0">
-      <h3>Recent Patients</h3>
+      <div class="section-header">
+        <h3>Recent Patients</h3>
+        <a routerLink="/patients" class="section-link">View all</a>
+      </div>
       <div class="patients-list">
-        <div class="patient-item" *ngFor="let patient of recentPatients">
+        <a
+          class="patient-item"
+          *ngFor="let patient of recentPatients"
+          [routerLink]="['/patients', 'edit', patient.id]"
+        >
           <div class="patient-info">
             <h4>{{ patient.firstName }} {{ patient.lastName }}</h4>
             <p>{{ patient.email }}</p>
@@ -60,6 +75,27 @@
           </div>
           <div class="patient-age">
             <span class="age-badge">Age: {{ patient.age }}</span>
+            <span class="item-hint">Open</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="recent-patients" *ngIf="recentAppointments.length > 0">
+      <div class="section-header">
+        <h3>Recent Appointments</h3>
+        <a routerLink="/appointments" class="section-link">View all</a>
+      </div>
+      <div class="patients-list">
+        <div class="patient-item" *ngFor="let appointment of recentAppointments">
+          <div class="patient-info">
+            <h4>{{ formatDate(appointment.scheduledAt) }}</h4>
+            <p>{{ appointment.reason }}</p>
+            <small>{{ appointment.durationMinutes }} minutes</small>
+          </div>
+          <div class="patient-age">
+            <span class="age-badge">{{ appointment.status }}</span>
+            <span class="item-hint">Open</span>
           </div>
         </div>
       </div>
@@ -70,7 +106,7 @@
       <div class="empty-content">
         <h3>No Patients Yet</h3>
         <p>Start by adding your first patient to the SmartCare system.</p>
-        <button class="add-patient-btn" routerLink="/patients">Add First Patient</button>
+        <a class="add-patient-btn" routerLink="/patients/new">Add First Patient</a>
       </div>
     </div>
 

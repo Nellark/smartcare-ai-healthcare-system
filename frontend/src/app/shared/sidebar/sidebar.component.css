@@ -19,14 +19,17 @@
   text-decoration: none;
   padding: 10px;
   border-radius: 8px;
+  transition: background-color 0.2s, color 0.2s, transform 0.2s;
 }
 
 .nav a:hover {
   background: #1e293b;
   color: white;
+  transform: translateX(2px);
 }
 
 .active {
   background: #2563eb;
   color: white;
+  font-weight: 600;
 }

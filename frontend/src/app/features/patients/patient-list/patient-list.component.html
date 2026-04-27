@@ -22,7 +22,7 @@
       type="text"
       placeholder="Search patients by name, email or phone..."
       [(ngModel)]="searchTerm"
-      (input)="applyFilter()"
+      (input)="onSearchTermChange()"
     />
   </div>
 
@@ -47,7 +47,7 @@
         <td>{{ p.phoneNumber }}</td>
         <td>{{ p.email }}</td>
         <td>
-          <a class="btn-edit" routerLink="/patients/edit/{{ p.id }}">Edit</a>
+          <a class="btn-edit" [routerLink]="['/patients', 'edit', p.id]">Edit</a>
           <button class="btn-delete" (click)="deletePatient(p.id)">Delete</button>
         </td>
       </tr>
@@ -72,4 +72,3 @@
   </div>
 
   </div>
-

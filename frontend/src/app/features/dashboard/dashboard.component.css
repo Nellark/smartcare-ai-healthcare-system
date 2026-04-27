@@ -10,13 +10,28 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+  gap: 16px;
 }
 
-.dashboard-header h2 {
+.header-copy h2 {
   margin: 0;
   color: #1f2937;
   font-size: 28px;
   font-weight: 700;
+}
+
+.header-copy p {
+  margin: 6px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .refresh-btn {
@@ -28,6 +43,10 @@
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .refresh-btn:hover:not(:disabled) {
@@ -37,6 +56,37 @@
 .refresh-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.primary-btn,
+.secondary-btn {
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.primary-btn {
+  background: #2563eb;
+  color: white;
+}
+
+.primary-btn:hover {
+  background: #1d4ed8;
+  color: white;
+}
+
+.secondary-btn {
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.secondary-btn:hover {
+  background: #f9fafb;
+  color: #111827;
 }
 
 /* Error Message */
@@ -76,6 +126,7 @@
   align-items: center;
   gap: 16px;
   transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
 }
 
 .stat-card:hover {
@@ -135,6 +186,25 @@
   color: #1f2937;
 }
 
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.section-link {
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.section-link:hover {
+  text-decoration: underline;
+}
+
 .patients-list {
   display: flex;
   flex-direction: column;
@@ -149,6 +219,15 @@
   background: #f9fafb;
   border-radius: 8px;
   border: 1px solid #e5e7eb;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.patient-item:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  transform: translateY(-1px);
 }
 
 .patient-info h4 {
@@ -176,6 +255,18 @@
   border-radius: 12px;
   font-size: 12px;
   font-weight: 500;
+}
+
+.patient-age {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.item-hint {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2563eb;
 }
 
 /* Empty State */
@@ -211,6 +302,10 @@
   font-size: 16px;
   font-weight: 500;
   transition: background-color 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .add-patient-btn:hover {
@@ -228,7 +323,16 @@
     gap: 16px;
     align-items: stretch;
   }
-  
+
+  .header-actions {
+    justify-content: stretch;
+  }
+
+  .header-actions a,
+  .header-actions button {
+    width: 100%;
+  }
+
   .stats-grid {
     grid-template-columns: 1fr;
   }

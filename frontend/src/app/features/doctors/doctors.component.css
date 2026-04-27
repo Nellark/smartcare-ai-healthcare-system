@@ -1,13 +1,145 @@
-.doctors-container {
-  padding: 20px;
+.module-page {
+  display: grid;
+  gap: 1.25rem;
 }
 
-.doctors-container h2 {
-  color: #333;
-  margin-bottom: 20px;
+.module-header,
+.module-toolbar,
+.panel-header,
+.form-actions,
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.doctors-container p {
-  color: #666;
-  font-size: 16px;
+.module-header,
+.panel-header {
+  justify-content: space-between;
+}
+
+.module-header h2,
+.panel h3 {
+  margin: 0;
+}
+
+.module-header p,
+.muted {
+  margin: 0.25rem 0 0;
+  color: #6b7280;
+}
+
+.module-grid {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  gap: 1.25rem;
+}
+
+.panel {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 1.25rem;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+}
+
+.stacked-form {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1rem;
+}
+
+.stacked-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.stacked-form input,
+.search-input {
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 0.75rem 0.9rem;
+  font: inherit;
+}
+
+.form-actions,
+.row-actions {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.table-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  background: #f9fafb;
+}
+
+.notice {
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+}
+
+.notice.error {
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.notice.loading {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.empty-state.compact {
+  padding: 1rem;
+  border: 1px dashed #d1d5db;
+  border-radius: 14px;
+  color: #6b7280;
+}
+
+.primary-btn,
+.secondary-btn,
+.ghost-btn,
+.danger-btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.75rem 1rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.primary-btn {
+  background: #0f766e;
+  color: white;
+}
+
+.secondary-btn,
+.ghost-btn {
+  background: #eef2ff;
+  color: #1e3a8a;
+}
+
+.danger-btn {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+@media (max-width: 1000px) {
+  .module-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .table-row {
+    grid-template-columns: 1fr;
+  }
 }

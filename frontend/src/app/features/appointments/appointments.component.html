@@ -1,4 +1,107 @@
-<div class="appointments-container">
-  <h2>Appointments</h2>
-  <p>Appointment management functionality coming soon...</p>
+<div class="module-page">
+  <div class="module-header">
+    <div>
+      <h2>Appointments</h2>
+      <p>Schedule visits, track status, and keep the clinic calendar current.</p>
+    </div>
+    <button type="button" class="secondary-btn" (click)="resetForm()">New Appointment</button>
+  </div>
+
+  <div class="module-toolbar filters">
+    <select [(ngModel)]="filterPatientId" (change)="onFilterChange()" class="search-input">
+      <option value="">All patients</option>
+      <option *ngFor="let patient of patients" [value]="patient.id">
+        {{ patient.firstName }} {{ patient.lastName }}
+      </option>
+    </select>
+    <select [(ngModel)]="filterDoctorId" (change)="onFilterChange()" class="search-input">
+      <option value="">All doctors</option>
+      <option *ngFor="let doctor of doctors" [value]="doctor.id">
+        {{ doctor.firstName }} {{ doctor.lastName }}
+      </option>
+    </select>
+  </div>
+
+  <div class="notice error" *ngIf="errorMessage">{{ errorMessage }}</div>
+  <div class="notice loading" *ngIf="isLoading">Loading appointments...</div>
+
+  <div class="module-grid" *ngIf="!isLoading">
+    <section class="panel">
+      <h3>{{ editingAppointmentId ? 'Edit Appointment' : 'Add Appointment' }}</h3>
+      <form (ngSubmit)="saveAppointment()" class="stacked-form">
+        <label>
+          Patient
+          <select name="patientId" [(ngModel)]="appointmentForm.patientId" required>
+            <option value="">Select patient</option>
+            <option *ngFor="let patient of patients" [value]="patient.id">
+              {{ patient.firstName }} {{ patient.lastName }}
+            </option>
+          </select>
+        </label>
+        <label>
+          Doctor
+          <select name="doctorId" [(ngModel)]="appointmentForm.doctorId" required>
+            <option value="">Select doctor</option>
+            <option *ngFor="let doctor of doctors" [value]="doctor.id">
+              {{ doctor.firstName }} {{ doctor.lastName }}
+            </option>
+          </select>
+        </label>
+        <label>
+          Scheduled at
+          <input name="scheduledAt" type="datetime-local" [(ngModel)]="appointmentForm.scheduledAt" required />
+        </label>
+        <label>
+          Duration (minutes)
+          <input name="durationMinutes" type="number" min="1" [(ngModel)]="appointmentForm.durationMinutes" required />
+        </label>
+        <label>
+          Status
+          <select name="status" [(ngModel)]="appointmentForm.status" required>
+            <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+          </select>
+        </label>
+        <label>
+          Reason
+          <input name="reason" [(ngModel)]="appointmentForm.reason" required />
+        </label>
+        <label>
+          Notes
+          <textarea name="notes" rows="4" [(ngModel)]="appointmentForm.notes"></textarea>
+        </label>
+        <div class="form-actions">
+          <button type="submit" class="primary-btn">Save</button>
+          <button type="button" class="ghost-btn" (click)="resetForm()">Clear</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel table-panel">
+      <div class="panel-header">
+        <h3>Appointment List</h3>
+        <span>{{ appointments.length }} appointments</span>
+      </div>
+
+      <div class="empty-state compact" *ngIf="appointments.length === 0">
+        No appointments found.
+      </div>
+
+      <div class="table-list" *ngIf="appointments.length > 0">
+        <article class="table-row appointments-row" *ngFor="let appointment of appointments">
+          <div>
+            <strong>{{ formatDate(appointment.scheduledAt) }}</strong>
+            <div class="muted">{{ appointment.reason }}</div>
+          </div>
+          <div>{{ getPatientName(appointment.patientId) }}</div>
+          <div>{{ getDoctorName(appointment.doctorId) }}</div>
+          <div>{{ appointment.status }}</div>
+          <div>{{ appointment.durationMinutes }} min</div>
+          <div class="row-actions">
+            <button type="button" class="ghost-btn" (click)="editAppointment(appointment)">Edit</button>
+            <button type="button" class="danger-btn" (click)="deleteAppointment(appointment.id)">Delete</button>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
 </div>

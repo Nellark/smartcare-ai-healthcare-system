@@ -1,4 +1,94 @@
-<div class="records-container">
-  <h2>Medical Records</h2>
-  <p>Medical records management functionality coming soon...</p>
+<div class="module-page">
+  <div class="module-header">
+    <div>
+      <h2>Medical Records</h2>
+      <p>Capture diagnoses, treatments, and visit notes for each patient.</p>
+    </div>
+    <button type="button" class="secondary-btn" (click)="resetForm()">New Record</button>
+  </div>
+
+  <div class="module-toolbar filters">
+    <select [(ngModel)]="filterPatientId" (change)="onFilterChange()" class="search-input">
+      <option value="">All patients</option>
+      <option *ngFor="let patient of patients" [value]="patient.id">
+        {{ patient.firstName }} {{ patient.lastName }}
+      </option>
+    </select>
+  </div>
+
+  <div class="notice error" *ngIf="errorMessage">{{ errorMessage }}</div>
+  <div class="notice loading" *ngIf="isLoading">Loading medical records...</div>
+
+  <div class="module-grid" *ngIf="!isLoading">
+    <section class="panel">
+      <h3>{{ editingRecordId ? 'Edit Record' : 'Add Record' }}</h3>
+      <form (ngSubmit)="saveRecord()" class="stacked-form">
+        <label>
+          Patient
+          <select name="patientId" [(ngModel)]="recordForm.patientId" required>
+            <option value="">Select patient</option>
+            <option *ngFor="let patient of patients" [value]="patient.id">
+              {{ patient.firstName }} {{ patient.lastName }}
+            </option>
+          </select>
+        </label>
+        <label>
+          Doctor
+          <select name="doctorId" [(ngModel)]="recordForm.doctorId" required>
+            <option value="">Select doctor</option>
+            <option *ngFor="let doctor of doctors" [value]="doctor.id">
+              {{ doctor.firstName }} {{ doctor.lastName }}
+            </option>
+          </select>
+        </label>
+        <label>
+          Record date
+          <input name="recordDate" type="datetime-local" [(ngModel)]="recordForm.recordDate" required />
+        </label>
+        <label>
+          Diagnosis
+          <input name="diagnosis" [(ngModel)]="recordForm.diagnosis" required />
+        </label>
+        <label>
+          Treatment
+          <input name="treatment" [(ngModel)]="recordForm.treatment" required />
+        </label>
+        <label>
+          Notes
+          <textarea name="notes" rows="4" [(ngModel)]="recordForm.notes"></textarea>
+        </label>
+        <div class="form-actions">
+          <button type="submit" class="primary-btn">Save</button>
+          <button type="button" class="ghost-btn" (click)="resetForm()">Clear</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel table-panel">
+      <div class="panel-header">
+        <h3>Record List</h3>
+        <span>{{ records.length }} records</span>
+      </div>
+
+      <div class="empty-state compact" *ngIf="records.length === 0">
+        No records found.
+      </div>
+
+      <div class="table-list" *ngIf="records.length > 0">
+        <article class="table-row records-row" *ngFor="let record of records">
+          <div>
+            <strong>{{ record.diagnosis }}</strong>
+            <div class="muted">{{ record.treatment }}</div>
+          </div>
+          <div>{{ getPatientName(record.patientId) }}</div>
+          <div>{{ getDoctorName(record.doctorId) }}</div>
+          <div>{{ formatDate(record.recordDate) }}</div>
+          <div class="row-actions">
+            <button type="button" class="ghost-btn" (click)="editRecord(record)">Edit</button>
+            <button type="button" class="danger-btn" (click)="deleteRecord(record.id)">Delete</button>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
 </div>
