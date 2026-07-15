@@ -1,7 +1,10 @@
 .page {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  padding: 2rem;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 /* Header */
@@ -9,73 +12,54 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
 }
 
 .header h2 {
   margin: 0;
-  color: #333;
-  font-size: 24px;
-  font-weight: 600;
-}
-
-.btn {
-  background: #2563eb;
-  color: white;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background-color 0.2s;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.btn:hover {
-  background: #1d4ed8;
-  text-decoration: none;
-  color: white;
+  font-size: 2rem;
+  color: var(--color-text-primary);
 }
 
 /* Error Message */
 .error-message {
-  background-color: #fee;
-  border: 1px solid #fcc;
-  border-radius: 6px;
-  padding: 12px;
-  margin-bottom: 16px;
-  color: #c33;
-  font-size: 14px;
+  background-color: #FEF2F2;
+  border: 1px solid #F87171;
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-error);
+  font-size: 0.875rem;
 }
 
 /* Loading State */
 .loading {
   text-align: center;
-  padding: 40px;
-  color: #666;
-  font-size: 16px;
+  padding: 3rem;
+  color: var(--color-text-secondary);
+  font-size: 1rem;
 }
 
 /* Search */
 .search-box {
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
 }
 
 .search-box input {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: border-color 0.2s;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-family-body);
+  font-size: 1rem;
+  border: 1px solid var(--color-surface-muted);
+  border-radius: var(--radius-md);
+  background-color: white;
+  transition: all var(--transition-fast);
 }
 
 .search-box input:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(2, 108, 124, 0.1);
 }
 
 /* Table */
@@ -83,70 +67,78 @@
   width: 100%;
   border-collapse: collapse;
   background: white;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-surface-muted);
 }
 
 .enterprise-table th,
 .enterprise-table td {
-  padding: 16px;
+  padding: 1rem;
   text-align: left;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--color-surface-muted);
 }
 
 .enterprise-table th {
-  background: #f9fafb;
+  background: var(--color-surface-hover);
   font-weight: 600;
-  color: #374151;
-  font-size: 14px;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .enterprise-table td {
-  color: #4b5563;
-  font-size: 14px;
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+}
+
+.enterprise-table tbody tr {
+  transition: background-color var(--transition-fast);
 }
 
 .enterprise-table tbody tr:hover {
-  background: #f9fafb;
+  background: var(--color-surface-hover);
 }
 
 /* Action Buttons */
 .btn-edit {
-  background: #f59e0b;
+  background: #F59E0B;
   color: white;
-  padding: 6px 12px;
+  padding: 0.5rem 0.75rem;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  font-size: 12px;
-  margin-right: 6px;
-  transition: background-color 0.2s;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-right: 0.5rem;
+  transition: all var(--transition-fast);
   text-decoration: none;
   display: inline-block;
 }
 
 .btn-edit:hover {
-  background: #d97706;
-  text-decoration: none;
+  background: #D97706;
   color: white;
+  transform: translateY(-1px);
 }
 
 .btn-delete {
-  background: #ef4444;
+  background: var(--color-error);
   color: white;
-  padding: 6px 12px;
+  padding: 0.5rem 0.75rem;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  font-size: 12px;
-  transition: background-color 0.2s;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
 }
 
 .btn-delete:hover {
-  background: #dc2626;
+  background: #DC2626;
+  transform: translateY(-1px);
 }
 
 /* Pagination */
@@ -154,23 +146,24 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
-  margin-top: 24px;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
 .pagination button {
-  background: #6b7280;
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
+  background: white;
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-surface-muted);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.2s;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all var(--transition-fast);
 }
 
 .pagination button:hover:not(:disabled) {
-  background: #4b5563;
+  background: var(--color-surface-hover);
 }
 
 .pagination button:disabled {
@@ -179,14 +172,15 @@
 }
 
 .pagination span {
-  color: #6b7280;
-  font-size: 14px;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 /* Empty state */
 .empty {
   text-align: center;
-  padding: 40px;
-  color: #9ca3af;
-  font-size: 16px;
+  padding: 3rem;
+  color: var(--color-text-muted);
+  font-size: 1rem;
 }

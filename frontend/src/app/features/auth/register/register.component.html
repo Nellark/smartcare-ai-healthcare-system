@@ -1,0 +1,158 @@
+<div class="auth-layout-split">
+  
+  <!-- Left Side: Image Panel -->
+  <div class="split-image-panel">
+    <div class="testimonial-card">
+      <img src="/assets/images/logo2.png" alt="MedPulse Pro" style="width: 52px; height: 52px; object-fit: contain; margin-bottom: 1.5rem; display: block;">
+      <div class="badge">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        TRUSTED BY 5,000+ PROVIDERS
+      </div>
+      
+      <h1>Empowering the<br>future of digital care.</h1>
+      
+      <div class="testimonial-content">
+        <div class="stars">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" stroke="none" *ngFor="let i of [1,2,3,4,5]">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+        </div>
+        <p>"MedPulse Pro has transformed how our clinic handles patient records. The precision and clarity of the interface allow our team to focus purely on patient outcomes rather than administrative friction."</p>
+        
+        <div class="author-info">
+          <div class="author-avatar"></div>
+          <div>
+            <div class="author-name">Dr. Sarah Jenkins</div>
+            <div class="author-title">Chief Medical Officer, Northwell Health</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side: Form Panel -->
+  <div class="split-form-panel">
+    
+    <!-- Header -->
+    <div class="auth-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <img src="/assets/images/logo.png" alt="MedPulse Pro Logo" class="brand-logo" style="width: 24px; height: 24px; object-fit: contain;">
+        </div>
+        MedPulse Pro
+      </div>
+      <div class="sign-in-link">
+        Already have an account? <a routerLink="/login">Sign In</a>
+      </div>
+    </div>
+
+    <!-- Main Form -->
+    <div class="auth-form-container">
+      <h2>Create Provider Account</h2>
+      <p class="auth-subtitle">Access the next generation of medical management tools.</p>
+      
+      <div *ngIf="errorMessage" class="error-alert">{{ errorMessage }}</div>
+      
+      <form (ngSubmit)="onSubmit()">
+        
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <div class="input-with-icon">
+            <svg class="input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <input type="text" id="fullName" name="fullName" [(ngModel)]="userData.fullName" placeholder="John Doe, MD">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="hospitalName">Hospital/Clinic Name</label>
+          <div class="input-with-icon">
+            <svg class="input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+              <path d="M9 22v-4h6v4"></path>
+              <path d="M8 6h.01"></path>
+              <path d="M16 6h.01"></path>
+              <path d="M12 6h.01"></path>
+              <path d="M12 10h.01"></path>
+              <path d="M12 14h.01"></path>
+              <path d="M16 10h.01"></path>
+              <path d="M16 14h.01"></path>
+              <path d="M8 10h.01"></path>
+              <path d="M8 14h.01"></path>
+            </svg>
+            <input type="text" id="hospitalName" name="hospitalName" [(ngModel)]="userData.hospitalName" placeholder="City General Hospital">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half-width">
+            <label for="email">Professional Email</label>
+            <div class="input-with-icon">
+              <svg class="input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <input type="email" id="email" name="email" [(ngModel)]="userData.email" required placeholder="j.doe@hospital.org">
+            </div>
+          </div>
+          
+          <div class="form-group half-width">
+            <label for="license">Medical License Number</label>
+            <div class="input-with-icon">
+              <svg class="input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <input type="text" id="license" name="license" [(ngModel)]="userData.license" placeholder="MED-12345678">
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-with-icon right-icon">
+            <svg class="input-icon left" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <input type="password" id="password" name="password" [(ngModel)]="userData.password" required placeholder="••••••••••••">
+            <button type="button" class="icon-button-right">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+          <div class="password-hint">Must be at least 12 characters with numbers and symbols.</div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+          {{ isLoading ? 'Creating Account...' : 'Create Provider Account' }}
+          <svg *ngIf="!isLoading" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:0.5rem">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </form>
+      
+      <div class="auth-footer-inline">
+        <div>© 2024 MedPulse Pro. HIPAA Compliant.</div>
+        <div class="links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-page-footer">
+      SOC2 TYPE II CERTIFIED • END-TO-END ENCRYPTION • SECURE PROVIDER PORTAL
+    </div>
+  </div>
+</div>

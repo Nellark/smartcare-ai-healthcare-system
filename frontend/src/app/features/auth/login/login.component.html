@@ -1,0 +1,115 @@
+<div class="auth-layout">
+  
+  <div class="top-nav">
+    <div class="brand">
+      <img src="/assets/images/logo.png" alt="MedPulse Pro Logo" class="brand-logo" style="width: 24px; height: 24px; object-fit: contain;">
+      <span>MedPulse Pro</span>
+    </div>
+    <div class="help-link">
+      Need help? <a href="#" class="btn-primary">Contact Support</a>
+    </div>
+  </div>
+
+  <!-- Main Card -->
+  <div class="auth-container">
+    
+    <!-- Left Side: Image Panel -->
+    <div class="auth-image-panel">
+      <div class="auth-image-content">
+        <img src="/assets/images/logo2.png" alt="MedPulse Pro" style="width: 64px; height: 64px; object-fit: contain; margin-bottom: 1.5rem;">
+        <svg class="auth-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          <line x1="12" y1="11" x2="12" y2="17"></line>
+          <line x1="9" y1="14" x2="15" y2="14"></line>
+        </svg>
+        <h2>Secure Healthcare<br>Ecosystem</h2>
+        <p>Access your patient records, consultations, and medical data through our HIPAA-compliant professional portal.</p>
+      </div>
+    </div>
+
+    <!-- Right Side: Form Panel -->
+    <div class="auth-form-panel">
+      <!-- Main Form -->
+      <div class="auth-form-container">
+        <h1>SmartCare Login</h1>
+        <p class="auth-subtitle">Welcome back, Provider. Please verify your credentials.</p>
+        
+        <div *ngIf="errorMessage" class="error-alert">{{ errorMessage }}</div>
+        
+        <form (ngSubmit)="onSubmit()">
+          
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="email">Professional Email</label>
+            </div>
+            <input type="email" id="email" name="email" [(ngModel)]="credentials.email" required placeholder="dr.richardson@medpulse.pro">
+          </div>
+          
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="password">Password</label>
+              <a href="#" class="forgot-password">Forgot Password?</a>
+            </div>
+            <div class="input-icon-wrapper">
+              <input type="password" id="password" name="password" [(ngModel)]="credentials.password" required placeholder="••••••••">
+              <button type="button" class="icon-button">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          <button type="submit" class="btn btn-sign-in" [disabled]="isLoading">
+            {{ isLoading ? 'Signing in...' : 'Sign In' }}
+            <svg *ngIf="!isLoading" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </form>
+        
+        <div class="divider">OR LOGIN VIA BIOMETRICS</div>
+        
+        <div class="biometrics-options">
+          <button type="button" class="btn-biometric">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 11a3 3 0 1 0 6 0"></path>
+              <path d="M17.657 16.657L13.414 20.9a2 2 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"></path>
+            </svg>
+            FaceID
+          </button>
+          <button type="button" class="btn-biometric">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a10 10 0 0 0-10 10v2a10 10 0 0 0 10 10"></path>
+              <path d="M12 6a6 6 0 0 0-6 6v2"></path>
+              <path d="M12 10a2 2 0 0 0-2 2v2"></path>
+            </svg>
+            TouchID
+          </button>
+        </div>
+        
+        <div class="auth-footer-links">
+          New to the platform? <a routerLink="/register">Request Access</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-page-footer">
+    <div class="brand-footer">
+      <img src="/assets/images/logo.png" alt="MedPulse Pro Logo" class="brand-logo" style="width: 20px; height: 20px; object-fit: contain;">
+      <span>MedPulse Pro</span>
+    </div>
+    <div class="footer-nav">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Security</a>
+      <a href="#">Compliance</a>
+      <a href="#">Contact</a>
+    </div>
+    <p>© 2024 MedPulse Pro. HIPAA Compliant. SOC2 Certified.</p>
+  </div>
+</div>

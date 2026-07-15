@@ -65,6 +65,7 @@ export class DoctorsComponent implements OnInit {
 
   resetForm(): void {
     this.editingDoctorId = null;
+    this.errorMessage = '';
     this.doctorForm = {
       firstName: '',
       lastName: '',
@@ -95,6 +96,7 @@ export class DoctorsComponent implements OnInit {
     request$.subscribe({
       next: (response) => {
         if (response.success) {
+          this.errorMessage = '';
           this.loadDoctors();
           this.resetForm();
         } else {

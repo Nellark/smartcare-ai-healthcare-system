@@ -1,186 +1,52 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { AppointmentService } from '../../core/services/appointment.service';
-import { PatientService } from '../../core/services/patient.service';
-import { DoctorService } from '../../core/services/doctor.service';
-import { Appointment, AppointmentStatus, UpsertAppointmentRequest } from '../../core/models/appointment.model';
-import { Patient } from '../../core/models/patient.model';
-import { Doctor } from '../../core/models/doctor.model';
+
+interface CalendarEvent {
+  title: string;
+  type: 'in-person' | 'telehealth';
+}
+
+interface CalendarDay {
+  date: number;
+  isCurrentMonth: boolean;
+  events: CalendarEvent[];
+}
 
 @Component({
   selector: 'app-appointments',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
   templateUrl: './appointments.component.html',
   styleUrls: ['./appointments.component.css']
 })
-export class AppointmentsComponent implements OnInit {
-  appointments: Appointment[] = [];
-  patients: Patient[] = [];
-  doctors: Doctor[] = [];
-  isLoading = false;
-  errorMessage = '';
+export class AppointmentsComponent {
+  daysOfWeek = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+  
+  calendarDays: CalendarDay[] = [
+    { date: 25, isCurrentMonth: false, events: [] },
+    { date: 26, isCurrentMonth: false, events: [{ title: 'J. Doe - In Person', type: 'in-person' }] },
+    { date: 27, isCurrentMonth: false, events: [{ title: 'Tele: R. Smith', type: 'telehealth' }] },
+    { date: 28, isCurrentMonth: false, events: [{ title: 'A. Brown - In Person', type: 'in-person' }, { title: 'Tele: K. White', type: 'telehealth' }] },
+    { date: 29, isCurrentMonth: false, events: [] },
+    { date: 30, isCurrentMonth: false, events: [] },
+    { date: 31, isCurrentMonth: false, events: [] },
+    { date: 1, isCurrentMonth: true, events: [{ title: 'H. Vance - Annual', type: 'in-person' }] },
+    { date: 2, isCurrentMonth: true, events: [] },
+    { date: 3, isCurrentMonth: true, events: [{ title: 'Tele: L. Moore', type: 'telehealth' }] },
+    { date: 4, isCurrentMonth: true, events: [] },
+    { date: 5, isCurrentMonth: true, events: [{ title: 'M. Scott - Follow up', type: 'in-person' }] },
+    { date: 6, isCurrentMonth: true, events: [] },
+    { date: 7, isCurrentMonth: true, events: [] }
+  ];
 
-  filterPatientId = '';
-  filterDoctorId = '';
-  editingAppointmentId: string | null = null;
+  dailyAgenda = [
+    { time: '09:00', ampm: 'AM', name: 'James', desc: 'Post-Op' },
+    { time: '10:30', ampm: 'AM', name: 'Sarah C.', desc: 'Lab Result' },
+    { time: '01:15', ampm: 'PM', name: 'Robert B.', desc: 'General' }
+  ];
 
-  appointmentForm: UpsertAppointmentRequest = {
-    patientId: '',
-    doctorId: '',
-    scheduledAt: '',
-    durationMinutes: 30,
-    reason: '',
-    notes: '',
-    status: 'Scheduled'
-  };
-
-  readonly statuses: AppointmentStatus[] = ['Scheduled', 'Confirmed', 'Completed', 'Cancelled', 'NoShow'];
-
-  constructor(
-    private readonly appointmentService: AppointmentService,
-    private readonly patientService: PatientService,
-    private readonly doctorService: DoctorService
-  ) {}
-
-  ngOnInit(): void {
-    this.loadReferenceData();
-    this.loadAppointments();
-  }
-
-  loadReferenceData(): void {
-    this.patientService.getAll().subscribe({
-      next: (response) => {
-        this.patients = response.success ? response.data ?? [] : [];
-      },
-      error: () => {
-        this.patients = [];
-      }
-    });
-
-    this.doctorService.getAll().subscribe({
-      next: (response) => {
-        this.doctors = response.success ? response.data ?? [] : [];
-      },
-      error: () => {
-        this.doctors = [];
-      }
-    });
-  }
-
-  loadAppointments(): void {
-    this.isLoading = true;
-    this.errorMessage = '';
-
-    this.appointmentService.getAll(this.filterPatientId || null, this.filterDoctorId || null).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.appointments = response.data ?? [];
-        } else {
-          this.errorMessage = response.message || 'Failed to load appointments';
-          this.appointments = [];
-        }
-        this.isLoading = false;
-      },
-      error: () => {
-        this.errorMessage = 'An error occurred while loading appointments';
-        this.appointments = [];
-        this.isLoading = false;
-      }
-    });
-  }
-
-  onFilterChange(): void {
-    this.loadAppointments();
-  }
-
-  resetForm(): void {
-    this.editingAppointmentId = null;
-    this.appointmentForm = {
-      patientId: '',
-      doctorId: '',
-      scheduledAt: '',
-      durationMinutes: 30,
-      reason: '',
-      notes: '',
-      status: 'Scheduled'
-    };
-  }
-
-  editAppointment(appointment: Appointment): void {
-    this.editingAppointmentId = appointment.id;
-    this.appointmentForm = {
-      patientId: appointment.patientId,
-      doctorId: appointment.doctorId,
-      scheduledAt: this.toInputDateTime(appointment.scheduledAt),
-      durationMinutes: appointment.durationMinutes,
-      reason: appointment.reason,
-      notes: appointment.notes,
-      status: appointment.status
-    };
-  }
-
-  saveAppointment(): void {
-    const request$ = this.editingAppointmentId
-      ? this.appointmentService.update(this.editingAppointmentId, this.appointmentForm)
-      : this.appointmentService.create(this.appointmentForm);
-
-    request$.subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.loadAppointments();
-          this.resetForm();
-        } else {
-          this.errorMessage = response.message || 'Unable to save appointment';
-        }
-      },
-      error: () => {
-        this.errorMessage = 'An error occurred while saving the appointment';
-      }
-    });
-  }
-
-  deleteAppointment(id: string): void {
-    if (!confirm('Delete this appointment?')) {
-      return;
-    }
-
-    this.appointmentService.delete(id).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.loadAppointments();
-        } else {
-          this.errorMessage = response.message || 'Unable to delete appointment';
-        }
-      },
-      error: () => {
-        this.errorMessage = 'An error occurred while deleting the appointment';
-      }
-    });
-  }
-
-  getPatientName(patientId: string): string {
-    const patient = this.patients.find(item => item.id === patientId);
-    return patient ? `${patient.firstName} ${patient.lastName}` : patientId;
-  }
-
-  getDoctorName(doctorId: string): string {
-    const doctor = this.doctors.find(item => item.id === doctorId);
-    return doctor ? `${doctor.firstName} ${doctor.lastName}` : doctorId;
-  }
-
-  formatDate(value: string): string {
-    return new Date(value).toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit'
-    });
-  }
-
-  private toInputDateTime(value: string): string {
-    return new Date(value).toISOString().slice(0, 16);
-  }
+  urgentWaitlist = [
+    { name: 'Elena Rodriguez', wait: '2.5 hrs' },
+    { name: 'Marcus Thorne', wait: '1.2 hrs' }
+  ];
 }

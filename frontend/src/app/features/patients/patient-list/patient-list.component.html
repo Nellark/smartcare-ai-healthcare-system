@@ -3,13 +3,11 @@
   <!-- Header -->
   <div class="header">
     <h2>Patients</h2>
-    <a routerLink="/patients/new" class="btn">+ Add Patient</a>
+    <a routerLink="/patients/new" class="btn btn-primary">+ Add Patient</a>
   </div>
 
   <!-- Error Message -->
-  <div class="error-message" *ngIf="errorMessage">
-    {{ errorMessage }}
-  </div>
+  <div class="error-message" *ngIf="errorMessage.length > 0">{{ errorMessage }}</div>
 
   <!-- Loading State -->
   <div class="loading" *ngIf="isLoading">

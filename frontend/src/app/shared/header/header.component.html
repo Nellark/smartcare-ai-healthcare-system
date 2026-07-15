@@ -1,11 +1,56 @@
 <div class="header-container">
 
-  <div class="left">
-    <h3>Dashboard</h3>
+  <!-- Left: Brand (aligns with sidebar) -->
+  <div class="header-left">
+    <div class="brand">
+      <img src="/assets/images/logo.png" alt="MedPulse Pro" class="brand-logo">
+      <span class="brand-name">MedPulse Pro</span>
+    </div>
   </div>
 
-  <div class="right">
-    <span class="user">Dr. Admin</span>
+  <!-- Center: Search Bar -->
+  <div class="header-center">
+    <div class="search-bar">
+      <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" placeholder="Search records...">
+    </div>
+  </div>
+
+  <!-- Right: Icons + User Profile -->
+  <div class="header-right">
+
+    <!-- Bell icon with dot -->
+    <button class="icon-btn" title="Notifications">
+      <div class="icon-btn-inner">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span class="notification-dot"></span>
+      </div>
+    </button>
+
+    <!-- Help icon -->
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </svg>
+    </button>
+
+    <!-- User Profile -->
+    <div class="user-profile">
+      <img src="https://i.pravatar.cc/150?img=11" alt="Dr. Smith" class="avatar">
+      <div class="user-info">
+        <div class="user-name">Dr. Smith</div>
+        <div class="user-role">Administrator</div>
+      </div>
+    </div>
+
   </div>
 
 </div>

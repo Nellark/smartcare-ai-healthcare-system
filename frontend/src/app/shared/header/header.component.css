@@ -1,12 +1,181 @@
+/* ========================
+   Header Container
+======================== */
 .header-container {
-  width: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  gap: 0;
 }
 
-.user {
-  background: #e2e8f0;
-  padding: 6px 12px;
-  border-radius: 20px;
+/* ========================
+   Left — Brand
+======================== */
+.header-left {
+  width: 260px;
+  min-width: 260px;
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  border-right: 1px solid #F1F5F9;
+  height: 100%;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+}
+
+.brand-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.brand-name {
+  font-family: var(--font-family-heading);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* ========================
+   Center — Search
+======================== */
+.header-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2rem;
+}
+
+.search-bar {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9CA3AF;
+  pointer-events: none;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 0.6rem 1.25rem 0.6rem 2.6rem;
+  border-radius: 9999px;
+  border: 1.5px solid #E5E7EB;
+  background-color: #F9FAFB;
+  font-size: 0.875rem;
+  color: #374151;
+  outline: none;
+  transition: all 0.2s;
+  font-family: var(--font-family-body);
+}
+
+.search-bar input::placeholder {
+  color: #9CA3AF;
+}
+
+.search-bar input:focus {
+  border-color: var(--color-primary);
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(2, 108, 124, 0.1);
+}
+
+/* ========================
+   Right — Actions + User
+======================== */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0 1.5rem;
+}
+
+/* Icon buttons */
+.icon-btn {
+  background: none;
+  border: none;
+  color: #6B7280;
+  cursor: pointer;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.15s;
+  position: relative;
+}
+
+.icon-btn:hover {
+  background: #F3F4F6;
+  color: #0F172A;
+}
+
+.icon-btn-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background: #DC2626;
+  border-radius: 50%;
+  border: 1.5px solid white;
+}
+
+/* User profile */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding-left: 1rem;
+  margin-left: 0.5rem;
+  border-left: 1px solid #E5E7EB;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #E5E7EB;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0F172A;
+  line-height: 1.2;
+}
+
+.user-role {
+  font-size: 0.72rem;
+  color: #6B7280;
+  font-weight: 500;
 }

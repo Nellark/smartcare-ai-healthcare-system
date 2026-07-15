@@ -1,107 +1,112 @@
-<div class="module-page">
-  <div class="module-header">
-    <div>
-      <h2>Appointments</h2>
-      <p>Schedule visits, track status, and keep the clinic calendar current.</p>
+<div class="page-container">
+  
+  <!-- Left Side: Main Calendar -->
+  <div class="main-content">
+    <div class="header-row">
+      <div class="header-titles">
+        <h2>Schedule Overview</h2>
+        <p>October 2023</p>
+      </div>
+      <div class="view-toggles">
+        <button class="toggle-btn active">Month</button>
+        <button class="toggle-btn">Week</button>
+        <button class="toggle-btn">Day</button>
+      </div>
     </div>
-    <button type="button" class="secondary-btn" (click)="resetForm()">New Appointment</button>
-  </div>
 
-  <div class="module-toolbar filters">
-    <select [(ngModel)]="filterPatientId" (change)="onFilterChange()" class="search-input">
-      <option value="">All patients</option>
-      <option *ngFor="let patient of patients" [value]="patient.id">
-        {{ patient.firstName }} {{ patient.lastName }}
-      </option>
-    </select>
-    <select [(ngModel)]="filterDoctorId" (change)="onFilterChange()" class="search-input">
-      <option value="">All doctors</option>
-      <option *ngFor="let doctor of doctors" [value]="doctor.id">
-        {{ doctor.firstName }} {{ doctor.lastName }}
-      </option>
-    </select>
-  </div>
-
-  <div class="notice error" *ngIf="errorMessage">{{ errorMessage }}</div>
-  <div class="notice loading" *ngIf="isLoading">Loading appointments...</div>
-
-  <div class="module-grid" *ngIf="!isLoading">
-    <section class="panel">
-      <h3>{{ editingAppointmentId ? 'Edit Appointment' : 'Add Appointment' }}</h3>
-      <form (ngSubmit)="saveAppointment()" class="stacked-form">
-        <label>
-          Patient
-          <select name="patientId" [(ngModel)]="appointmentForm.patientId" required>
-            <option value="">Select patient</option>
-            <option *ngFor="let patient of patients" [value]="patient.id">
-              {{ patient.firstName }} {{ patient.lastName }}
-            </option>
-          </select>
-        </label>
-        <label>
-          Doctor
-          <select name="doctorId" [(ngModel)]="appointmentForm.doctorId" required>
-            <option value="">Select doctor</option>
-            <option *ngFor="let doctor of doctors" [value]="doctor.id">
-              {{ doctor.firstName }} {{ doctor.lastName }}
-            </option>
-          </select>
-        </label>
-        <label>
-          Scheduled at
-          <input name="scheduledAt" type="datetime-local" [(ngModel)]="appointmentForm.scheduledAt" required />
-        </label>
-        <label>
-          Duration (minutes)
-          <input name="durationMinutes" type="number" min="1" [(ngModel)]="appointmentForm.durationMinutes" required />
-        </label>
-        <label>
-          Status
-          <select name="status" [(ngModel)]="appointmentForm.status" required>
-            <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
-          </select>
-        </label>
-        <label>
-          Reason
-          <input name="reason" [(ngModel)]="appointmentForm.reason" required />
-        </label>
-        <label>
-          Notes
-          <textarea name="notes" rows="4" [(ngModel)]="appointmentForm.notes"></textarea>
-        </label>
-        <div class="form-actions">
-          <button type="submit" class="primary-btn">Save</button>
-          <button type="button" class="ghost-btn" (click)="resetForm()">Clear</button>
+    <div class="calendar-card">
+      <div class="calendar-grid">
+        <!-- Days of Week Headers -->
+        <div class="day-header" *ngFor="let day of daysOfWeek">{{ day }}</div>
+        
+        <!-- Calendar Cells -->
+        <div class="calendar-cell" *ngFor="let cell of calendarDays" [class.current-month]="cell.isCurrentMonth">
+          <span class="date-num">{{ cell.date }}</span>
+          
+          <div class="events-list">
+            <div class="event-pill" *ngFor="let event of cell.events" [ngClass]="event.type">
+              {{ event.title }}
+            </div>
+          </div>
         </div>
-      </form>
-    </section>
-
-    <section class="panel table-panel">
-      <div class="panel-header">
-        <h3>Appointment List</h3>
-        <span>{{ appointments.length }} appointments</span>
       </div>
+    </div>
+    
+    <div class="legend">
+      <div class="legend-item"><span class="dot in-person"></span> In-Person Consultation</div>
+      <div class="legend-item"><span class="dot telehealth"></span> Telehealth Session</div>
+    </div>
+  </div>
 
-      <div class="empty-state compact" *ngIf="appointments.length === 0">
-        No appointments found.
+  <!-- Right Side: Sidebar -->
+  <div class="right-sidebar">
+    
+    <!-- Daily Agenda -->
+    <div class="sidebar-card">
+      <div class="card-header">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--color-primary)" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <h3>Daily Agenda</h3>
       </div>
-
-      <div class="table-list" *ngIf="appointments.length > 0">
-        <article class="table-row appointments-row" *ngFor="let appointment of appointments">
-          <div>
-            <strong>{{ formatDate(appointment.scheduledAt) }}</strong>
-            <div class="muted">{{ appointment.reason }}</div>
+      
+      <div class="agenda-list">
+        <div class="agenda-item" *ngFor="let item of dailyAgenda">
+          <div class="agenda-time">
+            <span class="time">{{ item.time }}</span>
+            <span class="ampm">{{ item.ampm }}</span>
           </div>
-          <div>{{ getPatientName(appointment.patientId) }}</div>
-          <div>{{ getDoctorName(appointment.doctorId) }}</div>
-          <div>{{ appointment.status }}</div>
-          <div>{{ appointment.durationMinutes }} min</div>
-          <div class="row-actions">
-            <button type="button" class="ghost-btn" (click)="editAppointment(appointment)">Edit</button>
-            <button type="button" class="danger-btn" (click)="deleteAppointment(appointment.id)">Delete</button>
+          <div class="agenda-details">
+            <span class="name">{{ item.name }}</span>
+            <span class="desc">{{ item.desc }}</span>
           </div>
-        </article>
+        </div>
       </div>
-    </section>
+      
+      <button class="btn-full-width">View Full Agenda</button>
+    </div>
+
+    <!-- Urgent Waitlist -->
+    <div class="sidebar-card">
+      <div class="card-header alert-header">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#dc2626" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <h3 class="alert-title">Urgent Waitlist</h3>
+      </div>
+      
+      <div class="waitlist">
+        <div class="waitlist-item" *ngFor="let patient of urgentWaitlist">
+          <div class="avatar-placeholder">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <div class="waitlist-info">
+            <span class="w-name">{{ patient.name }}</span>
+            <span class="w-wait">Wait time: {{ patient.wait }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Occupancy Rate -->
+    <div class="sidebar-card green-card">
+      <div class="icon-up">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#16a34a" stroke-width="2">
+          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+          <polyline points="17 6 23 6 23 12"></polyline>
+        </svg>
+      </div>
+      <div class="rate-val">88%</div>
+      <div class="rate-label">Occupancy Rate</div>
+    </div>
+
   </div>
 </div>

@@ -17,7 +17,7 @@
     />
   </div>
 
-  <div class="notice error" *ngIf="errorMessage">{{ errorMessage }}</div>
+  <div class="notice error" *ngIf="errorMessage.length > 0">{{ errorMessage }}</div>
   <div class="notice loading" *ngIf="isLoading">Loading doctors...</div>
 
   <div class="module-grid" *ngIf="!isLoading">
