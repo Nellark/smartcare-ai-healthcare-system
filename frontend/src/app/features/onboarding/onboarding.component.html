@@ -11,7 +11,7 @@
       
       <div class="form-group mt-4">
         <label>Full Name</label>
-        <input type="text" [(ngModel)]="onboardingData.fullName" placeholder="Dr. Jane Doe">
+        <input type="text" [(ngModel)]="onboardingData.fullName" placeholder="Jane Doe">
       </div>
       
       <button class="btn btn-primary btn-block mt-4" (click)="nextStep()" [disabled]="!onboardingData.fullName">
@@ -34,9 +34,33 @@
         <input type="text" [(ngModel)]="onboardingData.specialization" placeholder="e.g. Cardiology, General Practice">
       </div>
       
-      <button class="btn btn-primary btn-block mt-4" (click)="completeOnboarding()" [disabled]="!onboardingData.clinicName || !onboardingData.specialization">
+      <button class="btn btn-primary btn-block mt-4" (click)="completeOnboarding()" [disabled]="!onboardingData.clinicName || !onboardingData.specialization || isSubmitting">
+        {{ isSubmitting ? 'Submitting...' : 'Submit Application' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="modal-overlay" *ngIf="showSuccessModal">
+    <div class="modal-content success-modal fade-in">
+      <div class="success-icon-container">
+        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" class="success-check">
+          <circle cx="12" cy="12" r="10" fill="#16a34a" stroke="none"></circle>
+          <path d="M8 12.5l3 3 5-6" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </div>
+      
+      <h2>Application<br>Received</h2>
+      
+      <p class="success-message">
+        Your application is being reviewed by our compliance team. This process typically takes 3-5 business days.
+      </p>
+      
+      <button class="btn btn-navy btn-block mt-4" (click)="goToDashboard()">
         Go to Dashboard
       </button>
+      
+      <p class="app-id">Application ID: #MPP-9482-AD</p>
     </div>
   </div>
 </div>

@@ -1,91 +1,70 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
-interface RecordMock {
-  patientName: string;
-  patientId: string;
-  initials: string;
+interface RecordItem {
   type: string;
-  subType?: string;
-  typeColor: string;
-  referenceCode: string;
-  dateCreated: string;
-  status: 'Finalized' | 'Pending Review' | 'High Priority';
+  status: string;
+  statusClass: string;
+  title: string;
   provider: string;
+  subtext: string;
+  date: string;
+  dateLabel: string;
 }
 
 @Component({
   selector: 'app-records',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './records.component.html',
   styleUrls: ['./records.component.css']
 })
-export class RecordsComponent implements OnInit {
-  activeTab = 'All Records';
-  tabs = ['All Records', 'Lab Results', 'Imaging', 'Clinical Notes'];
-
-  records: RecordMock[] = [
+export class RecordsComponent {
+  records: RecordItem[] = [
     {
-      patientName: 'Eleanor Johnson',
-      patientId: '#SMT-99201',
-      initials: 'EJ',
+      type: 'LAB RESULT',
+      status: 'FINALIZED',
+      statusClass: 'finalized',
+      title: 'Complete Blood Count (CBC) with Differential',
+      provider: 'Metropolitan General Laboratory',
+      subtext: 'Collected Oct 12, 2024 • ID: #LB-88219',
+      date: 'Oct 14, 2024',
+      dateLabel: 'REPORT DATE'
+    },
+    {
       type: 'IMAGING',
-      subType: '(MRI)',
-      typeColor: 'blue',
-      referenceCode: 'LUMBAR-SPINE-V2',
-      dateCreated: 'Oct 24, 2023',
-      status: 'Finalized',
-      provider: 'Dr. Patel'
+      status: 'PENDING REVIEW',
+      statusClass: 'pending',
+      title: 'Chest X-Ray 2 Views (PA & Lateral)',
+      provider: 'City Health Imaging Center',
+      subtext: 'Performed Oct 08, 2024 • ID: #IM-22104',
+      date: 'Oct 09, 2024',
+      dateLabel: 'REPORT DATE'
     },
     {
-      patientName: 'Marcus Holloway',
-      patientId: '#SMT-44312',
-      initials: 'MH',
-      type: 'LAB',
-      subType: 'RESULT',
-      typeColor: 'green',
-      referenceCode: 'CBC-W-DIFF',
-      dateCreated: 'Oct 23, 2023',
-      status: 'Pending Review',
-      provider: 'LabCorp Systems'
+      type: 'CLINICAL NOTE',
+      status: 'FINALIZED',
+      statusClass: 'finalized',
+      title: 'Annual Physical Examination Summary',
+      provider: 'Dr. Sarah Chen, Primary Care',
+      subtext: 'Visit Sept 25, 2024 • ID: #CN-44109',
+      date: 'Sept 26, 2024',
+      dateLabel: 'REPORT DATE'
     },
     {
-      patientName: 'Sarah Chen',
-      patientId: '#SMT-00125',
-      initials: 'SC',
-      type: 'NOTE',
-      typeColor: 'purple',
-      referenceCode: 'FOLLOW-UP-POST-OP',
-      dateCreated: 'Oct 22, 2023',
-      status: 'Finalized',
-      provider: 'Dr. Smith'
-    },
-    {
-      patientName: 'Robert Bradley',
-      patientId: '#SMT-33811',
-      initials: 'RB',
-      type: 'IMAGING',
-      subType: '(X-RAY)',
-      typeColor: 'blue',
-      referenceCode: 'CHEST-AP-LAT',
-      dateCreated: 'Oct 22, 2023',
-      status: 'High Priority',
-      provider: 'Radiology Dept.'
-    },
-    {
-      patientName: 'Katherine Long',
-      patientId: '#SMT-11200',
-      initials: 'KL',
-      type: 'LAB',
-      subType: 'RESULT',
-      typeColor: 'green',
-      referenceCode: 'LIPID-PANEL',
-      dateCreated: 'Oct 21, 2023',
-      status: 'Finalized',
-      provider: 'Dr. Patel'
+      type: 'IMMUNIZATION',
+      status: 'VERIFIED',
+      statusClass: 'verified',
+      title: 'Influenza Vaccine (Quadrivalent)',
+      provider: "Walton's Pharmacy Services",
+      subtext: 'Administered Sept 15, 2024 • Lot: #RX-9902',
+      date: 'Sept 15, 2024',
+      dateLabel: 'RECORDED'
     }
   ];
 
-  ngOnInit(): void {}
+  currentPage = 1;
+  totalPages = 3;
+  totalRecords = 28;
 }

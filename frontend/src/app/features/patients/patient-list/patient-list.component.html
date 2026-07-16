@@ -1,72 +1,133 @@
-<div class="page">
+<div class="page-container">
+  <div class="main-content">
+    
+    <!-- Header -->
+    <div class="header-row">
+      <div class="header-titles">
+        <h2>Patients</h2>
+        <p class="subtitle">Manage your clinic's patient records and details.</p>
+      </div>
+      <a routerLink="/patients/new" class="btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        New Patient
+      </a>
+    </div>
 
-  <!-- Header -->
-  <div class="header">
-    <h2>Patients</h2>
-    <a routerLink="/patients/new" class="btn btn-primary">+ Add Patient</a>
+    <!-- Error Message -->
+    <div class="error-message" *ngIf="errorMessage().length > 0">{{ errorMessage() }}</div>
+
+    <!-- Card -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div class="search-bar">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18" height="18">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="text"
+            placeholder="Search patients by name, email or phone..."
+            [(ngModel)]="searchTerm"
+            (input)="onSearchTermChange()"
+          />
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div class="loading" *ngIf="isLoading()">
+        <div class="spinner"></div>
+        <p>Loading patients...</p>
+      </div>
+
+      <!-- Table -->
+      <div class="table-container" *ngIf="!isLoading()">
+        <table class="modern-table">
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>Contact Info</th>
+              <th>Date of Birth</th>
+              <th>Blood / Gender</th>
+              <th class="actions-col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of paginatedPatients()">
+              <td>
+                <div class="patient-cell">
+                  <div class="avatar-placeholder">{{ p.firstName[0] }}{{ p.lastName[0] }}</div>
+                  <div class="patient-info">
+                    <span class="p-name">{{ p.firstName }} {{ p.lastName }}</span>
+                    <span class="p-id">ID: {{ p.id | uppercase }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="contact-cell">
+                  <span class="c-email">{{ p.email }}</span>
+                  <span class="c-phone">{{ p.phoneNumber }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="dob-cell">
+                  <span class="d-date">{{ formatDate(p.dateOfBirth) }}</span>
+                  <span class="d-age">{{ p.age }} yrs</span>
+                </div>
+              </td>
+              <td>
+                <div class="badge-cell">
+                  <span class="badge badge-blood" *ngIf="p.bloodType">{{ p.bloodType }}</span>
+                  <span class="badge badge-gender" *ngIf="p.gender">{{ p.gender }}</span>
+                  <span class="badge badge-empty" *ngIf="!p.bloodType && !p.gender">N/A</span>
+                </div>
+              </td>
+              <td class="actions-col">
+                <div class="row-actions">
+                  <a class="icon-action-btn" title="View Details" [routerLink]="['/patients', p.id]">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  </a>
+                  <a class="icon-action-btn" title="Edit Patient" [routerLink]="['/patients', 'edit', p.id]">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  </a>
+                  <button class="icon-action-btn danger" title="Delete Patient" (click)="deletePatient(p.id)">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr *ngIf="paginatedPatients().length === 0">
+              <td colspan="5" class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="48" height="48">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <p>No patients found.</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-footer" *ngIf="!isLoading() && patients().length > 0">
+        <span class="page-info">
+          Showing <strong>{{ startIndex() }}</strong> to <strong>{{ endIndex() }}</strong> of <strong>{{ filteredPatients().length | number }}</strong> entries
+        </span>
+        <div class="page-controls">
+          <button class="page-btn" (click)="prevPage()" [disabled]="currentPage() === 1">Previous</button>
+          
+          <button class="page-btn page-num" 
+                  *ngFor="let page of visiblePages()" 
+                  [class.active]="currentPage() === page"
+                  [disabled]="page === '...'"
+                  (click)="goToPage(page)">
+            {{ page }}
+          </button>
+          
+          <button class="page-btn" (click)="nextPage()" [disabled]="currentPage() === totalPages()">Next</button>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <!-- Error Message -->
-  <div class="error-message" *ngIf="errorMessage.length > 0">{{ errorMessage }}</div>
-
-  <!-- Loading State -->
-  <div class="loading" *ngIf="isLoading">
-    Loading patients...
-  </div>
-
-  <!-- Search -->
-  <div class="search-box" *ngIf="!isLoading">
-    <input
-      type="text"
-      placeholder="Search patients by name, email or phone..."
-      [(ngModel)]="searchTerm"
-      (input)="onSearchTermChange()"
-    />
-  </div>
-
-  <!-- Table -->
-  <table class="enterprise-table" *ngIf="!isLoading">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Date of Birth</th>
-        <th>Age</th>
-        <th>Phone</th>
-        <th>Email</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr *ngFor="let p of paginatedPatients">
-        <td>{{ p.firstName }} {{ p.lastName }}</td>
-        <td>{{ formatDate(p.dateOfBirth) }}</td>
-        <td>{{ p.age }}</td>
-        <td>{{ p.phoneNumber }}</td>
-        <td>{{ p.email }}</td>
-        <td>
-          <a class="btn-edit" [routerLink]="['/patients', 'edit', p.id]">Edit</a>
-          <button class="btn-delete" (click)="deletePatient(p.id)">Delete</button>
-        </td>
-      </tr>
-
-      <tr *ngIf="paginatedPatients.length === 0">
-        <td colspan="6" class="empty">No patients found</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- Pagination -->
-  <div class="pagination" *ngIf="!isLoading && totalPages() > 1">
-    <button (click)="prevPage()" [disabled]="currentPage === 1">
-      Prev
-    </button>
-
-    <span>Page {{ currentPage }} of {{ totalPages() }}</span>
-
-    <button (click)="nextPage()" [disabled]="currentPage === totalPages()">
-      Next
-    </button>
-  </div>
-
-  </div>
+</div>

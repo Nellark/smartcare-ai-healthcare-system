@@ -13,6 +13,21 @@ import { AuthService } from '../../core/services/auth.service';
 export class SidebarComponent {
   private authService = inject(AuthService);
 
+  get currentUserEmail(): string {
+    return this.authService.currentUser() || '';
+  }
+
+  get currentUserRole(): string {
+    return this.authService.currentUserRole() || 'Provider';
+  }
+
+  get currentUserInitials(): string {
+    const email = this.currentUserEmail;
+    const namePart = email.split('@')[0];
+    const parts = namePart.split('.');
+    return parts.map(p => p[0]).slice(0, 2).join('').toUpperCase() || '?';
+  }
+
   logout() {
     this.authService.logout();
   }

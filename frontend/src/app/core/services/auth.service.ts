@@ -23,6 +23,7 @@ export class AuthService {
   
   // Use a signal to hold the current user email/token state
   public currentUser = signal<string | null>(null);
+  public currentUserRole = signal<string | null>(null);
 
   constructor(private http: HttpClient, private router: Router) {
     this.checkToken();
@@ -35,9 +36,16 @@ export class AuthService {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         this.currentUser.set(payload.email || payload.sub || 'User');
+        // Extract role from standard JWT claim or custom claim
+        const role = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || payload.role || null;
+        this.currentUserRole.set(role);
       } catch {
         this.currentUser.set('User');
+        this.currentUserRole.set(null);
       }
+    } else {
+      this.currentUser.set(null);
+      this.currentUserRole.set(null);
     }
   }
 

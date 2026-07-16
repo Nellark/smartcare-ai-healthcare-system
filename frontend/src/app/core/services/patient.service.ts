@@ -8,7 +8,6 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class PatientService {
-
   private readonly baseUrl = `${environment.apiBaseUrl}/patients`;
 
   constructor(private http: HttpClient) {}
@@ -26,7 +25,7 @@ export class PatientService {
   }
 
   update(id: string, patient: CreatePatientRequest): Observable<ApiResponse<Patient>> {
-    return this.http.put<ApiResponse<Patient>>(`${this.baseUrl}/${id}`, patient);
+    return this.http.put<ApiResponse<Patient>>(`${this.baseUrl}/${id}`, { ...patient, id });
   }
 
   delete(id: string): Observable<ApiResponse<null>> {
@@ -34,8 +33,17 @@ export class PatientService {
   }
 
   search(searchTerm: string): Observable<ApiResponse<Patient[]>> {
-    return this.http.get<ApiResponse<Patient[]>>(
-      `${this.baseUrl}/search?searchTerm=${encodeURIComponent(searchTerm)}`
-    );
+    return this.http.get<ApiResponse<Patient[]>>(`${this.baseUrl}/search?searchTerm=${encodeURIComponent(searchTerm)}`);
+  }
+
+  private calculateAge(dob: string): number {
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
   }
 }

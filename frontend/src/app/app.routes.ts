@@ -68,6 +68,27 @@ export const routes: Routes = [
       },
 
       {
+        path: 'settings',
+        loadComponent: () =>
+          import('./features/settings/settings.component')
+            .then(m => m.SettingsComponent)
+      },
+
+      {
+        path: 'new-consultation',
+        loadComponent: () =>
+          import('./features/new-consultation/new-consultation.component')
+            .then(m => m.NewConsultationComponent)
+      },
+
+      {
+        path: 'patient-dashboard',
+        loadComponent: () =>
+          import('./features/patient-dashboard/patient-dashboard.component')
+            .then(m => m.PatientDashboardComponent)
+      },
+
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'

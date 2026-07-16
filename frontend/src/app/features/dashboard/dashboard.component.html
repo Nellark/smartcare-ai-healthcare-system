@@ -3,8 +3,8 @@
   <!-- Page Header -->
   <div class="page-header">
     <div class="page-header-left">
-      <h1>Patient Directory</h1>
-      <p>Manage and monitor records for {{ totalEntries | number }} registered patients.</p>
+      <h1>Welcome, {{ currentUserEmail.split('@')[0] | titlecase }}</h1>
+      <p>{{ currentUserRole }} portal &mdash; {{ totalEntries | number }} registered patients in the system.</p>
     </div>
     <div class="page-header-right">
       <button class="btn-filters">
@@ -58,7 +58,7 @@
     <div class="stat-card">
       <div class="stat-body">
         <div class="stat-label">TOTAL RECORDS</div>
-        <div class="stat-value">{{ totalRecords | number }}</div>
+        <div class="stat-value">{{ totalEntries | number }}</div>
       </div>
       <div class="stat-icon teal">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -83,8 +83,18 @@
     </div>
   </div>
 
+  <!-- Loading / Error States -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading patients...</p>
+  </div>
+  <div *ngIf="errorMessage && !isLoading" class="error-state">
+    <p>{{ errorMessage }}</p>
+    <button (click)="loadPatients()" class="btn-new-patient">Retry</button>
+  </div>
+
   <!-- Table Card -->
-  <div class="table-card">
+  <div class="table-card" *ngIf="!isLoading && !errorMessage">
     <!-- Toolbar -->
     <div class="table-toolbar">
       <div class="table-search">
@@ -106,16 +116,6 @@
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
         </div>
-        <div class="filter-select">
-          <select [(ngModel)]="physicianFilter">
-            <option value="All">Physician: All</option>
-            <option value="Dr. Smith">Dr. Smith</option>
-            <option value="Dr. Patel">Dr. Patel</option>
-          </select>
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </div>
       </div>
     </div>
 
@@ -132,7 +132,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let patient of filteredPatients">
+        <tr *ngFor="let patient of paginatedPatients">
           <td>
             <div class="patient-cell">
               <div class="avatar-wrap" *ngIf="patient.avatarUrl">
@@ -152,13 +152,29 @@
             <span class="status-badge" [ngClass]="patient.status.toLowerCase()">{{ patient.status }}</span>
           </td>
           <td class="actions-cell">
-            <button class="action-btn" title="More options">
+            <button class="action-btn" title="More options" (click)="toggleDropdown(patient.id, $event)">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
                 <circle cx="12" cy="5" r="1.5"></circle>
                 <circle cx="12" cy="12" r="1.5"></circle>
                 <circle cx="12" cy="19" r="1.5"></circle>
               </svg>
             </button>
+            
+            <div class="dropdown-menu" *ngIf="activeDropdownId === patient.id" (click)="$event.stopPropagation()">
+              <a class="dropdown-item" [routerLink]="['/app/patients', patient.id]">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                View Profile
+              </a>
+              <a class="dropdown-item" [routerLink]="['/app/patients', 'edit', patient.id]">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                Edit Details
+              </a>
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item danger">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                Delete
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>

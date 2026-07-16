@@ -6,6 +6,10 @@ export interface Patient {
   dateOfBirth: string;
   phoneNumber: string;
   address: string;
+  gender?: string;
+  bloodType?: string;
+  emergencyContactName?: string;
+  emergencyContactPhone?: string;
   age?: number;
   createdAt?: string;
   updatedAt?: string;

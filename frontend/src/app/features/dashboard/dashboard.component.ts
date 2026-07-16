@@ -1,68 +1,99 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { PatientService } from '../../core/services/patient.service';
+import { AuthService } from '../../core/services/auth.service';
+import { Patient } from '../../core/models/patient.model';
 
 interface DashboardPatient {
   id: string;
   name: string;
   dateOfBirth: string;
-  gender: 'Male' | 'Female';
+  gender: string;
   lastVisit: string;
   status: 'Active' | 'Pending' | 'Inactive';
   avatarUrl: string;
+  email?: string;
 }
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
+  private patientService = inject(PatientService);
+  private authService = inject(AuthService);
+
   searchQuery = '';
   statusFilter = 'All';
-  physicianFilter = 'All';
-  
+  isLoading = true;
+  errorMessage = '';
+
   isModalOpen = false;
+  activeDropdownId: string | null = null;
 
   currentPage = 1;
   pageSize = 10;
-  totalEntries = 1240;
 
-  activePatients = 842;
-  inPatients = 12;
-  totalRecords = 1240;
-  pendingReviews = 24;
+  // Current logged-in user info
+  get currentUserEmail(): string {
+    return this.authService.currentUser() || 'User';
+  }
 
-  allPatients: DashboardPatient[] = [
-    { id: 'SC-8921', name: 'Martha Jenkins',   dateOfBirth: 'May 12, 1954', gender: 'Female', lastVisit: 'Oct 24, 2023', status: 'Active',   avatarUrl: 'https://i.pravatar.cc/150?img=47' },
-    { id: 'SC-9042', name: 'Alejandro Silva',   dateOfBirth: 'Jan 18, 1991', gender: 'Male',   lastVisit: 'Nov 02, 2023', status: 'Pending',  avatarUrl: 'https://i.pravatar.cc/150?img=53' },
-    { id: 'SC-7731', name: 'Sarah Johnson',     dateOfBirth: 'Nov 30, 1985', gender: 'Female', lastVisit: 'Aug 15, 2023', status: 'Inactive', avatarUrl: '' },
-    { id: 'SC-1240', name: 'Li Wei Chen',       dateOfBirth: 'Jul 04, 1970', gender: 'Male',   lastVisit: 'Nov 14, 2023', status: 'Active',   avatarUrl: 'https://i.pravatar.cc/150?img=61' },
-    { id: 'SC-3305', name: 'Emily Davis',       dateOfBirth: 'Mar 22, 1978', gender: 'Female', lastVisit: 'Sep 30, 2023', status: 'Active',   avatarUrl: 'https://i.pravatar.cc/150?img=45' },
-    { id: 'SC-4471', name: 'James Okafor',      dateOfBirth: 'Jun 09, 1965', gender: 'Male',   lastVisit: 'Oct 11, 2023', status: 'Pending',  avatarUrl: 'https://i.pravatar.cc/150?img=12' },
-    { id: 'SC-6612', name: 'Priya Sharma',      dateOfBirth: 'Feb 14, 1992', gender: 'Female', lastVisit: 'Nov 01, 2023', status: 'Active',   avatarUrl: 'https://i.pravatar.cc/150?img=49' },
-    { id: 'SC-2288', name: 'Robert Kim',        dateOfBirth: 'Sep 03, 1982', gender: 'Male',   lastVisit: 'Jul 22, 2023', status: 'Inactive', avatarUrl: 'https://i.pravatar.cc/150?img=14' },
-    { id: 'SC-5190', name: 'Fatima Al-Hassan',  dateOfBirth: 'Dec 19, 1975', gender: 'Female', lastVisit: 'Nov 08, 2023', status: 'Active',   avatarUrl: 'https://i.pravatar.cc/150?img=44' },
-    { id: 'SC-7803', name: 'Carlos Mendez',     dateOfBirth: 'Aug 27, 1989', gender: 'Male',   lastVisit: 'Oct 05, 2023', status: 'Active',   avatarUrl: 'https://i.pravatar.cc/150?img=15' },
-  ];
+  get currentUserRole(): string {
+    return this.authService.currentUserRole() || 'Provider';
+  }
+
+  get currentUserInitials(): string {
+    const email = this.currentUserEmail;
+    const parts = email.split('@')[0].split('.');
+    return parts.map(p => p[0]).slice(0, 2).join('').toUpperCase();
+  }
+
+  allPatients: DashboardPatient[] = [];
+
+  get activePatients(): number {
+    return this.allPatients.filter(p => p.status === 'Active').length;
+  }
+
+  get pendingReviews(): number {
+    return this.allPatients.filter(p => p.status === 'Pending').length;
+  }
+
+  get inPatients(): number {
+    return this.allPatients.filter(p => p.status === 'Inactive').length;
+  }
+
+  get totalEntries(): number {
+    return this.filteredPatients.length;
+  }
 
   get filteredPatients(): DashboardPatient[] {
     return this.allPatients.filter(p => {
       const matchesSearch = !this.searchQuery ||
         p.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        p.id.toLowerCase().includes(this.searchQuery.toLowerCase());
+        p.id.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        (p.email && p.email.toLowerCase().includes(this.searchQuery.toLowerCase()));
       const matchesStatus = this.statusFilter === 'All' || p.status === this.statusFilter;
       return matchesSearch && matchesStatus;
     });
   }
 
+  get paginatedPatients(): DashboardPatient[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredPatients.slice(start, start + this.pageSize);
+  }
+
   get totalPages(): number {
-    return Math.ceil(this.totalEntries / this.pageSize);
+    return Math.ceil(this.totalEntries / this.pageSize) || 1;
   }
 
   get displayedFrom(): number {
+    if (this.totalEntries === 0) return 0;
     return (this.currentPage - 1) * this.pageSize + 1;
   }
 
@@ -89,7 +120,53 @@ export class DashboardComponent implements OnInit {
     return name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
   }
 
-  ngOnInit(): void {}
+  private mapPatientToDisplay(p: Patient): DashboardPatient {
+    const dob = p.dateOfBirth ? new Date(p.dateOfBirth) : null;
+    const dobFormatted = dob ? dob.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
+    const lastVisit = p.updatedAt || p.createdAt;
+    const lastVisitFormatted = lastVisit
+      ? new Date(lastVisit).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      : 'N/A';
+
+    // Assign a status based on recency of last visit
+    const daysSince = lastVisit
+      ? (Date.now() - new Date(lastVisit).getTime()) / (1000 * 60 * 60 * 24)
+      : 999;
+    const status: 'Active' | 'Pending' | 'Inactive' =
+      daysSince < 90 ? 'Active' : daysSince < 180 ? 'Pending' : 'Inactive';
+
+    return {
+      id: `SC-${p.id.slice(0, 4).toUpperCase()}`,
+      name: `${p.firstName} ${p.lastName}`,
+      dateOfBirth: dobFormatted,
+      gender: (p as any).gender || 'N/A',
+      lastVisit: lastVisitFormatted,
+      status,
+      avatarUrl: '',
+      email: p.email
+    };
+  }
+
+  ngOnInit(): void {
+    this.loadPatients();
+  }
+
+  loadPatients(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.patientService.getAll().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.allPatients = response.data.map(p => this.mapPatientToDisplay(p));
+        }
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.errorMessage = 'Could not load patients. Please ensure the backend is running.';
+        this.isLoading = false;
+      }
+    });
+  }
 
   openModal(): void {
     this.isModalOpen = true;
@@ -111,5 +188,22 @@ export class DashboardComponent implements OnInit {
 
   nextPage(): void {
     if (this.currentPage < this.totalPages) this.currentPage++;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.actions-cell')) {
+      this.activeDropdownId = null;
+    }
+  }
+
+  toggleDropdown(patientId: string, event: Event) {
+    event.stopPropagation();
+    if (this.activeDropdownId === patientId) {
+      this.activeDropdownId = null;
+    } else {
+      this.activeDropdownId = patientId;
+    }
   }
 }

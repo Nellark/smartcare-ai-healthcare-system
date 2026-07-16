@@ -134,6 +134,33 @@
   position: relative;
 }
 
+.role-selector {
+  display: flex;
+  background-color: #F1F5F9;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 2rem;
+}
+
+.role-selector button {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.role-selector button.active {
+  background: white;
+  color: var(--color-primary-dark);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
 .auth-header {
   display: flex;
   justify-content: space-between;

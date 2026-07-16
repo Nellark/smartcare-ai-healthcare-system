@@ -1,71 +1,197 @@
 <div class="page-container">
-  
-  <!-- Left Side: Main Calendar -->
+
+  <!-- ══════════════ LEFT: Calendar ══════════════ -->
   <div class="main-content">
+
     <div class="header-row">
       <div class="header-titles">
         <h2>Schedule Overview</h2>
-        <p>October 2023</p>
+        <div class="month-nav">
+          <button class="nav-arrow" (click)="prev()">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <p>{{ headerLabel() }}</p>
+          <button class="nav-arrow" (click)="next()">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+          <button class="today-btn" (click)="goToday()">Today</button>
+        </div>
       </div>
       <div class="view-toggles">
-        <button class="toggle-btn active">Month</button>
-        <button class="toggle-btn">Week</button>
-        <button class="toggle-btn">Day</button>
+        <button class="toggle-btn"
+                *ngFor="let v of views"
+                [class.active]="activeView() === v"
+                (click)="setView(v)">
+          {{ v }}
+        </button>
       </div>
     </div>
 
-    <div class="calendar-card">
-      <div class="calendar-grid">
-        <!-- Days of Week Headers -->
-        <div class="day-header" *ngFor="let day of daysOfWeek">{{ day }}</div>
-        
-        <!-- Calendar Cells -->
-        <div class="calendar-cell" *ngFor="let cell of calendarDays" [class.current-month]="cell.isCurrentMonth">
-          <span class="date-num">{{ cell.date }}</span>
-          
-          <div class="events-list">
-            <div class="event-pill" *ngFor="let event of cell.events" [ngClass]="event.type">
-              {{ event.title }}
+    <!-- ── MONTH VIEW ── -->
+    <ng-container *ngIf="activeView() === 'Month'">
+      <div class="calendar-card">
+        <div class="calendar-grid">
+          <div class="day-header" *ngFor="let day of daysOfWeek">{{ day }}</div>
+          <ng-container *ngFor="let week of calendarWeeks()">
+            <div class="calendar-cell"
+                 *ngFor="let cell of week"
+                 [class.other-month]="!cell.isCurrentMonth"
+                 [class.is-today]="cell.isToday">
+              <span class="date-num">
+                {{ cell.date }}
+                <span class="today-dot" *ngIf="cell.isToday"></span>
+              </span>
+              <div class="events-list">
+                <div class="event-pill"
+                     *ngFor="let event of cell.events"
+                     [class.in-person]="event.type === 'in-person'"
+                     [class.telehealth]="event.type === 'telehealth'">
+                  <span *ngIf="event.type === 'telehealth'" class="pill-prefix">Tele: </span>{{ event.providerName.split(' ').slice(-1)[0] }} – {{ event.reason }}
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><span class="dot in-person"></span> In-Person Consultation</div>
+        <div class="legend-item"><span class="dot telehealth"></span> Telehealth Session</div>
+        <a routerLink="/app/new-consultation" class="btn-new-consultation">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          New Consultation
+        </a>
+      </div>
+    </ng-container>
+
+    <!-- ── WEEK VIEW ── -->
+    <ng-container *ngIf="activeView() === 'Week'">
+      <div class="calendar-card week-card">
+
+        <!-- Week Header Row -->
+        <div class="week-header-row">
+          <div class="time-gutter-header"></div>
+          <div class="week-day-header"
+               *ngFor="let day of weekDays()"
+               [class.is-today]="day.isToday">
+            <span class="wdh-name">{{ day.label }}</span>
+            <span class="wdh-date" [class.today-circle]="day.isToday">{{ day.shortDate }}</span>
+          </div>
+        </div>
+
+        <!-- Week Body: time slots -->
+        <div class="week-body">
+          <div class="week-row" *ngFor="let slot of timeSlots">
+            <div class="time-gutter">{{ slot.label }}</div>
+            <div class="week-cell"
+                 *ngFor="let day of weekDays()"
+                 [class.is-today-col]="day.isToday">
+              <div class="week-event"
+                   *ngFor="let evt of eventsForSlot(day, slot.hour)"
+                   [class.in-person]="evt.type === 'in-person'"
+                   [class.telehealth]="evt.type === 'telehealth'">
+                <span class="we-time">{{ evt.timeLabel }} {{ evt.timeAmpm }}</span>
+                <span class="we-name">{{ evt.providerName }}</span>
+                <span class="we-reason">{{ evt.reason }}</span>
+              </div>
             </div>
           </div>
         </div>
+
       </div>
-    </div>
-    
-    <div class="legend">
-      <div class="legend-item"><span class="dot in-person"></span> In-Person Consultation</div>
-      <div class="legend-item"><span class="dot telehealth"></span> Telehealth Session</div>
-    </div>
+
+      <div class="legend">
+        <div class="legend-item"><span class="dot in-person"></span> In-Person Consultation</div>
+        <div class="legend-item"><span class="dot telehealth"></span> Telehealth Session</div>
+        <a routerLink="/app/new-consultation" class="btn-new-consultation">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          New Consultation
+        </a>
+      </div>
+    </ng-container>
+
+    <!-- ── DAY VIEW ── -->
+    <ng-container *ngIf="activeView() === 'Day'">
+      <div class="calendar-card day-card">
+
+        <!-- Day Header -->
+        <div class="day-view-header" [class.is-today]="isDayToday()">
+          <div class="dvh-inner">
+            <span class="dvh-weekday">{{ viewDate().toLocaleDateString('en-US', { weekday: 'long' }) }}</span>
+            <span class="dvh-date" [class.today-circle]="isDayToday()">{{ viewDate().getDate() }}</span>
+          </div>
+        </div>
+
+        <!-- Day Time Slots -->
+        <div class="week-body">
+          <div class="week-row" *ngFor="let slot of timeSlots">
+            <div class="time-gutter">{{ slot.label }}</div>
+            <div class="day-col" [class.is-today-col]="isDayToday()">
+              <div class="week-event"
+                   *ngFor="let evt of eventsForDaySlot(slot.hour)"
+                   [class.in-person]="evt.type === 'in-person'"
+                   [class.telehealth]="evt.type === 'telehealth'">
+                <span class="we-time">{{ evt.timeLabel }} {{ evt.timeAmpm }}</span>
+                <span class="we-name">{{ evt.providerName }}</span>
+                <span class="we-reason">{{ evt.reason }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty day state -->
+        <div class="empty-day" *ngIf="dayEvents().length === 0">
+          <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#CBD5E1" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <p>No appointments on this day</p>
+          <a routerLink="/app/new-consultation" class="btn-schedule-day">+ Schedule one</a>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><span class="dot in-person"></span> In-Person</div>
+        <div class="legend-item"><span class="dot telehealth"></span> Telehealth</div>
+        <a routerLink="/app/new-consultation" class="btn-new-consultation">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          New Consultation
+        </a>
+      </div>
+    </ng-container>
+
   </div>
 
-  <!-- Right Side: Sidebar -->
+  <!-- ══════════════ RIGHT: Sidebar ══════════════ -->
   <div class="right-sidebar">
-    
+
     <!-- Daily Agenda -->
     <div class="sidebar-card">
       <div class="card-header">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--color-primary)" stroke-width="2">
           <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
           <line x1="16" y1="2" x2="16" y2="6"></line>
-          <line x1="8" y1="2" x2="8" y2="6"></line>
-          <line x1="3" y1="10" x2="21" y2="10"></line>
+          <line x1="8"  y1="2" x2="8"  y2="6"></line>
+          <line x1="3"  y1="10" x2="21" y2="10"></line>
         </svg>
         <h3>Daily Agenda</h3>
       </div>
-      
-      <div class="agenda-list">
-        <div class="agenda-item" *ngFor="let item of dailyAgenda">
+
+      <div class="agenda-list" *ngIf="todayAgenda().length > 0">
+        <div class="agenda-item" *ngFor="let item of todayAgenda()">
           <div class="agenda-time">
-            <span class="time">{{ item.time }}</span>
-            <span class="ampm">{{ item.ampm }}</span>
+            <span class="time">{{ item.timeLabel }}</span>
+            <span class="ampm">{{ item.timeAmpm }}</span>
           </div>
+          <div class="agenda-divider"></div>
           <div class="agenda-details">
-            <span class="name">{{ item.name }}</span>
-            <span class="desc">{{ item.desc }}</span>
+            <span class="a-name">{{ item.providerName }}</span>
+            <span class="a-desc">{{ item.reason }}</span>
           </div>
         </div>
       </div>
-      
+
+      <div class="agenda-empty" *ngIf="todayAgenda().length === 0">
+        <p>No appointments today.</p>
+      </div>
+
       <button class="btn-full-width">View Full Agenda</button>
     </div>
 
@@ -74,12 +200,11 @@
       <div class="card-header alert-header">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#dc2626" stroke-width="2">
           <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="8"  x2="12"    y2="12"></line>
           <line x1="12" y1="16" x2="12.01" y2="16"></line>
         </svg>
         <h3 class="alert-title">Urgent Waitlist</h3>
       </div>
-      
       <div class="waitlist">
         <div class="waitlist-item" *ngFor="let patient of urgentWaitlist">
           <div class="avatar-placeholder">
@@ -104,7 +229,7 @@
           <polyline points="17 6 23 6 23 12"></polyline>
         </svg>
       </div>
-      <div class="rate-val">88%</div>
+      <div class="rate-val">{{ occupancyRate }}%</div>
       <div class="rate-label">Occupancy Rate</div>
     </div>
 

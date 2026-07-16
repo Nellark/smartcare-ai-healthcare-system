@@ -18,6 +18,9 @@ export class OnboardingComponent {
     fullName: ''
   };
 
+  isSubmitting = false;
+  showSuccessModal = false;
+
   constructor(private router: Router) {}
 
   nextStep() {
@@ -25,9 +28,15 @@ export class OnboardingComponent {
   }
 
   completeOnboarding() {
-    // Here we would typically save to the backend. 
-    // For now, we'll just mock saving and redirect to dashboard.
-    console.log('Onboarding complete:', this.onboardingData);
+    this.isSubmitting = true;
+    // Simulate API call
+    setTimeout(() => {
+      this.isSubmitting = false;
+      this.showSuccessModal = true;
+    }, 800);
+  }
+  
+  goToDashboard() {
     this.router.navigate(['/app/dashboard']);
   }
 }

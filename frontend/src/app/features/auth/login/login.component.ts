@@ -29,7 +29,12 @@ export class LoginComponent {
 
     this.authService.login(this.credentials).subscribe({
       next: () => {
-        this.router.navigate(['/app/dashboard']);
+        const userRole = this.authService.currentUserRole();
+        if (userRole === 'Patient') {
+          this.router.navigate(['/app/patient-dashboard']);
+        } else {
+          this.router.navigate(['/app/dashboard']);
+        }
       },
       error: (err) => {
         this.isLoading = false;

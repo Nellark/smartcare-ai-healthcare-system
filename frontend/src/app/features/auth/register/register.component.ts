@@ -12,9 +12,13 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  userData = { fullName: '', hospitalName: '', email: '', license: '', password: '' };
+  userData = { fullName: '', hospitalName: '', email: '', license: '', password: '', role: 'Doctor' };
   errorMessage = '';
   isLoading = false;
+
+  setRole(role: string) {
+    this.userData.role = role;
+  }
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -29,9 +33,18 @@ export class RegisterComponent {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.authService.register({ email: this.userData.email, password: this.userData.password }).subscribe({
+    this.authService.register({ 
+      email: this.userData.email, 
+      password: this.userData.password,
+      role: this.userData.role 
+    }).subscribe({
       next: () => {
-        this.router.navigate(['/onboarding']);
+        const userRole = this.authService.currentUserRole();
+        if (userRole === 'Patient') {
+          this.router.navigate(['/app/patient-dashboard']);
+        } else {
+          this.router.navigate(['/app/dashboard']);
+        }
       },
       error: (err) => {
         this.isLoading = false;

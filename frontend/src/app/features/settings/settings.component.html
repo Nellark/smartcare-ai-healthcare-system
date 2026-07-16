@@ -1,0 +1,262 @@
+<div class="profile-page full-width">
+
+  <!-- TOP CARD: Profile Summary -->
+  <div class="card profile-header-card">
+    <div class="profile-header-content">
+      
+      <div class="profile-avatar-wrapper" [class.editing]="isEditing">
+        
+        <ng-container *ngIf="profile.avatar; else fallbackAvatar">
+          <img [src]="profile.avatar" [alt]="profile.name" class="profile-avatar">
+        </ng-container>
+        <ng-template #fallbackAvatar>
+          <div class="profile-avatar fallback-avatar-large">
+            {{ profile.name.charAt(0) || 'U' }}
+          </div>
+        </ng-template>
+
+        <!-- Hover Overlay for Image Upload (only when editing) -->
+        <div class="avatar-edit-overlay" *ngIf="isEditing">
+          <label class="overlay-action">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+              <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+            <span>Change</span>
+            <input type="file" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+          </label>
+          <button class="overlay-action remove-btn" *ngIf="profile.avatar" (click)="removeAvatar()">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            <span>Remove</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="profile-info-main">
+        <div class="profile-name-row">
+          <ng-container *ngIf="!isEditing; else editName">
+            <h1>{{ profile.name }}</h1>
+          </ng-container>
+          <ng-template #editName>
+            <input type="text" class="edit-input header-input h1-input" [(ngModel)]="profile.name" placeholder="Name">
+          </ng-template>
+
+          <div class="verified-badge" *ngIf="!isEditing">
+            <span class="verified-text">Verified<br>Practitioner</span>
+          </div>
+        </div>
+
+        <ng-container *ngIf="!isEditing; else editRole">
+          <h2 class="profile-role">{{ profile.role }}</h2>
+        </ng-container>
+        <ng-template #editRole>
+          <input type="text" class="edit-input header-input h2-input" [(ngModel)]="profile.role" placeholder="Role & Specialty">
+        </ng-template>
+
+        <div class="profile-location">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" *ngIf="!isEditing">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <ng-container *ngIf="!isEditing; else editLocation">
+            {{ profile.location }}
+          </ng-container>
+          <ng-template #editLocation>
+            <input type="text" class="edit-input header-input loc-input" [(ngModel)]="profile.location" placeholder="Location">
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        <!-- Not Editing -->
+        <button class="btn-edit-profile" *ngIf="!isEditing" (click)="toggleEdit()">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 20h9"></path>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+          </svg>
+          Edit Profile
+        </button>
+
+        <!-- Editing -->
+        <div class="edit-actions-group" *ngIf="isEditing">
+          <button class="btn-cancel" (click)="cancelEdit()">Cancel</button>
+          <button class="btn-save" (click)="saveProfile()">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MIDDLE GRID -->
+  <div class="profile-grid">
+    
+    <!-- LEFT COLUMN -->
+    <div class="profile-col-left">
+      <!-- Personal Details -->
+      <div class="card details-card" [class.editing-card]="isEditing">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <h3>Personal Details</h3>
+        </div>
+        <div class="details-list">
+          
+          <div class="detail-item">
+            <span class="detail-label">FULL LEGAL NAME</span>
+            <span class="detail-value" *ngIf="!isEditing">{{ profile.fullName }}</span>
+            <input type="text" class="edit-input" *ngIf="isEditing" [(ngModel)]="profile.fullName">
+          </div>
+          
+          <div class="detail-item">
+            <span class="detail-label">EMAIL ADDRESS</span>
+            <span class="detail-value" *ngIf="!isEditing">{{ profile.email }}</span>
+            <input type="email" class="edit-input" *ngIf="isEditing" [(ngModel)]="profile.email">
+          </div>
+          
+          <div class="detail-item">
+            <span class="detail-label">CONTACT NUMBER</span>
+            <span class="detail-value" *ngIf="!isEditing">{{ profile.contact }}</span>
+            <input type="tel" class="edit-input" *ngIf="isEditing" [(ngModel)]="profile.contact">
+          </div>
+          
+          <div class="detail-item">
+            <span class="detail-label">OFFICE LOCATION</span>
+            <span class="detail-value" *ngIf="!isEditing">{{ profile.office }}</span>
+            <input type="text" class="edit-input" *ngIf="isEditing" [(ngModel)]="profile.office">
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Availability Card -->
+      <div class="card availability-card">
+        <h4 class="availability-title">AVAILABLE FOR CONSULT</h4>
+        <p class="availability-text" *ngIf="!isEditing">{{ profile.hours }}</p>
+        <input type="text" class="edit-input avail-input" *ngIf="isEditing" [(ngModel)]="profile.hours">
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="profile-col-right" [class.editing-faded]="isEditing">
+      <!-- Professional Credentials -->
+      <div class="card credentials-card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          <h3>Professional Credentials</h3>
+          <span class="read-only-badge" *ngIf="isEditing">Read Only</span>
+        </div>
+        
+        <div class="credentials-content">
+          <div class="cred-left">
+            <div class="section-heading">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              Licenses & Board
+            </div>
+            <div class="license-list">
+              <div class="license-item" *ngFor="let lic of credentials.licenses">
+                <span class="license-type">{{ lic.type }}</span>
+                <span class="license-code" [class.verified]="lic.verified">
+                  <svg *ngIf="lic.verified" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  {{ lic.code }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cred-right">
+            <div class="section-heading">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+              Education History
+            </div>
+            <div class="education-timeline">
+              <div class="edu-item" *ngFor="let edu of credentials.education">
+                <div class="edu-dot"></div>
+                <div class="edu-info">
+                  <span class="edu-school">{{ edu.school }}</span>
+                  <span class="edu-degree">{{ edu.degree }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accomplishments-section">
+          <h4 class="acc-title">Recent Accomplishments</h4>
+          <div class="acc-list">
+            <div class="acc-item" *ngFor="let acc of credentials.accomplishments">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              {{ acc }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM CARD: Account Settings -->
+  <div class="card account-settings-card" [class.editing-faded]="isEditing">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.68 9c.13-.6-.09-1.34-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06c.48.24 1.22.46 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51c.6.13 1.34-.09 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06c-.24.48-.46 1.22-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+      <h3>Account Settings</h3>
+      <span class="read-only-badge" *ngIf="isEditing">Read Only</span>
+    </div>
+
+    <div class="settings-list">
+      <div class="settings-item">
+        <div class="settings-icon">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        </div>
+        <div class="settings-info">
+          <h4>Notification Preferences</h4>
+          <p>Manage email, push, and emergency pager alerts</p>
+        </div>
+        <div class="settings-arrow">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </div>
+      </div>
+
+      <div class="settings-item">
+        <div class="settings-icon">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        </div>
+        <div class="settings-info">
+          <h4>Security & Password</h4>
+          <p>Change your password and enable 2FA</p>
+        </div>
+        <div class="settings-arrow">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </div>
+      </div>
+
+      <div class="settings-item">
+        <div class="settings-icon">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+        </div>
+        <div class="settings-info">
+          <h4>Language & Region</h4>
+          <p>Set your preferred clinical reporting language</p>
+        </div>
+        <div class="settings-action">
+          <span class="settings-val">English (US)</span>
+        </div>
+        <div class="settings-arrow">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Info -->
+  <div class="profile-footer">
+    Last login: Oct 24, 2023 - 07:14 AM from Internal Network IP: 10.0.1.42
+  </div>
+
+</div>

@@ -1,4 +1,15 @@
 /* ========================
+   Host element fix
+======================== */
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ========================
    Sidebar Container
 ======================== */
 .sidebar-container {
@@ -162,16 +173,63 @@
   transition: all 0.15s;
 }
 
-.bottom-link:hover {
-  background: #F8FAFC;
+/* User Card */
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #F1F5F9;
+  margin-top: 0.5rem;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 50%;
+  background: #026C7C;
+  color: white;
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-email {
+  font-size: 0.8rem;
+  font-weight: 600;
   color: #0F172A;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.logout-link {
-  color: #DC2626;
+.user-role {
+  font-size: 0.72rem;
+  color: #64748B;
+  font-weight: 500;
 }
 
-.logout-link:hover {
+.logout-btn {
+  background: none;
+  border: none;
+  color: #94A3B8;
+  cursor: pointer;
+  padding: 0.3rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  transition: all 0.15s;
+}
+
+.logout-btn:hover {
   background: #FEF2F2;
-  color: #991B1B;
+  color: #DC2626;
 }
