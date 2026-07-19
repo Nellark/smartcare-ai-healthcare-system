@@ -1,237 +1,138 @@
-<div class="page-container">
+<div class="appointments-page">
 
-  <!-- ══════════════ LEFT: Calendar ══════════════ -->
-  <div class="main-content">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-titles">
+      <span class="eyebrow">PORTAL DASHBOARD</span>
+      <h1 class="main-title">Your Appointments</h1>
+    </div>
+    <button class="btn btn-primary">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      Schedule New Appointment
+    </button>
+  </div>
 
-    <div class="header-row">
-      <div class="header-titles">
-        <h2>Schedule Overview</h2>
-        <div class="month-nav">
-          <button class="nav-arrow" (click)="prev()">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          </button>
-          <p>{{ headerLabel() }}</p>
-          <button class="nav-arrow" (click)="next()">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-          </button>
-          <button class="today-btn" (click)="goToday()">Today</button>
+  <!-- Scheduled Visits -->
+  <div class="section scheduled-visits">
+    <div class="section-header">
+      <h2>Scheduled Visits</h2>
+      <span class="badge badge-yellow">2 UPCOMING</span>
+    </div>
+
+    <div class="visits-container">
+      
+      <!-- Full Image Card -->
+      <div class="visit-card full-card" *ngIf="upcomingVisits[0]">
+        <div class="card-image" [style.background-image]="'url(' + upcomingVisits[0].imageUrl + ')'"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <span class="badge badge-light">{{ upcomingVisits[0].badge }}</span>
+            <button class="btn-more">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+            </button>
+          </div>
+          <h3 class="card-title">{{ upcomingVisits[0].title }}</h3>
+          <p class="card-desc">{{ upcomingVisits[0].description }}</p>
+          
+          <div class="card-bottom">
+            <div class="info-block">
+              <div class="icon-wrap">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              </div>
+              <div class="info-text">
+                <span class="label">DATE</span>
+                <span class="value">{{ upcomingVisits[0].date }}</span>
+              </div>
+            </div>
+            <div class="info-block">
+              <div class="icon-wrap">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              </div>
+              <div class="info-text">
+                <span class="label">TIME</span>
+                <span class="value">{{ upcomingVisits[0].time }}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="view-toggles">
-        <button class="toggle-btn"
-                *ngFor="let v of views"
-                [class.active]="activeView() === v"
-                (click)="setView(v)">
-          {{ v }}
+
+      <!-- Compact Card -->
+      <div class="visit-card compact-card" *ngIf="upcomingVisits[1]">
+        <div class="compact-icon-placeholder"></div>
+        <h3 class="card-title">{{ upcomingVisits[1].title }}</h3>
+        <p class="card-desc">{{ upcomingVisits[1].description }}</p>
+        
+        <div class="compact-details">
+          <div class="detail-row">
+            <span class="detail-label">PHYSICIAN</span>
+            <span class="detail-value">{{ upcomingVisits[1].physician }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">ROOM</span>
+            <span class="detail-value">{{ upcomingVisits[1].room }}</span>
+          </div>
+        </div>
+        
+        <button class="btn btn-outline-white" *ngIf="upcomingVisits[1].hasPreparation">
+          View Preparation
         </button>
       </div>
+
     </div>
-
-    <!-- ── MONTH VIEW ── -->
-    <ng-container *ngIf="activeView() === 'Month'">
-      <div class="calendar-card">
-        <div class="calendar-grid">
-          <div class="day-header" *ngFor="let day of daysOfWeek">{{ day }}</div>
-          <ng-container *ngFor="let week of calendarWeeks()">
-            <div class="calendar-cell"
-                 *ngFor="let cell of week"
-                 [class.other-month]="!cell.isCurrentMonth"
-                 [class.is-today]="cell.isToday">
-              <span class="date-num">
-                {{ cell.date }}
-                <span class="today-dot" *ngIf="cell.isToday"></span>
-              </span>
-              <div class="events-list">
-                <div class="event-pill"
-                     *ngFor="let event of cell.events"
-                     [class.in-person]="event.type === 'in-person'"
-                     [class.telehealth]="event.type === 'telehealth'">
-                  <span *ngIf="event.type === 'telehealth'" class="pill-prefix">Tele: </span>{{ event.providerName.split(' ').slice(-1)[0] }} – {{ event.reason }}
-                </div>
-              </div>
-            </div>
-          </ng-container>
-        </div>
-      </div>
-
-      <div class="legend">
-        <div class="legend-item"><span class="dot in-person"></span> In-Person Consultation</div>
-        <div class="legend-item"><span class="dot telehealth"></span> Telehealth Session</div>
-        <a routerLink="/app/new-consultation" class="btn-new-consultation">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-          New Consultation
-        </a>
-      </div>
-    </ng-container>
-
-    <!-- ── WEEK VIEW ── -->
-    <ng-container *ngIf="activeView() === 'Week'">
-      <div class="calendar-card week-card">
-
-        <!-- Week Header Row -->
-        <div class="week-header-row">
-          <div class="time-gutter-header"></div>
-          <div class="week-day-header"
-               *ngFor="let day of weekDays()"
-               [class.is-today]="day.isToday">
-            <span class="wdh-name">{{ day.label }}</span>
-            <span class="wdh-date" [class.today-circle]="day.isToday">{{ day.shortDate }}</span>
-          </div>
-        </div>
-
-        <!-- Week Body: time slots -->
-        <div class="week-body">
-          <div class="week-row" *ngFor="let slot of timeSlots">
-            <div class="time-gutter">{{ slot.label }}</div>
-            <div class="week-cell"
-                 *ngFor="let day of weekDays()"
-                 [class.is-today-col]="day.isToday">
-              <div class="week-event"
-                   *ngFor="let evt of eventsForSlot(day, slot.hour)"
-                   [class.in-person]="evt.type === 'in-person'"
-                   [class.telehealth]="evt.type === 'telehealth'">
-                <span class="we-time">{{ evt.timeLabel }} {{ evt.timeAmpm }}</span>
-                <span class="we-name">{{ evt.providerName }}</span>
-                <span class="we-reason">{{ evt.reason }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="legend">
-        <div class="legend-item"><span class="dot in-person"></span> In-Person Consultation</div>
-        <div class="legend-item"><span class="dot telehealth"></span> Telehealth Session</div>
-        <a routerLink="/app/new-consultation" class="btn-new-consultation">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-          New Consultation
-        </a>
-      </div>
-    </ng-container>
-
-    <!-- ── DAY VIEW ── -->
-    <ng-container *ngIf="activeView() === 'Day'">
-      <div class="calendar-card day-card">
-
-        <!-- Day Header -->
-        <div class="day-view-header" [class.is-today]="isDayToday()">
-          <div class="dvh-inner">
-            <span class="dvh-weekday">{{ viewDate().toLocaleDateString('en-US', { weekday: 'long' }) }}</span>
-            <span class="dvh-date" [class.today-circle]="isDayToday()">{{ viewDate().getDate() }}</span>
-          </div>
-        </div>
-
-        <!-- Day Time Slots -->
-        <div class="week-body">
-          <div class="week-row" *ngFor="let slot of timeSlots">
-            <div class="time-gutter">{{ slot.label }}</div>
-            <div class="day-col" [class.is-today-col]="isDayToday()">
-              <div class="week-event"
-                   *ngFor="let evt of eventsForDaySlot(slot.hour)"
-                   [class.in-person]="evt.type === 'in-person'"
-                   [class.telehealth]="evt.type === 'telehealth'">
-                <span class="we-time">{{ evt.timeLabel }} {{ evt.timeAmpm }}</span>
-                <span class="we-name">{{ evt.providerName }}</span>
-                <span class="we-reason">{{ evt.reason }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Empty day state -->
-        <div class="empty-day" *ngIf="dayEvents().length === 0">
-          <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#CBD5E1" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-          <p>No appointments on this day</p>
-          <a routerLink="/app/new-consultation" class="btn-schedule-day">+ Schedule one</a>
-        </div>
-      </div>
-
-      <div class="legend">
-        <div class="legend-item"><span class="dot in-person"></span> In-Person</div>
-        <div class="legend-item"><span class="dot telehealth"></span> Telehealth</div>
-        <a routerLink="/app/new-consultation" class="btn-new-consultation">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-          New Consultation
-        </a>
-      </div>
-    </ng-container>
-
   </div>
 
-  <!-- ══════════════ RIGHT: Sidebar ══════════════ -->
-  <div class="right-sidebar">
-
-    <!-- Daily Agenda -->
-    <div class="sidebar-card">
-      <div class="card-header">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--color-primary)" stroke-width="2">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="16" y1="2" x2="16" y2="6"></line>
-          <line x1="8"  y1="2" x2="8"  y2="6"></line>
-          <line x1="3"  y1="10" x2="21" y2="10"></line>
-        </svg>
-        <h3>Daily Agenda</h3>
-      </div>
-
-      <div class="agenda-list" *ngIf="todayAgenda().length > 0">
-        <div class="agenda-item" *ngFor="let item of todayAgenda()">
-          <div class="agenda-time">
-            <span class="time">{{ item.timeLabel }}</span>
-            <span class="ampm">{{ item.timeAmpm }}</span>
-          </div>
-          <div class="agenda-divider"></div>
-          <div class="agenda-details">
-            <span class="a-name">{{ item.providerName }}</span>
-            <span class="a-desc">{{ item.reason }}</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="agenda-empty" *ngIf="todayAgenda().length === 0">
-        <p>No appointments today.</p>
-      </div>
-
-      <button class="btn-full-width">View Full Agenda</button>
+  <!-- Appointment History -->
+  <div class="section appointment-history">
+    <div class="section-header">
+      <h2>Appointment History</h2>
+      <a href="#" class="link-action">VIEW FULL ARCHIVE</a>
     </div>
 
-    <!-- Urgent Waitlist -->
-    <div class="sidebar-card">
-      <div class="card-header alert-header">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#dc2626" stroke-width="2">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="8"  x2="12"    y2="12"></line>
-          <line x1="12" y1="16" x2="12.01" y2="16"></line>
-        </svg>
-        <h3 class="alert-title">Urgent Waitlist</h3>
+    <div class="history-table">
+      <div class="th-row">
+        <div class="th-col col-service">SERVICE & CLINICIAN</div>
+        <div class="th-col col-date">DATE</div>
+        <div class="th-col col-status">STATUS</div>
+        <div class="th-col col-doc">DOCUMENTATION</div>
       </div>
-      <div class="waitlist">
-        <div class="waitlist-item" *ngFor="let patient of urgentWaitlist">
-          <div class="avatar-placeholder">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
+
+      <div class="tr-row" *ngFor="let history of historyVisits">
+        <div class="td-col col-service">
+          <div class="service-icon">
+            <svg *ngIf="history.iconType === 'stethoscope'" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 5 5 5 9V12C5 13.5 6.5 15 8 15C9.5 15 11 13.5 11 12V9C11 8.5 11.5 8 12 8C12.5 8 13 8.5 13 9V17C13 18.5 14.5 20 16 20C17.5 20 19 18.5 19 17V9C19 5 16 2 12 2Z"></path><circle cx="8" cy="17" r="2"></circle></svg>
+            <svg *ngIf="history.iconType === 'syringe'" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="4"></rect><rect x="10" y="6" width="4" height="10"></rect><path d="M12 16v6"></path><path d="M8 22h8"></path><line x1="8" y1="10" x2="16" y2="10"></line></svg>
+            <svg *ngIf="history.iconType === 'leaf'" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 1 8.3C18.9 14.5 15 20 11 20z"></path><line x1="11" y1="20" x2="15" y2="12"></line></svg>
           </div>
-          <div class="waitlist-info">
-            <span class="w-name">{{ patient.name }}</span>
-            <span class="w-wait">Wait time: {{ patient.wait }}</span>
+          <div class="service-info">
+            <span class="service-name">{{ history.service }}</span>
+            <span class="service-doc">{{ history.clinician }}</span>
           </div>
+        </div>
+        <div class="td-col col-date">{{ history.date }}</div>
+        <div class="td-col col-status">
+          <span class="badge" [ngClass]="{'badge-green': history.status === 'COMPLETED', 'badge-gray': history.status === 'ARCHIVED'}">
+            {{ history.status }}
+          </span>
+        </div>
+        <div class="td-col col-doc">
+          <a href="#" class="doc-link">
+            <svg *ngIf="history.iconType !== 'syringe'" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            <svg *ngIf="history.iconType === 'syringe'" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+            {{ history.docText }}
+          </a>
         </div>
       </div>
     </div>
-
-    <!-- Occupancy Rate -->
-    <div class="sidebar-card green-card">
-      <div class="icon-up">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#16a34a" stroke-width="2">
-          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-          <polyline points="17 6 23 6 23 12"></polyline>
-        </svg>
-      </div>
-      <div class="rate-val">{{ occupancyRate }}%</div>
-      <div class="rate-label">Occupancy Rate</div>
-    </div>
-
   </div>
+
+  <!-- Preparedness Banner -->
+  <div class="preparedness-banner">
+    <div class="banner-content">
+      <h2>Patient Preparedness</h2>
+      <p>Ensure you have your current insurance identification and a comprehensive list of medications prepared before your visit to facilitate an efficient scholarly review of your wellness profile.</p>
+    </div>
+    <button class="btn btn-white">VIEW PATIENT GUIDE</button>
+  </div>
+
 </div>

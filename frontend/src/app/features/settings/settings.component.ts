@@ -1,7 +1,21 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProfileService, UserProfile } from '../../core/services/profile.service';
+import { ProfileService } from '../../core/services/profile.service';
+
+interface UserSettings {
+  fullName: string;
+  email: string;
+  phone: string;
+  altPhone: string;
+  address: string;
+  twoFactorEnabled: boolean;
+  passwordLastChanged: string;
+  emailNotifications: boolean;
+  smsNotifications: boolean;
+  resultsPortalSync: boolean;
+  weeklyHealthDigest: boolean;
+}
 
 @Component({
   selector: 'app-settings',
@@ -11,66 +25,75 @@ import { ProfileService, UserProfile } from '../../core/services/profile.service
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
-  profileService = inject(ProfileService);
-  
-  isEditing = false;
-  profile!: UserProfile;
+  private profileService = inject(ProfileService);
 
-  credentials = {
-    licenses: [
-      { type: 'Medical License', code: '#MED-209931-JS' },
-      { type: 'Board Certified', code: 'Surgery', verified: true }
-    ],
-    education: [
-      { school: 'Johns Hopkins Medicine', degree: 'Residency in General Surgery • 2018-2022' },
-      { school: 'Stanford Medical School', degree: 'Doctor of Medicine (M.D.) • 2014-2018' },
-      { school: 'UC Berkeley', degree: 'B.S. Molecular Biology • 2010-2014' }
-    ],
-    accomplishments: [
-      'Top Performer 2023',
-      'Clinical Research Lead',
-      'ER Trauma Certified'
-    ]
+  profile: UserSettings = {
+    fullName: '',
+    email: '',
+    phone: '',
+    altPhone: '',
+    address: '',
+    twoFactorEnabled: true,
+    passwordLastChanged: 'Last changed 4 months ago',
+    emailNotifications: true,
+    smsNotifications: false,
+    resultsPortalSync: true,
+    weeklyHealthDigest: false
   };
 
+  isSaving = false;
+  saveSuccess = false;
+
   ngOnInit() {
-    this.initWorkingCopy();
+    const userProfile = this.profileService.currentProfile();
+    this.profile.fullName = userProfile.fullName || userProfile.name;
+    this.profile.email = userProfile.email;
+    this.profile.phone = userProfile.contact !== 'Not provided' ? userProfile.contact : '+27 (82) 123-4567';
+    this.profile.altPhone = '+27 (71) 987-6543'; // Default fallback
+    this.profile.address = userProfile.office !== 'Not provided' ? userProfile.office : 'Block B, Nelson Mandela Square, Sandton, 2196';
   }
 
-  initWorkingCopy() {
-    this.profile = { ...this.profileService.currentProfile() };
+  saveProfile() {
+    this.isSaving = true;
+    this.saveSuccess = false;
+
+    // Simulate API call
+    setTimeout(() => {
+      this.profileService.updateProfile({
+        fullName: this.profile.fullName,
+        name: this.profile.fullName,
+        email: this.profile.email,
+        contact: this.profile.phone,
+        office: this.profile.address
+      });
+      
+      this.isSaving = false;
+      this.saveSuccess = true;
+      
+      // Reset success message after 3 seconds
+      setTimeout(() => {
+        this.saveSuccess = false;
+      }, 3000);
+    }, 800);
   }
 
-  toggleEdit(): void {
-    if (!this.isEditing) {
-      this.initWorkingCopy();
-      this.isEditing = true;
-    }
+  toggle2FA() {
+    this.profile.twoFactorEnabled = !this.profile.twoFactorEnabled;
   }
 
-  saveProfile(): void {
-    this.profileService.updateProfile(this.profile);
-    this.isEditing = false;
+  toggleEmailNotifications() {
+    this.profile.emailNotifications = !this.profile.emailNotifications;
   }
 
-  cancelEdit(): void {
-    this.initWorkingCopy();
-    this.isEditing = false;
+  toggleSmsNotifications() {
+    this.profile.smsNotifications = !this.profile.smsNotifications;
   }
 
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.profile.avatar = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
+  toggleResultsPortalSync() {
+    this.profile.resultsPortalSync = !this.profile.resultsPortalSync;
   }
 
-  removeAvatar(): void {
-    this.profile.avatar = '';
+  toggleWeeklyHealthDigest() {
+    this.profile.weeklyHealthDigest = !this.profile.weeklyHealthDigest;
   }
 }

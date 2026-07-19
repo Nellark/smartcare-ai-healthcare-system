@@ -29,9 +29,6 @@ public class MedicalRecordEntity : IAuditableEntity
     public string DoctorId { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
-
-    // Navigation property
-    public PatientEntity Patient { get; set; } = null!;
 }
 
 public interface IAuditableEntity

@@ -1,0 +1,48 @@
+{
+  "upcomingVisits": [
+    {
+      "type": "full",
+      "badge": "ANNUAL WELLNESS",
+      "title": "Annual Wellness Review",
+      "description": "A comprehensive evaluation of your current health status and preventative care screening with Dr. Aris Thorne.",
+      "date": "October 24, 2024",
+      "time": "09:30 AM",
+      "imageUrl": "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2053&auto=format&fit=crop"
+    },
+    {
+      "type": "compact",
+      "badge": "",
+      "title": "Diagnostic Imaging",
+      "description": "Routine MRI scan of lower lumbar region. Please arrive 15 minutes early.",
+      "physician": "Dr. Elena Ross",
+      "room": "402-B Imaging",
+      "hasPreparation": true
+    }
+  ],
+  "historyVisits": [
+    {
+      "service": "Cardiology Follow-up",
+      "clinician": "Dr. Julian Vance",
+      "date": "Aug 12, 2024",
+      "status": "COMPLETED",
+      "docText": "Clinical Notes",
+      "iconType": "stethoscope"
+    },
+    {
+      "service": "Seasonal Immunization",
+      "clinician": "Nurse Sarah Jenkins",
+      "date": "Jul 29, 2024",
+      "status": "COMPLETED",
+      "docText": "Vax Record",
+      "iconType": "syringe"
+    },
+    {
+      "service": "Dermatology Consult",
+      "clinician": "Dr. Marcus Wu",
+      "date": "May 15, 2024",
+      "status": "ARCHIVED",
+      "docText": "Visit Summary",
+      "iconType": "leaf"
+    }
+  ]
+}

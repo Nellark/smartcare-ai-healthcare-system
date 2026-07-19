@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConsultationStoreService } from '../../core/services/consultation-store.service';
+import { MockDataService } from '../../core/services/mock-data.service';
+import { DoctorService } from '../../core/services/doctor.service';
 
 interface Provider {
-  id: number;
+  id: string;
   name: string;
   specialty: string;
   rating: number;
@@ -30,25 +32,22 @@ interface CalendarDay {
   templateUrl: './new-consultation.component.html',
   styleUrls: ['./new-consultation.component.css']
 })
-export class NewConsultationComponent {
-  constructor(private router: Router, private store: ConsultationStoreService) {
+export class NewConsultationComponent implements OnInit {
+  private router = inject(Router);
+  private store = inject(ConsultationStoreService);
+  private mockDataService = inject(MockDataService);
+  private doctorService = inject(DoctorService);
+
+  constructor() {
     this.buildCalendar();
   }
 
   currentStep = 1;
   searchQuery = '';
-  selectedReason = 'Annual Heart Check-up';
+  selectedReason = '';
   notes = '';
 
-  reasons = [
-    'Annual Heart Check-up',
-    'General Consultation',
-    'Follow-up Visit',
-    'Lab Results Review',
-    'Referral',
-    'Emergency Consultation'
-  ];
-
+  reasons: string[] = [];
   providers: Provider[] = [];
 
   get selectedProvider(): Provider | undefined {
@@ -58,6 +57,39 @@ export class NewConsultationComponent {
   selectProvider(provider: Provider): void {
     this.providers.forEach(p => p.selected = false);
     provider.selected = true;
+  }
+
+  ngOnInit(): void {
+    this.mockDataService.getNewConsultationData().subscribe({
+      next: (data) => {
+        this.reasons = data.reasons;
+        if (data.reasons.length > 0) {
+          this.selectedReason = data.reasons[0];
+        }
+        this.timeSlots = data.timeSlots;
+        const availableSlot = data.timeSlots.find((s: any) => s.available);
+        if (availableSlot) {
+          this.selectedTime = availableSlot.label;
+        }
+      }
+    });
+
+    this.doctorService.getAll().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.providers = response.data.map(d => ({
+            id: d.id,
+            name: `Dr. ${d.firstName} ${d.lastName}`,
+            specialty: d.specialty,
+            rating: 4.8,
+            reviews: 124,
+            bio: `Specialist in ${d.specialty} with years of clinical experience. Dedicated to providing personalized patient care.`,
+            avatarUrl: `https://ui-avatars.com/api/?name=${d.firstName}+${d.lastName}&background=026C7C&color=fff`,
+            selected: false
+          }));
+        }
+      }
+    });
   }
 
   // ─── Real Calendar Logic ───────────────────────────────────────
@@ -138,15 +170,8 @@ export class NewConsultationComponent {
   }
 
   // ─── Time Slots ────────────────────────────────────────────────
-  timeSlots = [
-    { label: '09:00', sub: 'AM', available: true },
-    { label: '10:30', sub: 'AM', available: true },
-    { label: '11:15', sub: 'AM', available: true },
-    { label: '01:00', sub: 'PM', available: true },
-    { label: '02:30', sub: 'PM', available: true },
-    { label: '03:15', sub: 'PM', available: false }
-  ];
-  selectedTime = '11:15';
+  timeSlots: { label: string; sub: string; available: boolean }[] = [];
+  selectedTime = '';
 
   selectTime(slot: { label: string; sub: string; available: boolean }): void {
     if (slot.available) this.selectedTime = slot.label;

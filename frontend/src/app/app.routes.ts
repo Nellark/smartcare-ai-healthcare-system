@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { authGuard } from './core/guards/auth.guard';
+import { providerGuard, patientGuard, dashboardRedirectGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   {
@@ -27,6 +28,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
+        canActivate: [providerGuard],
         loadComponent: () =>
           import('./features/dashboard/dashboard.component')
             .then(m => m.DashboardComponent)
@@ -34,6 +36,7 @@ export const routes: Routes = [
 
       {
         path: 'patients',
+        canActivate: [providerGuard],
         loadChildren: () =>
           import('./features/patients/patients.routes')
             .then(m => m.PATIENT_ROUTES)
@@ -51,6 +54,20 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/doctors/doctors.component')
             .then(m => m.DoctorsComponent)
+      },
+
+      {
+        path: 'messages',
+        loadComponent: () =>
+          import('./features/messages/messages.component')
+            .then(m => m.MessagesComponent)
+      },
+
+      {
+        path: 'billing',
+        loadComponent: () =>
+          import('./features/billing/billing.component')
+            .then(m => m.BillingComponent)
       },
 
       {
@@ -83,6 +100,7 @@ export const routes: Routes = [
 
       {
         path: 'patient-dashboard',
+        canActivate: [patientGuard],
         loadComponent: () =>
           import('./features/patient-dashboard/patient-dashboard.component')
             .then(m => m.PatientDashboardComponent)
@@ -90,8 +108,8 @@ export const routes: Routes = [
 
       {
         path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
+        canActivate: [dashboardRedirectGuard],
+        children: []
       }
     ]
   }

@@ -19,6 +19,9 @@ public static class DependencyInjection
 
         // Add repositories
         services.AddScoped<IPatientRepository, PatientRepository>();
+        services.AddScoped<IDoctorRepository, DoctorRepository>();
+        services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+        services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
         services.AddScoped(typeof(IRepository<,>), typeof(GenericRepository<,>));
 
         // Add domain services
@@ -32,8 +35,8 @@ public static class DependencyInjection
         using var scope = services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<SmartCareDbContext>();
         
-        // Create database if it doesn't exist
-        await context.Database.EnsureCreatedAsync();
+        // Apply any pending migrations on startup
+        await context.Database.MigrateAsync();
         
         // Seed data only if database is empty
         if (!await context.Patients.AnyAsync())

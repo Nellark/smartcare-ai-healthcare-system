@@ -31,20 +31,18 @@ public class ExceptionHandlingMiddleware
     {
         context.Response.ContentType = "application/json";
 
-        var response = exception switch
+        var (statusCode, response) = exception switch
         {
-            ArgumentException => CreateErrorResponse(context.Response.StatusCode, exception.Message),
-            InvalidOperationException => CreateErrorResponse(StatusCodes.Status400BadRequest, exception.Message),
-            UnauthorizedAccessException => CreateErrorResponse(StatusCodes.Status401Unauthorized, "Unauthorized access"),
+            ArgumentException => CreateErrorResponse(StatusCodes.Status400BadRequest, exception.Message),
             KeyNotFoundException => CreateErrorResponse(StatusCodes.Status404NotFound, "Resource not found"),
             _ => CreateErrorResponse(StatusCodes.Status500InternalServerError, "An unexpected error occurred")
         };
 
-        context.Response.StatusCode = response.StatusCode;
-        await context.Response.WriteAsync(JsonSerializer.Serialize(response.ApiResponse));
+        context.Response.StatusCode = statusCode;
+        await context.Response.WriteAsync(JsonSerializer.Serialize(response));
     }
 
-    private static (int StatusCode, object ApiResponse) CreateErrorResponse(int statusCode, string message)
+    private static (int StatusCode, ApiResponse ApiResponse) CreateErrorResponse(int statusCode, string message)
     {
         var apiResponse = statusCode switch
         {

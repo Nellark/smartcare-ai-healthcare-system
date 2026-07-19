@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "lp4P3Zqq56o=",
+  "dgSpecHash": "pOx6t7k9x14=",
   "success": true,
-  "projectFilePath": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/SmartCare.Domain.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/SmartCare.Domain.csproj",
+  "expectedPackageFiles": [
+    "/Users/yonelakulati/.nuget/packages/microsoft.netcore.app.ref/8.0.22/microsoft.netcore.app.ref.8.0.22.nupkg.sha512",
+    "/Users/yonelakulati/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.22/microsoft.aspnetcore.app.ref.8.0.22.nupkg.sha512"
+  ],
   "logs": []
 }

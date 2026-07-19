@@ -471,19 +471,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/damacm1156/.nuget/packages/": {}
+    "/Users/yonelakulati/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/SmartCare.Application.csproj",
+      "projectUniqueName": "/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/SmartCare.Application.csproj",
       "projectName": "SmartCare.Application",
-      "projectPath": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/SmartCare.Application.csproj",
-      "packagesPath": "/Users/damacm1156/.nuget/packages/",
-      "outputPath": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/obj/",
+      "projectPath": "/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/SmartCare.Application.csproj",
+      "packagesPath": "/Users/yonelakulati/.nuget/packages/",
+      "outputPath": "/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Application/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/damacm1156/.nuget/NuGet/NuGet.Config"
+        "/Users/yonelakulati/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -495,8 +495,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/SmartCare.Domain.csproj": {
-              "projectPath": "/Users/damacm1156/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/SmartCare.Domain.csproj"
+            "/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/SmartCare.Domain.csproj": {
+              "projectPath": "/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Domain/SmartCare.Domain.csproj"
             }
           }
         }
@@ -510,7 +510,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0": {
@@ -548,12 +549,22 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[8.0.22, 8.0.22]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[8.0.22, 8.0.22]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.414/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.308/PortableRuntimeIdentifierGraph.json"
       }
     }
   },

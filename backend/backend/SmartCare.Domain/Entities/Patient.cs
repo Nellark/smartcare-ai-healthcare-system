@@ -23,14 +23,23 @@ public sealed class Patient : AggregateRoot<PatientId>
         Email email,
         DateTime dateOfBirth,
         string phoneNumber,
-        string address) : base(id)
+        string address,
+        DateTime createdAt,
+        DateTime? updatedAt,
+        IEnumerable<MedicalRecord>? medicalRecords = null) : base(id)
     {
         Name = name;
         Email = email;
         DateOfBirth = dateOfBirth;
         PhoneNumber = phoneNumber;
         Address = address;
-        CreatedAt = DateTime.UtcNow;
+        CreatedAt = createdAt;
+        UpdatedAt = updatedAt;
+
+        if (medicalRecords != null)
+        {
+            _medicalRecords.AddRange(medicalRecords);
+        }
     }
 
     public static Result<Patient> Create(
@@ -50,11 +59,25 @@ public sealed class Patient : AggregateRoot<PatientId>
         if (string.IsNullOrWhiteSpace(address))
             return Result<Patient>.Failure(Error.InvalidInput);
 
-        var patient = new Patient(id, name, email, dateOfBirth, phoneNumber, address);
+        var patient = new Patient(id, name, email, dateOfBirth, phoneNumber, address, DateTime.UtcNow, null);
         
         patient.RaiseDomainEvent(new PatientCreatedEvent(patient.Id, patient.Email));
         
         return Result<Patient>.Success(patient);
+    }
+
+    public static Patient Rehydrate(
+        PatientId id,
+        FullName name,
+        Email email,
+        DateTime dateOfBirth,
+        string phoneNumber,
+        string address,
+        DateTime createdAt,
+        DateTime? updatedAt,
+        IEnumerable<MedicalRecord>? medicalRecords = null)
+    {
+        return new Patient(id, name, email, dateOfBirth, phoneNumber, address, createdAt, updatedAt, medicalRecords);
     }
 
     public Result<MedicalRecord> AddMedicalRecord(
@@ -68,7 +91,7 @@ public sealed class Patient : AggregateRoot<PatientId>
         if (string.IsNullOrWhiteSpace(doctorId))
             return Result<MedicalRecord>.Failure(Error.InvalidInput);
 
-        var medicalRecord = MedicalRecord.Create(recordId, diagnosis, treatment, notes, recordDate, doctorId);
+        var medicalRecord = MedicalRecord.Create(recordId, Id, diagnosis, treatment, notes, recordDate, doctorId);
         _medicalRecords.Add(medicalRecord);
         
         UpdatedAt = DateTime.UtcNow;

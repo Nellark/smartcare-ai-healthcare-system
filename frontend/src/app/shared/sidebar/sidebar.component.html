@@ -24,8 +24,8 @@
     </a>
 
     <!-- Only show Patients directory to providers -->
-    <a *ngIf="currentUserRole !== 'Patient'" routerLink="/app/dashboard" routerLinkActive="active"
-       [routerLinkActiveOptions]="{ exact: true }" class="nav-item">
+    <a *ngIf="currentUserRole !== 'Patient'" routerLink="/app/patients" routerLinkActive="active"
+       [routerLinkActiveOptions]="{ exact: false }" class="nav-item">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
         <circle cx="9" cy="7" r="4"></circle>
@@ -62,6 +62,21 @@
         <line x1="6" y1="20" x2="6" y2="14"></line>
       </svg>
       Analytics
+    </a>
+
+    <a routerLink="/app/messages" routerLinkActive="active" class="nav-item">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+      Messages
+    </a>
+
+    <a routerLink="/app/billing" routerLinkActive="active" class="nav-item">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect>
+        <line x1="2" y1="10" x2="22" y2="10"></line>
+      </svg>
+      Billing
     </a>
 
     <a routerLink="/app/settings" routerLinkActive="active" class="nav-item">

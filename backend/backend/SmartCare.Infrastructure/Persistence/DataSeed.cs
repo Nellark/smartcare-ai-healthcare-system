@@ -9,6 +9,7 @@ public static class DataSeed
     public static async Task SeedAsync(SmartCareDbContext context)
     {
         await SeedPatientsAsync(context);
+        await SeedDoctorsAsync(context);
     }
 
     private static async Task SeedPatientsAsync(SmartCareDbContext context)
@@ -82,6 +83,54 @@ public static class DataSeed
         };
 
         await context.Patients.AddRangeAsync(patients);
+        await context.SaveChangesAsync();
+    }
+
+    private static async Task SeedDoctorsAsync(SmartCareDbContext context)
+    {
+        if (await context.Doctors.AnyAsync())
+        {
+            return;
+        }
+
+        var doctors = new List<DoctorEntity>
+        {
+            new()
+            {
+                Id = Domain.ValueObjects.DoctorId.FromGuid(Guid.Parse("44444444-4444-4444-4444-444444444441")),
+                FirstName = "Ava",
+                LastName = "Mokoena",
+                Email = "ava.mokoena@smartcare.com",
+                Specialty = "General Practice",
+                PhoneNumber = "555-0201",
+                LicenseNumber = "LIC-GP-001",
+                CreatedAt = DateTime.UtcNow.AddDays(-40)
+            },
+            new()
+            {
+                Id = Domain.ValueObjects.DoctorId.FromGuid(Guid.Parse("44444444-4444-4444-4444-444444444442")),
+                FirstName = "Thabo",
+                LastName = "Ndlovu",
+                Email = "thabo.ndlovu@smartcare.com",
+                Specialty = "Cardiology",
+                PhoneNumber = "555-0202",
+                LicenseNumber = "LIC-CARD-002",
+                CreatedAt = DateTime.UtcNow.AddDays(-35)
+            },
+            new()
+            {
+                Id = Domain.ValueObjects.DoctorId.FromGuid(Guid.Parse("44444444-4444-4444-4444-444444444443")),
+                FirstName = "Lerato",
+                LastName = "Naidoo",
+                Email = "lerato.naidoo@smartcare.com",
+                Specialty = "Pediatrics",
+                PhoneNumber = "555-0203",
+                LicenseNumber = "LIC-PED-003",
+                CreatedAt = DateTime.UtcNow.AddDays(-30)
+            }
+        };
+
+        await context.Doctors.AddRangeAsync(doctors);
         await context.SaveChangesAsync();
     }
 }

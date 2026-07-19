@@ -1,0 +1,46 @@
+{
+  "totalBalance": "R1,248.50",
+  "dueDate": "October 15, 2024",
+  "nextPaymentDate": "Oct 12",
+  "autoPayAmount": "R150.00",
+  "transactions": [
+    {
+      "date": "Sep 24",
+      "year": "2024",
+      "title": "Consultation - Cardiology",
+      "invoiceId": "Inv #SC-98231",
+      "status": "PROCESSING",
+      "amount": "R340.00"
+    },
+    {
+      "date": "Sep 12",
+      "year": "2024",
+      "title": "Lab Work: Comprehensive Panel",
+      "invoiceId": "Inv #SC-98102",
+      "status": "PAID BY INSURANCE",
+      "amount": "R0.00"
+    },
+    {
+      "date": "Aug 28",
+      "year": "2024",
+      "title": "Physical Therapy Session",
+      "invoiceId": "Inv #SC-97992",
+      "status": "OVERDUE",
+      "amount": "R85.00"
+    },
+    {
+      "date": "Aug 15",
+      "year": "2024",
+      "title": "Diagnostic Imaging: MRI",
+      "invoiceId": "Inv #SC-97880",
+      "status": "COMPLETED",
+      "amount": "R823.50"
+    }
+  ],
+  "insurance": {
+    "provider": "BlueShield Horizon PPO",
+    "id": "#9928-1004-921",
+    "copay": "R25.00",
+    "deductible": "R2,000.00"
+  }
+}

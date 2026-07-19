@@ -1,13 +1,17 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SmartCare.Application;
 using SmartCare.Application.Common.DTOs;
+using SmartCare.API.Auth;
 using SmartCare.Infrastructure;
 using SmartCare.API.Middleware;
 using SmartCare.API.Health;
 using SmartCare.Infrastructure.Persistence;
 using Serilog;
 using Microsoft.OpenApi.Models;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +59,31 @@ builder.Services.AddSwaggerGen(c =>
     {
         c.IncludeXmlComments(xmlPath);
     }
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
 
 // Add CORS
@@ -67,6 +96,55 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader()
               .AllowCredentials();
     });
+});
+
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.SectionName));
+builder.Services.AddSingleton<ITokenService, JwtTokenService>();
+
+// Prevent ASP.NET Core from mapping standard claim types to Microsoft schemas
+System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
+    {
+        var jwtSettings = builder.Configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()
+            ?? throw new InvalidOperationException("JWT settings are missing.");
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwtSettings.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwtSettings.Audience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromMinutes(1),
+            RoleClaimType = "role",
+            NameClaimType = "name"
+        };
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ViewDashboard", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor, AppRoles.Patient));
+    options.AddPolicy("ViewDoctors", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor, AppRoles.Patient));
+    options.AddPolicy("ManageDoctors", policy => policy.RequireRole(AppRoles.Admin));
+    options.AddPolicy("DeleteDoctors", policy => policy.RequireRole(AppRoles.Admin));
+    options.AddPolicy("ViewAppointments", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor, AppRoles.Patient));
+    options.AddPolicy("ManageAppointments", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor));
+    options.AddPolicy("DeleteAppointments", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor));
+    options.AddPolicy("ViewMedicalRecords", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor, AppRoles.Patient));
+    options.AddPolicy("ManageMedicalRecords", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor));
+    options.AddPolicy("DeleteMedicalRecords", policy => policy.RequireRole(AppRoles.Admin));
+    options.AddPolicy("ViewPatientDetails", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor, AppRoles.Patient));
+    options.AddPolicy("ViewPatientList", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor));
+    options.AddPolicy("ManagePatients", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor));
+    options.AddPolicy("DeletePatients", policy => policy.RequireRole(AppRoles.Admin));
 });
 
 // Add application and infrastructure layers
@@ -98,8 +176,8 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowFrontend");
 
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 // Add health check endpoint

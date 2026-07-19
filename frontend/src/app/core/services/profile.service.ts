@@ -1,4 +1,4 @@
-import { Injectable, signal, inject } from '@angular/core';
+import { Injectable, signal, inject, computed } from '@angular/core';
 import { AuthService } from './auth.service';
 
 export interface UserProfile {
@@ -16,10 +16,29 @@ export interface UserProfile {
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
   private authService = inject(AuthService);
+  private updateTrigger = signal<number>(0);
 
-  // Load from localStorage or use defaults
-  private loadProfile(): UserProfile {
-    const saved = localStorage.getItem('userProfile');
+  // Dynamic profile computed based on current user email and role
+  readonly currentProfile = computed<UserProfile>(() => {
+    this.updateTrigger(); // Reactive dependency for manual updates
+    
+    const email = this.authService.currentUser();
+    if (!email) {
+      return {
+        name: 'User',
+        role: 'Patient',
+        location: 'SmartCare Clinic, Johannesburg',
+        avatar: '',
+        fullName: 'User',
+        email: '',
+        contact: '',
+        office: '',
+        hours: ''
+      };
+    }
+
+    const role = this.authService.currentUserRole() || 'Patient';
+    const saved = localStorage.getItem(`userProfile_${email}`);
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -27,31 +46,30 @@ export class ProfileService {
         // Fallback to default
       }
     }
-    
-    const email = this.authService.currentUser() || 'user@example.com';
-    const role = this.authService.currentUserRole() || 'Patient';
+
     const namePart = email.split('@')[0];
     const name = namePart.split('.').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
 
     return {
       name: role === 'Patient' ? name : `Dr. ${name}`,
       role: role,
-      location: "SmartCare Clinic",
+      location: "SmartCare Clinic, Johannesburg",
       avatar: '',
       fullName: role === 'Patient' ? name : `Dr. ${name}, M.D.`,
       email: email,
-      contact: 'Not provided',
-      office: 'Not provided',
-      hours: 'Not provided'
+      contact: '+27 (82) 123-4567',
+      office: 'Block B, Nelson Mandela Square, Sandton, 2196',
+      hours: 'Mon-Fri 08:00 - 17:00'
     };
-  }
-
-  private _profile = signal<UserProfile>(this.loadProfile());
-  readonly currentProfile = this._profile.asReadonly();
+  });
 
   updateProfile(newProfile: Partial<UserProfile>) {
-    const updated = { ...this._profile(), ...newProfile };
-    this._profile.set(updated);
-    localStorage.setItem('userProfile', JSON.stringify(updated));
+    const email = this.authService.currentUser();
+    if (!email) return;
+
+    const current = this.currentProfile();
+    const updated = { ...current, ...newProfile };
+    localStorage.setItem(`userProfile_${email}`, JSON.stringify(updated));
+    this.updateTrigger.update(n => n + 1);
   }
 }

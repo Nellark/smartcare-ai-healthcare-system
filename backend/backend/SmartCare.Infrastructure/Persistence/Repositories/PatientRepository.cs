@@ -1,9 +1,6 @@
-using System.Reflection;
-using SmartCare.Domain.Entities;
 using SmartCare.Domain.Repositories;
 using SmartCare.Domain.ValueObjects;
 using SmartCare.Infrastructure.Persistence.Entities;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace SmartCare.Infrastructure.Persistence.Repositories;
@@ -11,12 +8,10 @@ namespace SmartCare.Infrastructure.Persistence.Repositories;
 public class PatientRepository : IPatientRepository
 {
     private readonly SmartCareDbContext _context;
-    private readonly IMapper _mapper;
 
-    public PatientRepository(SmartCareDbContext context, IMapper mapper)
+    public PatientRepository(SmartCareDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<Domain.Entities.Patient?> GetByIdAsync(PatientId id, CancellationToken cancellationToken = default)
@@ -47,11 +42,22 @@ public class PatientRepository : IPatientRepository
         return patientEntities.Select(MapToDomainEntity).ToList().AsReadOnly();
     }
 
-    public async Task<IReadOnlyList<Domain.Entities.Patient>> GetByNameAsync(string firstName, string lastName, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<Domain.Entities.Patient>> SearchAsync(string searchTerm, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            return await GetAllAsync(cancellationToken);
+        }
+
+        var normalizedTerm = searchTerm.Trim();
         var patientEntities = await _context.Patients
             .Include(p => p.MedicalRecords)
-            .Where(p => p.FirstName == firstName && p.LastName == lastName)
+            .Where(p =>
+                EF.Functions.Like(p.FirstName, $"%{normalizedTerm}%") ||
+                EF.Functions.Like(p.LastName, $"%{normalizedTerm}%") ||
+                EF.Functions.Like(p.Email, $"%{normalizedTerm}%") ||
+                EF.Functions.Like(p.PhoneNumber, $"%{normalizedTerm}%") ||
+                EF.Functions.Like(p.FirstName + " " + p.LastName, $"%{normalizedTerm}%"))
             .ToListAsync(cancellationToken);
 
         return patientEntities.Select(MapToDomainEntity).ToList().AsReadOnly();
@@ -114,36 +120,34 @@ public class PatientRepository : IPatientRepository
             throw new InvalidOperationException("Invalid entity data");
         }
 
-        var patient = Domain.Entities.Patient.Create(
+        var medicalRecords = entity.MedicalRecords
+            .Select(medicalRecordEntity =>
+            {
+                var medicalRecord = Domain.Entities.MedicalRecord.Rehydrate(
+                    medicalRecordEntity.Id,
+                    medicalRecordEntity.PatientId,
+                    medicalRecordEntity.Diagnosis,
+                    medicalRecordEntity.Treatment,
+                    medicalRecordEntity.Notes,
+                    medicalRecordEntity.RecordDate,
+                    medicalRecordEntity.DoctorId,
+                    medicalRecordEntity.CreatedAt,
+                    medicalRecordEntity.UpdatedAt);
+
+                return medicalRecord;
+            })
+            .ToList();
+
+        return Domain.Entities.Patient.Rehydrate(
             entity.Id,
             nameResult.Value,
             emailResult.Value,
             entity.DateOfBirth,
             entity.PhoneNumber,
-            entity.Address).Value;
-
-        // Add medical records
-        foreach (var medicalRecordEntity in entity.MedicalRecords)
-        {
-            var medicalRecord = Domain.Entities.MedicalRecord.Create(
-                medicalRecordEntity.Id,
-                medicalRecordEntity.Diagnosis,
-                medicalRecordEntity.Treatment,
-                medicalRecordEntity.Notes,
-                medicalRecordEntity.RecordDate,
-                medicalRecordEntity.DoctorId);
-
-            // Use reflection to add medical record since AddMedicalRecord raises events
-            var medicalRecordsField = typeof(Domain.Entities.Patient)
-                .GetField("_medicalRecords", BindingFlags.NonPublic | BindingFlags.Instance);
-            
-            if (medicalRecordsField?.GetValue(patient) is List<Domain.Entities.MedicalRecord> medicalRecords)
-            {
-                medicalRecords.Add(medicalRecord);
-            }
-        }
-
-        return patient;
+            entity.Address,
+            entity.CreatedAt,
+            entity.UpdatedAt,
+            medicalRecords);
     }
 
     private static PatientEntity MapToInfrastructureEntity(Domain.Entities.Patient patient)

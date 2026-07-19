@@ -34,12 +34,26 @@ export class AuthService {
     if (token) {
       // Decode token to get email if needed, or just set it as present
       try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        let base64 = token.split('.')[1];
+        base64 = base64.replace(/-/g, '+').replace(/_/g, '/');
+        const pad = base64.length % 4;
+        if (pad) {
+          base64 += new Array(5 - pad).join('=');
+        }
+        const payload = JSON.parse(atob(base64));
+        console.log('Decoded JWT payload:', payload);
         this.currentUser.set(payload.email || payload.sub || 'User');
-        // Extract role from standard JWT claim or custom claim
-        const role = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || payload.role || null;
+        
+        // Extract role from standard JWT claim, lowercase 'role', or uppercase 'Role'
+        const role = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] 
+                  || payload.role 
+                  || payload.Role 
+                  || null;
+        
+        console.log('Extracted role:', role);
         this.currentUserRole.set(role);
-      } catch {
+      } catch (e) {
+        console.error('Error decoding token:', e);
         this.currentUser.set('User');
         this.currentUserRole.set(null);
       }

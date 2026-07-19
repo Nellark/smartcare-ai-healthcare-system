@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MockDataService } from '../../core/services/mock-data.service';
 
 interface RecordItem {
   type: string;
@@ -20,51 +21,21 @@ interface RecordItem {
   templateUrl: './records.component.html',
   styleUrls: ['./records.component.css']
 })
-export class RecordsComponent {
-  records: RecordItem[] = [
-    {
-      type: 'LAB RESULT',
-      status: 'FINALIZED',
-      statusClass: 'finalized',
-      title: 'Complete Blood Count (CBC) with Differential',
-      provider: 'Metropolitan General Laboratory',
-      subtext: 'Collected Oct 12, 2024 • ID: #LB-88219',
-      date: 'Oct 14, 2024',
-      dateLabel: 'REPORT DATE'
-    },
-    {
-      type: 'IMAGING',
-      status: 'PENDING REVIEW',
-      statusClass: 'pending',
-      title: 'Chest X-Ray 2 Views (PA & Lateral)',
-      provider: 'City Health Imaging Center',
-      subtext: 'Performed Oct 08, 2024 • ID: #IM-22104',
-      date: 'Oct 09, 2024',
-      dateLabel: 'REPORT DATE'
-    },
-    {
-      type: 'CLINICAL NOTE',
-      status: 'FINALIZED',
-      statusClass: 'finalized',
-      title: 'Annual Physical Examination Summary',
-      provider: 'Dr. Sarah Chen, Primary Care',
-      subtext: 'Visit Sept 25, 2024 • ID: #CN-44109',
-      date: 'Sept 26, 2024',
-      dateLabel: 'REPORT DATE'
-    },
-    {
-      type: 'IMMUNIZATION',
-      status: 'VERIFIED',
-      statusClass: 'verified',
-      title: 'Influenza Vaccine (Quadrivalent)',
-      provider: "Walton's Pharmacy Services",
-      subtext: 'Administered Sept 15, 2024 • Lot: #RX-9902',
-      date: 'Sept 15, 2024',
-      dateLabel: 'RECORDED'
-    }
-  ];
+export class RecordsComponent implements OnInit {
+  private mockDataService = inject(MockDataService);
 
+  records: RecordItem[] = [];
   currentPage = 1;
-  totalPages = 3;
-  totalRecords = 28;
+  totalPages = 1;
+  totalRecords = 0;
+
+  ngOnInit(): void {
+    this.mockDataService.getRecordsData().subscribe({
+      next: (data) => {
+        this.records = data;
+        this.totalRecords = data.length;
+        this.totalPages = Math.ceil(data.length / 10) || 1;
+      }
+    });
+  }
 }

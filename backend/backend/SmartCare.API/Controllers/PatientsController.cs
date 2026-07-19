@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartCare.Application.Common.DTOs;
 using SmartCare.Application.Patients.Commands;
@@ -26,6 +27,7 @@ public class PatientsController : ControllerBase
     /// <param name="command">Patient creation data</param>
     /// <returns>Created patient details</returns>
     [HttpPost]
+    [Authorize(Policy = "ManagePatients")]
     [ProducesResponseType(typeof(ApiResponse<PatientDto>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<PatientDto>), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ApiResponse<PatientDto>>> CreatePatient([FromBody] CreatePatientCommand command)
@@ -59,6 +61,7 @@ public class PatientsController : ControllerBase
     /// <param name="id">Patient ID</param>
     /// <returns>Patient details</returns>
     [HttpGet("{id:guid}")]
+    [Authorize(Policy = "ViewPatientDetails")]
     [ProducesResponseType(typeof(ApiResponse<PatientDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<PatientDto>), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ApiResponse<PatientDto>>> GetPatientById(Guid id)
@@ -92,6 +95,7 @@ public class PatientsController : ControllerBase
     /// </summary>
     /// <returns>List of all patients</returns>
     [HttpGet]
+    [Authorize(Policy = "ViewPatientList")]
     [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<PatientDto>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ApiResponse<IReadOnlyList<PatientDto>>>> GetAllPatients()
     {
@@ -114,22 +118,21 @@ public class PatientsController : ControllerBase
     }
 
     /// <summary>
-    /// Searches patients by name
+    /// Searches patients by name, email, or phone number
     /// </summary>
-    /// <param name="firstName">First name</param>
-    /// <param name="lastName">Last name</param>
+    /// <param name="searchTerm">Search term</param>
     /// <returns>List of matching patients</returns>
     [HttpGet("search")]
+    [Authorize(Policy = "ViewPatientList")]
     [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<PatientDto>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ApiResponse<IReadOnlyList<PatientDto>>>> SearchPatients(
-        [FromQuery] string firstName,
-        [FromQuery] string lastName)
+        [FromQuery] string searchTerm)
     {
         try
         {
-            _logger.LogInformation("Searching patients by name: {FirstName} {LastName}", firstName, lastName);
+            _logger.LogInformation("Searching patients with term: {SearchTerm}", searchTerm);
             
-            var query = new GetPatientsByNameQuery(firstName, lastName);
+            var query = new GetPatientsBySearchQuery(searchTerm);
             var result = await _mediator.Send(query);
             
             _logger.LogInformation("Found {Count} patients matching search criteria", result.Data?.Count ?? 0);
@@ -150,6 +153,7 @@ public class PatientsController : ControllerBase
     /// <param name="command">Patient update data</param>
     /// <returns>Updated patient details</returns>
     [HttpPut("{id:guid}")]
+    [Authorize(Policy = "ManagePatients")]
     [ProducesResponseType(typeof(ApiResponse<PatientDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<PatientDto>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<PatientDto>), StatusCodes.Status404NotFound)]
@@ -197,6 +201,7 @@ public class PatientsController : ControllerBase
     /// <param name="id">Patient ID</param>
     /// <returns>Deletion result</returns>
     [HttpDelete("{id:guid}")]
+    [Authorize(Policy = "DeletePatients")]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
@@ -239,6 +244,7 @@ public class PatientsController : ControllerBase
     /// <param name="command">Medical record data</param>
     /// <returns>Created medical record details</returns>
     [HttpPost("{patientId:guid}/medical-records")]
+    [Authorize(Policy = "ManagePatients")]
     [ProducesResponseType(typeof(ApiResponse<MedicalRecordDto>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<MedicalRecordDto>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<MedicalRecordDto>), StatusCodes.Status404NotFound)]

@@ -17,6 +17,113 @@ namespace SmartCare.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
 
+            modelBuilder.Entity("SmartCare.Infrastructure.Persistence.Entities.AppointmentEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("DurationMinutes")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ScheduledAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("PatientId");
+
+                    b.HasIndex("ScheduledAt");
+
+                    b.HasIndex("PatientId", "ScheduledAt");
+
+                    b.ToTable("Appointments");
+                });
+
+            modelBuilder.Entity("SmartCare.Infrastructure.Persistence.Entities.DoctorEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LicenseNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Specialty")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("LicenseNumber")
+                        .IsUnique();
+
+                    b.HasIndex("Specialty");
+
+                    b.HasIndex("FirstName", "LastName");
+
+                    b.ToTable("Doctors");
+                });
+
             modelBuilder.Entity("SmartCare.Infrastructure.Persistence.Entities.MedicalRecordEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -43,9 +150,6 @@ namespace SmartCare.Infrastructure.Migrations
                     b.Property<Guid>("PatientId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("PatientId1")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("RecordDate")
                         .HasColumnType("TEXT");
 
@@ -62,8 +166,6 @@ namespace SmartCare.Infrastructure.Migrations
                     b.HasIndex("DoctorId");
 
                     b.HasIndex("PatientId");
-
-                    b.HasIndex("PatientId1");
 
                     b.HasIndex("RecordDate");
 
@@ -119,6 +221,60 @@ namespace SmartCare.Infrastructure.Migrations
                     b.ToTable("Patients");
                 });
 
+            modelBuilder.Entity("SmartCare.Infrastructure.Persistence.Entities.UserEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("SmartCare.Infrastructure.Persistence.Entities.AppointmentEntity", b =>
+                {
+                    b.HasOne("SmartCare.Infrastructure.Persistence.Entities.DoctorEntity", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SmartCare.Infrastructure.Persistence.Entities.PatientEntity", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
+                });
+
             modelBuilder.Entity("SmartCare.Infrastructure.Persistence.Entities.MedicalRecordEntity", b =>
                 {
                     b.HasOne("SmartCare.Infrastructure.Persistence.Entities.PatientEntity", null)
@@ -126,12 +282,6 @@ namespace SmartCare.Infrastructure.Migrations
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("SmartCare.Infrastructure.Persistence.Entities.PatientEntity", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId1");
-
-                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("SmartCare.Infrastructure.Persistence.Entities.PatientEntity", b =>

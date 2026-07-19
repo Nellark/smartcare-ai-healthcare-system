@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { PatientService } from '../../core/services/patient.service';
 import { AuthService } from '../../core/services/auth.service';
-import { Patient } from '../../core/models/patient.model';
+import { Patient, CreatePatientRequest } from '../../core/models/patient.model';
 
 interface DashboardPatient {
   id: string;
@@ -35,6 +35,15 @@ export class DashboardComponent implements OnInit {
 
   isModalOpen = false;
   activeDropdownId: string | null = null;
+
+  newPatient = {
+    fullName: '',
+    email: '',
+    dateOfBirth: '',
+    gender: 'male',
+    phoneNumber: '',
+    address: ''
+  };
 
   currentPage = 1;
   pageSize = 10;
@@ -174,6 +183,62 @@ export class DashboardComponent implements OnInit {
 
   closeModal(): void {
     this.isModalOpen = false;
+  }
+
+  registerPatient(): void {
+    if (!this.newPatient.fullName || !this.newPatient.email || !this.newPatient.dateOfBirth) {
+      alert('Please fill out all required fields.');
+      return;
+    }
+
+    const nameParts = this.newPatient.fullName.trim().split(/\s+/);
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(' ') || 'Patient';
+
+    let dobIso = this.newPatient.dateOfBirth;
+    if (dobIso.includes('/')) {
+      const parts = dobIso.split('/');
+      if (parts.length === 3) {
+        const month = parts[0].padStart(2, '0');
+        const day = parts[1].padStart(2, '0');
+        const year = parts[2];
+        dobIso = `${year}-${month}-${day}`;
+      }
+    }
+
+    const requestData: CreatePatientRequest = {
+      firstName,
+      lastName,
+      email: this.newPatient.email,
+      dateOfBirth: dobIso,
+      phoneNumber: this.newPatient.phoneNumber || 'N/A',
+      address: this.newPatient.address || 'Sandton, Johannesburg'
+    };
+
+    this.patientService.create(requestData).subscribe({
+      next: (response) => {
+        if (response.success) {
+          alert('Patient registered successfully!');
+          this.closeModal();
+          this.loadPatients();
+          
+          // Reset form
+          this.newPatient = {
+            fullName: '',
+            email: '',
+            dateOfBirth: '',
+            gender: 'male',
+            phoneNumber: '',
+            address: ''
+          };
+        } else {
+          alert('Failed to register patient: ' + response.message);
+        }
+      },
+      error: (err) => {
+        alert('An error occurred while registering patient. Make sure the API is running and you are logged in as a Provider.');
+      }
+    });
   }
 
   setPage(page: number | string): void {

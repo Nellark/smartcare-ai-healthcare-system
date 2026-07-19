@@ -1,0 +1,17 @@
+{
+  "exportLogs": [
+    { "name": "Q3_Patient_Outcome_v2.pdf", "date": "Oct 24, 2023", "status": "Completed" },
+    { "name": "Monthly_Clinic_Volume.csv", "date": "Oct 22, 2023", "status": "Completed" },
+    { "name": "Demographics_Distribution.pdf", "date": "Oct 20, 2023", "status": "Expired" }
+  ],
+  "trendsChart": {
+    "xAxisData": ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6"],
+    "neutralSeries": [40, 45, 52, 48, 50, 58],
+    "positiveSeries": [65, 78, 72, 85, 92, 90]
+  },
+  "donutChart": [
+    { "value": 24, "name": "Pediatric", "color": "#BBE1FF" },
+    { "value": 48, "name": "Adult", "color": "#52A2FF" },
+    { "value": 28, "name": "Geriatric", "color": "#026C7C" }
+  ]
+}

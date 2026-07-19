@@ -1,6 +1,7 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as echarts from 'echarts';
+import { MockDataService } from '../../core/services/mock-data.service';
 
 interface ExportLog {
   name: string;
@@ -15,27 +16,45 @@ interface ExportLog {
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.css']
 })
-export class AnalyticsComponent implements AfterViewInit, OnDestroy {
+export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
+  private mockDataService = inject(MockDataService);
+
   @ViewChild('trendsChart') trendsChartRef!: ElementRef;
   @ViewChild('donutChart') donutChartRef!: ElementRef;
 
   private trendsChart?: echarts.ECharts;
   private donutChart?: echarts.ECharts;
 
-  exportLogs: ExportLog[] = [
-    { name: 'Q3_Patient_Outcome_v2.pdf', date: 'Oct 24, 2023', status: 'Completed' },
-    { name: 'Monthly_Clinic_Volume.csv', date: 'Oct 22, 2023', status: 'Completed' },
-    { name: 'Demographics_Distribution.pdf', date: 'Oct 20, 2023', status: 'Expired' }
-  ];
+  exportLogs: ExportLog[] = [];
+  chartData: any = null;
+  private isViewInit = false;
 
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.initTrendsChart();
-      this.initDonutChart();
-    }, 0);
+  ngOnInit(): void {
+    this.mockDataService.getAnalyticsData().subscribe({
+      next: (data) => {
+        this.exportLogs = data.exportLogs;
+        this.chartData = data;
+        this.tryInitCharts();
+      }
+    });
   }
 
-  private initTrendsChart(): void {
+  ngAfterViewInit(): void {
+    this.isViewInit = true;
+    this.tryInitCharts();
+  }
+
+  private tryInitCharts(): void {
+    if (this.isViewInit && this.chartData) {
+      setTimeout(() => {
+        this.initTrendsChart(this.chartData.trendsChart);
+        this.initDonutChart(this.chartData.donutChart);
+      }, 0);
+    }
+  }
+
+  private initTrendsChart(data: any): void {
+    if (!data) return;
     this.trendsChart = echarts.init(this.trendsChartRef.nativeElement);
     this.trendsChart.setOption({
       tooltip: { trigger: 'axis' },
@@ -43,7 +62,7 @@ export class AnalyticsComponent implements AfterViewInit, OnDestroy {
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
+        data: data.xAxisData,
         axisLine: { show: false },
         axisTick: { show: false },
         axisLabel: { color: '#64748B', fontSize: 11 }
@@ -59,7 +78,7 @@ export class AnalyticsComponent implements AfterViewInit, OnDestroy {
         {
           name: 'Neutral',
           type: 'line',
-          data: [40, 45, 52, 48, 50, 58],
+          data: data.neutralSeries,
           lineStyle: { width: 2, type: 'dashed', color: '#52A2FF' },
           symbol: 'circle',
           symbolSize: 8,
@@ -68,7 +87,7 @@ export class AnalyticsComponent implements AfterViewInit, OnDestroy {
         {
           name: 'Positive',
           type: 'line',
-          data: [65, 78, 72, 85, 92, 90],
+          data: data.positiveSeries,
           lineStyle: { width: 3, color: '#026C7C' },
           areaStyle: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
@@ -84,8 +103,14 @@ export class AnalyticsComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  private initDonutChart(): void {
+  private initDonutChart(data: any[]): void {
+    if (!data) return;
     this.donutChart = echarts.init(this.donutChartRef.nativeElement);
+    const formattedData = data.map((d: any) => ({
+      value: d.value,
+      name: d.name,
+      itemStyle: { color: d.color }
+    }));
     this.donutChart.setOption({
       tooltip: { trigger: 'item', formatter: '{b}: {c}%' },
       series: [
@@ -96,11 +121,7 @@ export class AnalyticsComponent implements AfterViewInit, OnDestroy {
           avoidLabelOverlap: false,
           label: { show: false },
           labelLine: { show: false },
-          data: [
-            { value: 24, name: 'Pediatric', itemStyle: { color: '#BBE1FF' } },
-            { value: 48, name: 'Adult', itemStyle: { color: '#52A2FF' } },
-            { value: 28, name: 'Geriatric', itemStyle: { color: '#026C7C' } }
-          ]
+          data: formattedData
         }
       ]
     });

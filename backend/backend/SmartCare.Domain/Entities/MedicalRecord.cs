@@ -5,6 +5,7 @@ namespace SmartCare.Domain.Entities;
 
 public sealed class MedicalRecord : Entity<MedicalRecordId>
 {
+    public PatientId PatientId { get; private set; }
     public string Diagnosis { get; private set; }
     public string Treatment { get; private set; }
     public string Notes { get; private set; }
@@ -13,24 +14,30 @@ public sealed class MedicalRecord : Entity<MedicalRecordId>
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
 
-    internal MedicalRecord(
+    private MedicalRecord(
         MedicalRecordId id,
+        PatientId patientId,
         string diagnosis,
         string treatment,
         string notes,
         DateTime recordDate,
-        string doctorId) : base(id)
+        string doctorId,
+        DateTime createdAt,
+        DateTime? updatedAt) : base(id)
     {
+        PatientId = patientId;
         Diagnosis = diagnosis;
         Treatment = treatment;
         Notes = notes;
         RecordDate = recordDate;
         DoctorId = doctorId;
-        CreatedAt = DateTime.UtcNow;
+        CreatedAt = createdAt;
+        UpdatedAt = updatedAt;
     }
 
     public static MedicalRecord Create(
         MedicalRecordId id,
+        PatientId patientId,
         string diagnosis,
         string treatment,
         string notes,
@@ -46,7 +53,21 @@ public sealed class MedicalRecord : Entity<MedicalRecordId>
         if (string.IsNullOrWhiteSpace(doctorId))
             throw new ArgumentException("Doctor ID cannot be empty", nameof(doctorId));
 
-        return new MedicalRecord(id, diagnosis, treatment, notes, recordDate, doctorId);
+        return new MedicalRecord(id, patientId, diagnosis, treatment, notes, recordDate, doctorId, DateTime.UtcNow, null);
+    }
+
+    public static MedicalRecord Rehydrate(
+        MedicalRecordId id,
+        PatientId patientId,
+        string diagnosis,
+        string treatment,
+        string notes,
+        DateTime recordDate,
+        string doctorId,
+        DateTime createdAt,
+        DateTime? updatedAt)
+    {
+        return new MedicalRecord(id, patientId, diagnosis, treatment, notes, recordDate, doctorId, createdAt, updatedAt);
     }
 
     public void UpdateDetails(string diagnosis, string treatment, string notes, string doctorId)

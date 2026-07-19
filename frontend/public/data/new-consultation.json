@@ -1,0 +1,18 @@
+{
+  "reasons": [
+    "Annual Heart Check-up",
+    "General Consultation",
+    "Follow-up Visit",
+    "Lab Results Review",
+    "Referral",
+    "Emergency Consultation"
+  ],
+  "timeSlots": [
+    { "label": "09:00", "sub": "AM", "available": true },
+    { "label": "10:30", "sub": "AM", "available": true },
+    { "label": "11:15", "sub": "AM", "available": true },
+    { "label": "01:00", "sub": "PM", "available": true },
+    { "label": "02:30", "sub": "PM", "available": true },
+    { "label": "03:15", "sub": "PM", "available": false }
+  ]
+}
