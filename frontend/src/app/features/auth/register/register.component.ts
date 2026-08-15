@@ -12,7 +12,7 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  userData = { fullName: '', hospitalName: '', email: '', license: '', password: '', role: 'Doctor' };
+  userData = { fullName: '', hospitalName: '', email: '', license: '', password: '', role: 'Patient' };
   errorMessage = '';
   isLoading = false;
 
@@ -39,8 +39,9 @@ export class RegisterComponent {
       role: this.userData.role 
     }).subscribe({
       next: () => {
-        const userRole = this.authService.currentUserRole();
-        if (userRole === 'Patient') {
+        if (this.authService.isAdminRole()) {
+          this.router.navigate(['/app/admin']);
+        } else if (this.authService.isPatientRole()) {
           this.router.navigate(['/app/patient-dashboard']);
         } else {
           this.router.navigate(['/app/dashboard']);

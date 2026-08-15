@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { authGuard } from './core/guards/auth.guard';
-import { providerGuard, patientGuard, dashboardRedirectGuard } from './core/guards/role.guard';
+import { providerGuard, patientGuard, dashboardRedirectGuard, adminGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   {
@@ -32,6 +32,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/dashboard/dashboard.component')
             .then(m => m.DashboardComponent)
+      },
+
+      {
+        path: 'admin',
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import('./features/admin/admin.component')
+            .then(m => m.AdminComponent)
       },
 
       {

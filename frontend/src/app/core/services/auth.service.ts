@@ -5,8 +5,14 @@ import { environment } from '../../../environments/environment';
 import { Observable, tap } from 'rxjs';
 
 export interface LoginResponse {
-  accessToken: string;
-  message: string;
+  AccessToken?: string;
+  accessToken?: string;
+  ExpiresAtUtc?: string;
+  expiresAtUtc?: string;
+  Email?: string;
+  email?: string;
+  Role?: string;
+  role?: string;
 }
 
 export interface ApiResponse<T> {
@@ -15,11 +21,14 @@ export interface ApiResponse<T> {
   data: T;
 }
 
+type KnownRole = 'Patient' | 'Doctor' | 'Nurse' | 'Admin';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly baseUrl = `${environment.apiBaseUrl}/auth`;
+  private readonly adminEmail = 'admin@smartcare.local';
   
   // Use a signal to hold the current user email/token state
   public currentUser = signal<string | null>(null);
@@ -27,6 +36,67 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {
     this.checkToken();
+  }
+
+  private isAdminEmail(email: string | null | undefined): boolean {
+    return (email ?? '').trim().toLowerCase() === this.adminEmail;
+  }
+
+  private normalizeRole(role: string | null | undefined): string | null {
+    if (!role) {
+      return null;
+    }
+
+    const lowerRole = role.trim().toLowerCase();
+    if (!lowerRole) {
+      return null;
+    }
+
+    const roleMap: Record<string, KnownRole> = {
+      patient: 'Patient',
+      doctor: 'Doctor',
+      provider: 'Doctor',
+      admin: 'Admin',
+      nurse: 'Nurse'
+    };
+
+    return roleMap[lowerRole] ?? role.trim();
+  }
+
+  getRoleLabel(role: string | null | undefined = this.currentUserRole()): string {
+    if (this.isAdminEmail(this.currentUser())) {
+      return 'Admin';
+    }
+
+    switch (this.normalizeRole(role)) {
+      case 'Doctor':
+        return 'Provider';
+      case 'Admin':
+        return 'Admin';
+      case 'Nurse':
+        return 'Nurse';
+      case 'Patient':
+        return 'Patient';
+      default:
+        return 'User';
+    }
+  }
+
+  isPatientRole(): boolean {
+    return this.normalizeRole(this.currentUserRole()) === 'Patient';
+  }
+
+  isProviderRole(): boolean {
+    if (this.isAdminEmail(this.currentUser())) {
+      return true;
+    }
+
+    const role = this.normalizeRole(this.currentUserRole());
+    return role === 'Doctor' || role === 'Nurse' || role === 'Admin';
+  }
+
+  isAdminRole(): boolean {
+    return this.isAdminEmail(this.currentUser()) || this.normalizeRole(this.currentUserRole()) === 'Admin';
   }
 
   private checkToken() {
@@ -51,7 +121,7 @@ export class AuthService {
                   || null;
         
         console.log('Extracted role:', role);
-        this.currentUserRole.set(role);
+        this.currentUserRole.set(this.isAdminEmail(payload.email || payload.sub) ? 'Admin' : this.normalizeRole(role));
       } catch (e) {
         console.error('Error decoding token:', e);
         this.currentUser.set('User');
@@ -67,8 +137,10 @@ export class AuthService {
     return this.http.post<ApiResponse<LoginResponse>>(`${this.baseUrl}/login`, credentials)
       .pipe(
         tap(response => {
-          if (response.success && response.data?.accessToken) {
-            this.setToken(response.data.accessToken);
+          console.log('Login response:', response);
+          const token = response.data?.accessToken || (response.data as any)?.AccessToken || (response.data as any)?.token;
+          if (response.success && token) {
+            this.setToken(token);
           }
         })
       );
@@ -78,28 +150,43 @@ export class AuthService {
     return this.http.post<ApiResponse<LoginResponse>>(`${this.baseUrl}/register`, userData)
       .pipe(
         tap(response => {
-          if (response.success && response.data?.accessToken) {
-            this.setToken(response.data.accessToken);
+          const token = (response.data as any)?.accessToken || (response.data as any)?.AccessToken || (response.data as any)?.token;
+          if (response.success && token) {
+            this.setToken(token);
           }
         })
       );
   }
 
+  createUserByAdmin(userData: any): Observable<ApiResponse<unknown>> {
+    return this.http.post<ApiResponse<unknown>>(`${this.baseUrl}/admin/create-user`, userData, {
+      headers: {
+        Authorization: `Bearer ${this.getToken()}`
+      }
+    });
+  }
+
   logout(): void {
     localStorage.removeItem('token');
     this.currentUser.set(null);
+    this.currentUserRole.set(null);
     this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    const token = localStorage.getItem('token');
+    console.log('Getting token:', token ? 'Found' : 'Not found');
+    return token;
   }
 
   isAuthenticated(): boolean {
-    return !!this.getToken();
+    const authed = !!this.getToken();
+    console.log('Is authenticated:', authed);
+    return authed;
   }
 
   private setToken(token: string): void {
+    console.log('Storing token to localStorage');
     localStorage.setItem('token', token);
     this.checkToken();
   }

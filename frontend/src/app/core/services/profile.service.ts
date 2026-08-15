@@ -37,7 +37,7 @@ export class ProfileService {
       };
     }
 
-    const role = this.authService.currentUserRole() || 'Patient';
+    const role = this.authService.getRoleLabel(this.authService.currentUserRole());
     const saved = localStorage.getItem(`userProfile_${email}`);
     if (saved) {
       try {
@@ -49,13 +49,14 @@ export class ProfileService {
 
     const namePart = email.split('@')[0];
     const name = namePart.split('.').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+    const title = role === 'Patient' ? '' : role === 'Admin' ? 'Admin ' : 'Dr. ';
 
     return {
-      name: role === 'Patient' ? name : `Dr. ${name}`,
+      name: role === 'Patient' ? name : `${title}${name}`.trim(),
       role: role,
       location: "SmartCare Clinic, Johannesburg",
       avatar: '',
-      fullName: role === 'Patient' ? name : `Dr. ${name}, M.D.`,
+      fullName: role === 'Patient' ? name : role === 'Admin' ? `Admin ${name}` : `Dr. ${name}, M.D.`,
       email: email,
       contact: '+27 (82) 123-4567',
       office: 'Block B, Nelson Mandela Square, Sandton, 2196',

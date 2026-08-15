@@ -1,0 +1,119 @@
+.admin-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.hero-card,
+.stat-card,
+.panel {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+}
+
+.hero-card {
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  font-size: 0.72rem;
+  color: #4f46e5;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.subtext {
+  color: #64748b;
+  margin: 0.35rem 0 0;
+}
+
+.primary-btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.8rem 1rem;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  padding: 1rem;
+  display: flex;
+  gap: 0.8rem;
+  align-items: start;
+}
+
+.icon {
+  font-size: 1.4rem;
+  width: 2.6rem;
+  height: 2.6rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.9rem;
+}
+
+.icon.blue { background: #dbeafe; }
+.icon.violet { background: #ede9fe; }
+.icon.green { background: #dcfce7; }
+.icon.orange { background: #ffedd5; }
+
+.stat-title { margin: 0 0 0.2rem; color: #64748b; font-size: 0.9rem; }
+.stat-card h3 { margin: 0; font-size: 1.3rem; }
+.stat-card span { color: #64748b; font-size: 0.85rem; }
+
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.panel {
+  padding: 1rem 1.1rem;
+}
+
+.panel-wide { grid-column: 1 / -1; }
+
+.panel-header h3 { margin: 0 0 0.8rem; }
+
+.action-list,
+.alert-list,
+.health-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.action-item {
+  display: flex;
+  justify-content: space-between;
+  text-decoration: none;
+  color: #0f172a;
+  padding: 0.75rem 0.8rem;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.alert-list { padding-left: 1rem; color: #334155; }
+.health-item { display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid #e2e8f0; }
+.health-item:last-child { border-bottom: 0; }
+
+@media (max-width: 900px) {
+  .content-grid { grid-template-columns: 1fr; }
+  .hero-card { flex-direction: column; align-items: flex-start; }
+}

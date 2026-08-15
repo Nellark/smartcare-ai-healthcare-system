@@ -137,7 +137,11 @@ export class PatientListComponent implements OnInit, OnDestroy {
         this.isLoading.set(false);
       },
       error: (error) => {
-        this.errorMessage.set('An error occurred while loading patients. Please ensure the backend API is running.');
+        if (error.status === 401 || error.status === 403) {
+          this.errorMessage.set('Session expired or insufficient permissions. Please log out and sign in again with a provider or admin account.');
+        } else {
+          this.errorMessage.set('An error occurred while loading patients. Please ensure the backend API is running.');
+        }
         this.isLoading.set(false);
       }
     });

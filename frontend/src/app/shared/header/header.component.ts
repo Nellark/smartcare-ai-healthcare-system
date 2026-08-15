@@ -15,6 +15,7 @@ export class HeaderComponent {
   private authService = inject(AuthService);
   profileService = inject(ProfileService);
   currentUser = computed(() => this.authService.currentUser() || 'User');
+  currentUserRole = computed(() => this.authService.getRoleLabel(this.authService.currentUserRole()));
 
   logout() {
     this.authService.logout();

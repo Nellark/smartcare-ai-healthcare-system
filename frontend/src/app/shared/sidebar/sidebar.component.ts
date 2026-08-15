@@ -18,7 +18,11 @@ export class SidebarComponent {
   }
 
   get currentUserRole(): string {
-    return this.authService.currentUserRole() || 'Provider';
+    return this.authService.getRoleLabel(this.authService.currentUserRole());
+  }
+
+  get isAdminUser(): boolean {
+    return this.currentUserRole.toLowerCase() === 'admin';
   }
 
   get currentUserInitials(): string {

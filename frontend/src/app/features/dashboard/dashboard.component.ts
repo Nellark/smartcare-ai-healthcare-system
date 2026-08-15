@@ -54,7 +54,7 @@ export class DashboardComponent implements OnInit {
   }
 
   get currentUserRole(): string {
-    return this.authService.currentUserRole() || 'Provider';
+    return this.authService.getRoleLabel(this.authService.currentUserRole());
   }
 
   get currentUserInitials(): string {
@@ -171,7 +171,11 @@ export class DashboardComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        this.errorMessage = 'Could not load patients. Please ensure the backend is running.';
+        if (err.status === 401 || err.status === 403) {
+          this.errorMessage = 'Session expired or insufficient permissions. Please log out and sign in again with a provider or admin account.';
+        } else {
+          this.errorMessage = 'Could not load patients. Please ensure the backend is running.';
+        }
         this.isLoading = false;
       }
     });
@@ -236,7 +240,7 @@ export class DashboardComponent implements OnInit {
         }
       },
       error: (err) => {
-        alert('An error occurred while registering patient. Make sure the API is running and you are logged in as a Provider.');
+        alert('An error occurred while registering patient. Make sure the API is running and you are logged in with a provider or admin account.');
       }
     });
   }
