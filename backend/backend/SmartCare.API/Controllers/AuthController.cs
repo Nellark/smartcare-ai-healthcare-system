@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -66,8 +67,10 @@ public sealed class AuthController : ControllerBase
         var role = AppRoles.Patient;
         if (!string.IsNullOrWhiteSpace(request.Role))
         {
+            // Admin role can only be assigned through the admin/create-user endpoint
             if (request.Role.Equals(AppRoles.Doctor, StringComparison.OrdinalIgnoreCase)) role = AppRoles.Doctor;
             else if (request.Role.Equals(AppRoles.Nurse, StringComparison.OrdinalIgnoreCase)) role = AppRoles.Nurse;
+            // Admin intentionally excluded — self-registration cannot grant admin access
         }
 
         var newUser = new UserEntity
@@ -85,5 +88,55 @@ public sealed class AuthController : ControllerBase
 
         var token = _tokenService.CreateToken(newUser.Email, newUser.Role);
         return Ok(ApiResponse<LoginResponse>.SuccessResult(token, "Registration successful"));
+    }
+
+    [Authorize]
+    [HttpPost("admin/create-user")]
+    [ProducesResponseType(typeof(ApiResponse<LoginResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<LoginResponse>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<LoginResponse>), StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult<ApiResponse<LoginResponse>>> CreateUserByAdmin([FromBody] CreateUserRequest request)
+    {
+        var currentUserEmail = User.Identity?.Name;
+        var currentUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == (currentUserEmail ?? string.Empty).ToLower());
+
+        if (currentUser == null || !string.Equals(currentUser.Role, AppRoles.Admin, StringComparison.OrdinalIgnoreCase))
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, ApiResponse<LoginResponse>.ErrorResult("Only admins can create users"));
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+        {
+            return BadRequest(ApiResponse<LoginResponse>.ErrorResult("Email and password are required"));
+        }
+
+        var existingUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
+        if (existingUser != null)
+        {
+            return BadRequest(ApiResponse<LoginResponse>.ErrorResult("User with this email already exists"));
+        }
+
+        var role = AppRoles.Patient;
+        if (!string.IsNullOrWhiteSpace(request.Role))
+        {
+            if (request.Role.Equals(AppRoles.Admin, StringComparison.OrdinalIgnoreCase)) role = AppRoles.Admin;
+            else if (request.Role.Equals(AppRoles.Doctor, StringComparison.OrdinalIgnoreCase)) role = AppRoles.Doctor;
+            else if (request.Role.Equals(AppRoles.Nurse, StringComparison.OrdinalIgnoreCase)) role = AppRoles.Nurse;
+        }
+
+        var newUser = new UserEntity
+        {
+            Id = Guid.NewGuid(),
+            Email = request.Email,
+            Role = role,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        newUser.PasswordHash = _passwordHasher.HashPassword(newUser, request.Password);
+
+        _dbContext.Users.Add(newUser);
+        await _dbContext.SaveChangesAsync();
+
+        return Ok(ApiResponse<LoginResponse>.SuccessResult(new LoginResponse(), "User created successfully"));
     }
 }

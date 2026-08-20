@@ -102,7 +102,6 @@ export class AuthService {
   private checkToken() {
     const token = localStorage.getItem('token');
     if (token) {
-      // Decode token to get email if needed, or just set it as present
       try {
         let base64 = token.split('.')[1];
         base64 = base64.replace(/-/g, '+').replace(/_/g, '/');
@@ -111,19 +110,16 @@ export class AuthService {
           base64 += new Array(5 - pad).join('=');
         }
         const payload = JSON.parse(atob(base64));
-        console.log('Decoded JWT payload:', payload);
         this.currentUser.set(payload.email || payload.sub || 'User');
-        
+
         // Extract role from standard JWT claim, lowercase 'role', or uppercase 'Role'
-        const role = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] 
-                  || payload.role 
-                  || payload.Role 
+        const role = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
+                  || payload.role
+                  || payload.Role
                   || null;
-        
-        console.log('Extracted role:', role);
+
         this.currentUserRole.set(this.isAdminEmail(payload.email || payload.sub) ? 'Admin' : this.normalizeRole(role));
       } catch (e) {
-        console.error('Error decoding token:', e);
         this.currentUser.set('User');
         this.currentUserRole.set(null);
       }
@@ -137,7 +133,6 @@ export class AuthService {
     return this.http.post<ApiResponse<LoginResponse>>(`${this.baseUrl}/login`, credentials)
       .pipe(
         tap(response => {
-          console.log('Login response:', response);
           const token = response.data?.accessToken || (response.data as any)?.AccessToken || (response.data as any)?.token;
           if (response.success && token) {
             this.setToken(token);
@@ -174,19 +169,14 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    const token = localStorage.getItem('token');
-    console.log('Getting token:', token ? 'Found' : 'Not found');
-    return token;
+    return localStorage.getItem('token');
   }
 
   isAuthenticated(): boolean {
-    const authed = !!this.getToken();
-    console.log('Is authenticated:', authed);
-    return authed;
+    return !!this.getToken();
   }
 
   private setToken(token: string): void {
-    console.log('Storing token to localStorage');
     localStorage.setItem('token', token);
     this.checkToken();
   }

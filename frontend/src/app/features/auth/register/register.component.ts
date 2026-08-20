@@ -27,18 +27,20 @@ export class RegisterComponent {
       this.errorMessage = 'Please enter both email and password';
       return;
     }
-    
-    // Additional validation could be added for fullName, hospitalName, etc.
+
+    // Prevent self-assigning Admin role via the public registration form
+    const role = this.userData.role === 'Admin' ? 'Patient' : this.userData.role;
 
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.authService.register({ 
-      email: this.userData.email, 
+    this.authService.register({
+      email: this.userData.email,
       password: this.userData.password,
-      role: this.userData.role 
+      role
     }).subscribe({
       next: () => {
+        this.isLoading = false;
         if (this.authService.isAdminRole()) {
           this.router.navigate(['/app/admin']);
         } else if (this.authService.isPatientRole()) {

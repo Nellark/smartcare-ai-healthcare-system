@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { PatientService } from '../../core/services/patient.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ToastService } from '../../core/services/toast.service';
 import { Patient, CreatePatientRequest } from '../../core/models/patient.model';
 
 interface DashboardPatient {
@@ -27,6 +28,7 @@ interface DashboardPatient {
 export class DashboardComponent implements OnInit {
   private patientService = inject(PatientService);
   private authService = inject(AuthService);
+  private toast = inject(ToastService);
 
   searchQuery = '';
   statusFilter = 'All';
@@ -191,7 +193,7 @@ export class DashboardComponent implements OnInit {
 
   registerPatient(): void {
     if (!this.newPatient.fullName || !this.newPatient.email || !this.newPatient.dateOfBirth) {
-      alert('Please fill out all required fields.');
+      this.toast.warning('Missing fields', 'Please fill out all required fields.');
       return;
     }
 
@@ -222,10 +224,10 @@ export class DashboardComponent implements OnInit {
     this.patientService.create(requestData).subscribe({
       next: (response) => {
         if (response.success) {
-          alert('Patient registered successfully!');
+          this.toast.success('Patient registered', `${firstName} ${lastName} has been added successfully.`);
           this.closeModal();
           this.loadPatients();
-          
+
           // Reset form
           this.newPatient = {
             fullName: '',
@@ -236,11 +238,11 @@ export class DashboardComponent implements OnInit {
             address: ''
           };
         } else {
-          alert('Failed to register patient: ' + response.message);
+          this.toast.error('Registration failed', response.message);
         }
       },
-      error: (err) => {
-        alert('An error occurred while registering patient. Make sure the API is running and you are logged in with a provider or admin account.');
+      error: () => {
+        this.toast.error('Registration failed', 'Could not reach the API. Make sure the backend is running and you are logged in.');
       }
     });
   }

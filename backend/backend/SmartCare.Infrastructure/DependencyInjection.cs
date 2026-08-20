@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SmartCare.Domain.Repositories;
 using SmartCare.Domain.Services;
 using SmartCare.Infrastructure.Persistence;
+using SmartCare.Infrastructure.Persistence.Entities;
 using SmartCare.Infrastructure.Persistence.Repositories;
 using SmartCare.Infrastructure.Services;
 

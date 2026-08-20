@@ -11,6 +11,23 @@
     </div>
   </div>
 
+  <div *ngIf="isAdminUser" class="admin-summary">
+    <div class="admin-summary-top">
+      <span class="admin-summary-badge">Admin Console</span>
+      <strong>Operations lane</strong>
+    </div>
+    <div class="admin-summary-stats">
+      <div>
+        <span>Access</span>
+        <strong>{{ currentUserRole }}</strong>
+      </div>
+      <div>
+        <span>View</span>
+        <strong>Live</strong>
+      </div>
+    </div>
+  </div>
+
   <!-- Navigation -->
   <nav class="nav">
     <a [routerLink]="currentUserRole === 'Patient' ? '/app/patient-dashboard' : '/app/dashboard'" 
@@ -64,6 +81,7 @@
       Analytics
     </a>
 
+    <div *ngIf="isAdminUser" class="nav-section-label">Admin Console</div>
     <a *ngIf="isAdminUser" routerLink="/app/admin" routerLinkActive="active" class="nav-item">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="3" width="7" height="7" rx="1"></rect>
@@ -71,7 +89,7 @@
         <rect x="14" y="14" width="7" height="7" rx="1"></rect>
         <rect x="3" y="14" width="7" height="7" rx="1"></rect>
       </svg>
-      Admin
+      Operations
     </a>
 
     <a routerLink="/app/messages" routerLinkActive="active" class="nav-item">
@@ -126,4 +144,3 @@
   </div>
 
 </div>
-

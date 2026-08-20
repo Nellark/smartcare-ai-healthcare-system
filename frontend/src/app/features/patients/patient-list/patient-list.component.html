@@ -7,7 +7,7 @@
         <h2>Patients</h2>
         <p class="subtitle">Manage your clinic's patient records and details.</p>
       </div>
-      <a routerLink="/patients/new" class="btn-primary">
+      <a routerLink="/app/patients/new" class="btn-primary">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
@@ -84,10 +84,7 @@
               </td>
               <td class="actions-col">
                 <div class="row-actions">
-                  <a class="icon-action-btn" title="View Details" [routerLink]="['/patients', p.id]">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                  </a>
-                  <a class="icon-action-btn" title="Edit Patient" [routerLink]="['/patients', 'edit', p.id]">
+                  <a class="icon-action-btn" title="Edit Patient" [routerLink]="['/app/patients', 'edit', p.id]">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                   </a>
                   <button class="icon-action-btn danger" title="Delete Patient" (click)="deletePatient(p.id)">
