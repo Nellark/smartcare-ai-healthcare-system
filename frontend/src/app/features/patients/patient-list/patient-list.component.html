@@ -15,9 +15,6 @@
       </a>
     </div>
 
-    <!-- Error Message -->
-    <div class="error-message" *ngIf="errorMessage().length > 0">{{ errorMessage() }}</div>
-
     <!-- Card -->
     <div class="table-card">
       <div class="table-toolbar">
@@ -48,7 +45,7 @@
               <th>Patient</th>
               <th>Contact Info</th>
               <th>Date of Birth</th>
-              <th>Blood / Gender</th>
+              <th>Gender</th>
               <th class="actions-col">Actions</th>
             </tr>
           </thead>
@@ -77,9 +74,8 @@
               </td>
               <td>
                 <div class="badge-cell">
-                  <span class="badge badge-blood" *ngIf="p.bloodType">{{ p.bloodType }}</span>
                   <span class="badge badge-gender" *ngIf="p.gender">{{ p.gender }}</span>
-                  <span class="badge badge-empty" *ngIf="!p.bloodType && !p.gender">N/A</span>
+                  <span class="badge badge-empty" *ngIf="!p.gender">N/A</span>
                 </div>
               </td>
               <td class="actions-col">

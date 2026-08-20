@@ -9,6 +9,7 @@ import { Patient, CreatePatientRequest } from '../../core/models/patient.model';
 
 interface DashboardPatient {
   id: string;
+  displayId: string;
   name: string;
   dateOfBirth: string;
   gender: string;
@@ -33,8 +34,6 @@ export class DashboardComponent implements OnInit {
   searchQuery = '';
   statusFilter = 'All';
   isLoading = true;
-  errorMessage = '';
-
   isModalOpen = false;
   activeDropdownId: string | null = null;
 
@@ -147,7 +146,8 @@ export class DashboardComponent implements OnInit {
       daysSince < 90 ? 'Active' : daysSince < 180 ? 'Pending' : 'Inactive';
 
     return {
-      id: `SC-${p.id.slice(0, 4).toUpperCase()}`,
+      id: p.id,
+      displayId: `SC-${p.id.slice(0, 4).toUpperCase()}`,
       name: `${p.firstName} ${p.lastName}`,
       dateOfBirth: dobFormatted,
       gender: (p as any).gender || 'N/A',
@@ -164,7 +164,6 @@ export class DashboardComponent implements OnInit {
 
   loadPatients(): void {
     this.isLoading = true;
-    this.errorMessage = '';
     this.patientService.getAll().subscribe({
       next: (response) => {
         if (response.success && response.data) {
@@ -174,13 +173,31 @@ export class DashboardComponent implements OnInit {
       },
       error: (err) => {
         if (err.status === 401 || err.status === 403) {
-          this.errorMessage = 'Session expired or insufficient permissions. Please log out and sign in again with a provider or admin account.';
+          this.toast.error('Access Denied', 'Session expired or insufficient permissions. Please log out and sign in again.');
         } else {
-          this.errorMessage = 'Could not load patients. Please ensure the backend is running.';
+          this.toast.error('Error', 'Could not load patients. Please ensure the backend is running.');
         }
         this.isLoading = false;
       }
     });
+  }
+
+  deletePatient(id: string): void {
+    if (confirm('Are you sure you want to delete this patient?')) {
+      this.patientService.delete(id).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.toast.success('Deleted', 'The patient was deleted successfully.');
+            this.loadPatients();
+          } else {
+            this.toast.error('Error', response.message || 'Failed to delete patient');
+          }
+        },
+        error: () => {
+          this.toast.error('Error', 'An error occurred while deleting the patient');
+        }
+      });
+    }
   }
 
   openModal(): void {
@@ -218,7 +235,8 @@ export class DashboardComponent implements OnInit {
       email: this.newPatient.email,
       dateOfBirth: dobIso,
       phoneNumber: this.newPatient.phoneNumber || 'N/A',
-      address: this.newPatient.address || 'Sandton, Johannesburg'
+      address: this.newPatient.address || 'Sandton, Johannesburg',
+      gender: this.newPatient.gender
     };
 
     this.patientService.create(requestData).subscribe({
