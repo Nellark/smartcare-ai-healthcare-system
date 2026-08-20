@@ -20,12 +20,6 @@ public class PatientDomainService : IPatientDomainService
         if (patient == null)
             return Result<bool>.Failure(Error.NotFound);
 
-        var hasActiveMedicalRecords = patient.MedicalRecords.Any();
-        if (hasActiveMedicalRecords)
-        {
-            return Result<bool>.Failure(Error.InvalidInput);
-        }
-
         return Result<bool>.Success(true);
     }
 

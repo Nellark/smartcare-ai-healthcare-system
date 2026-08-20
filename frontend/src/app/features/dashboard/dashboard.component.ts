@@ -6,6 +6,7 @@ import { PatientService } from '../../core/services/patient.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
 import { Patient, CreatePatientRequest } from '../../core/models/patient.model';
+import { DeletePatientModalComponent } from '../patients/delete-patient-modal/delete-patient-modal.component';
 
 interface DashboardPatient {
   id: string;
@@ -22,7 +23,7 @@ interface DashboardPatient {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, DeletePatientModalComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -35,7 +36,6 @@ export class DashboardComponent implements OnInit {
   statusFilter = 'All';
   isLoading = true;
   isModalOpen = false;
-  activeDropdownId: string | null = null;
 
   newPatient = {
     fullName: '',
@@ -182,22 +182,46 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  deletePatient(id: string): void {
-    if (confirm('Are you sure you want to delete this patient?')) {
-      this.patientService.delete(id).subscribe({
-        next: (response) => {
-          if (response.success) {
-            this.toast.success('Deleted', 'The patient was deleted successfully.');
-            this.loadPatients();
-          } else {
-            this.toast.error('Error', response.message || 'Failed to delete patient');
-          }
-        },
-        error: () => {
-          this.toast.error('Error', 'An error occurred while deleting the patient');
+  isDeleteModalVisible = false;
+  patientToDelete: Patient | null = null;
+
+  openDeleteModal(patient: DashboardPatient): void {
+    // We map back to a partial Patient object since the modal only needs id, firstName, lastName
+    const [firstName, ...rest] = patient.name.split(' ');
+    this.patientToDelete = {
+      id: patient.id,
+      firstName: firstName,
+      lastName: rest.join(' ')
+    } as Patient;
+    this.isDeleteModalVisible = true;
+  }
+
+  closeDeleteModal(): void {
+    this.isDeleteModalVisible = false;
+    this.patientToDelete = null;
+  }
+
+  confirmDeletePatient(event: {patientId: string, reason: string}): void {
+    this.patientService.delete(event.patientId).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.toast.success('Deleted', `The patient was deleted successfully. Reason: ${event.reason}`);
+          this.loadPatients();
+          this.closeDeleteModal();
+        } else {
+          this.toast.error('Error', response.message || 'Failed to delete patient');
         }
-      });
-    }
+      },
+      error: (error) => {
+        let errorMessage = 'An error occurred while deleting the patient';
+        if (error.error && error.error.message) {
+          errorMessage = error.error.message;
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        this.toast.error('Error', errorMessage);
+      }
+    });
   }
 
   openModal(): void {
@@ -279,20 +303,4 @@ export class DashboardComponent implements OnInit {
     if (this.currentPage < this.totalPages) this.currentPage++;
   }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event) {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.actions-cell')) {
-      this.activeDropdownId = null;
-    }
-  }
-
-  toggleDropdown(patientId: string, event: Event) {
-    event.stopPropagation();
-    if (this.activeDropdownId === patientId) {
-      this.activeDropdownId = null;
-    } else {
-      this.activeDropdownId = patientId;
-    }
-  }
 }

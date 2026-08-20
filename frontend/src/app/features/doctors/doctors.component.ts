@@ -5,11 +5,12 @@ import { DoctorService } from '../../core/services/doctor.service';
 import { Doctor, UpsertDoctorRequest } from '../../core/models/doctor.model';
 import { ToastService } from '../../core/services/toast.service';
 import { inject } from '@angular/core';
+import { ModalComponent } from '../../shared/components/modal/modal.component';
 
 @Component({
   selector: 'app-doctors',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ModalComponent],
   templateUrl: './doctors.component.html',
   styleUrls: ['./doctors.component.css']
 })
@@ -110,22 +111,40 @@ export class DoctorsComponent implements OnInit {
     });
   }
 
-  deleteDoctor(id: string): void {
-    if (!confirm('Delete this doctor?')) {
-      return;
-    }
+  isDeleteModalVisible = false;
+  doctorToDelete: Doctor | null = null;
 
-    this.doctorService.delete(id).subscribe({
+  confirmDeleteDoctor(doctor: Doctor): void {
+    this.doctorToDelete = doctor;
+    this.isDeleteModalVisible = true;
+  }
+
+  closeDeleteModal(): void {
+    this.isDeleteModalVisible = false;
+    this.doctorToDelete = null;
+  }
+
+  deleteDoctor(): void {
+    if (!this.doctorToDelete) return;
+    
+    this.doctorService.delete(this.doctorToDelete.id).subscribe({
       next: (response) => {
         if (response.success) {
           this.toast.success('Success', 'Doctor deleted successfully');
           this.loadDoctors();
+          this.closeDeleteModal();
         } else {
           this.toast.error('Error', response.message || 'Unable to delete doctor');
         }
       },
-      error: () => {
-        this.toast.error('Error', 'An error occurred while deleting the doctor');
+      error: (error) => {
+        let errorMessage = 'An error occurred while deleting the doctor';
+        if (error.error && error.error.message) {
+          errorMessage = error.error.message;
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        this.toast.error('Error', errorMessage);
       }
     });
   }

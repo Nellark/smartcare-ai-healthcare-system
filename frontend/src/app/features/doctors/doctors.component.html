@@ -75,10 +75,24 @@
           <div>{{ doctor.licenseNumber }}</div>
           <div class="row-actions">
             <button type="button" class="ghost-btn" (click)="editDoctor(doctor)">Edit</button>
-            <button type="button" class="danger-btn" (click)="deleteDoctor(doctor.id)">Delete</button>
+            <button type="button" class="danger-btn" (click)="confirmDeleteDoctor(doctor)">Delete</button>
           </div>
         </article>
       </div>
     </section>
   </div>
 </div>
+
+<app-modal
+  [isVisible]="isDeleteModalVisible"
+  title="Confirm Deletion"
+  width="400px"
+  (close)="closeDeleteModal()">
+  <div style="padding: 16px;">
+    <p>Are you sure you want to delete <strong>{{ doctorToDelete?.firstName }} {{ doctorToDelete?.lastName }}</strong>?</p>
+    <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 24px;">
+      <button type="button" class="ghost-btn" (click)="closeDeleteModal()">Cancel</button>
+      <button type="button" class="danger-btn" (click)="deleteDoctor()">Delete</button>
+    </div>
+  </div>
+</app-modal>

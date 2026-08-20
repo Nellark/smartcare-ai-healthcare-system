@@ -6,11 +6,12 @@ import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { PatientService } from '../../../core/services/patient.service';
 import { Patient } from '../../../core/models/patient.model';
 import { ToastService } from '../../../core/services/toast.service';
+import { DeletePatientModalComponent } from '../delete-patient-modal/delete-patient-modal.component';
 
 @Component({
   selector: 'app-patient-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, DeletePatientModalComponent],
   templateUrl: './patient-list.component.html',
   styleUrls: ['./patient-list.component.css']
 })
@@ -190,22 +191,40 @@ export class PatientListComponent implements OnInit, OnDestroy {
     }
   }
   
-  deletePatient(id: string) {
-    if (confirm('Are you sure you want to delete this patient?')) {
-      this.patientService.delete(id).subscribe({
-        next: (response) => {
-          if (response.success) {
-            this.toast.success('Patient Deleted', 'The patient was deleted successfully.');
-            this.loadPatients();
-          } else {
-            this.toast.error('Error', response.message || 'Failed to delete patient');
-          }
-        },
-        error: (error) => {
-          this.toast.error('Error', 'An error occurred while deleting the patient');
+  isDeleteModalVisible = false;
+  patientToDelete: Patient | null = null;
+
+  openDeleteModal(patient: Patient) {
+    this.patientToDelete = patient;
+    this.isDeleteModalVisible = true;
+  }
+
+  closeDeleteModal() {
+    this.isDeleteModalVisible = false;
+    this.patientToDelete = null;
+  }
+
+  confirmDeletePatient(event: {patientId: string, reason: string}) {
+    this.patientService.delete(event.patientId).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.toast.success('Patient Deleted', `The patient was deleted successfully. Reason: ${event.reason}`);
+          this.loadPatients();
+          this.closeDeleteModal();
+        } else {
+          this.toast.error('Error', response.message || 'Failed to delete patient');
         }
-      });
-    }
+      },
+      error: (error) => {
+        let errorMessage = 'An error occurred while deleting the patient';
+        if (error.error && error.error.message) {
+          errorMessage = error.error.message;
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        this.toast.error('Error', errorMessage);
+      }
+    });
   }
 
   formatDate(dateString: string): string {
