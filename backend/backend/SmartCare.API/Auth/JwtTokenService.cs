@@ -20,14 +20,10 @@ public sealed class JwtTokenService : ITokenService
         var expiresAtUtc = DateTime.UtcNow.AddMinutes(_settings.ExpiryMinutes);
         var claims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, email),
-            new(ClaimTypes.Email, email),
-            new(ClaimTypes.Name, email),
-            new(ClaimTypes.Role, role),
-            new("sub", email),
+            new("sub",   email),
             new("email", email),
-            new("name", email),
-            new("role", role)
+            new("name",  email),
+            new("role",  role)
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Key));

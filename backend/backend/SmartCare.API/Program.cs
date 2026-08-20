@@ -103,8 +103,6 @@ builder.Services.AddCors(options =>
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.SectionName));
 builder.Services.AddSingleton<ITokenService, JwtTokenService>();
 
-// Prevent ASP.NET Core from mapping standard claim types to Microsoft schemas
-System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -127,7 +125,7 @@ builder.Services.AddAuthentication(options =>
             ValidateLifetime = true,
             ClockSkew = TimeSpan.FromMinutes(1),
             RoleClaimType = "role",
-            NameClaimType = "name"
+            NameClaimType = "sub"
         };
 
         options.Events = new JwtBearerEvents
