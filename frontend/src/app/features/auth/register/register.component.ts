@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-register',
@@ -13,8 +14,9 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class RegisterComponent {
   userData = { fullName: '', hospitalName: '', email: '', license: '', password: '', role: 'Patient' };
-  errorMessage = '';
   isLoading = false;
+
+  private toast = inject(ToastService);
 
   setRole(role: string) {
     this.userData.role = role;
@@ -24,7 +26,7 @@ export class RegisterComponent {
 
   onSubmit() {
     if (!this.userData.email || !this.userData.password) {
-      this.errorMessage = 'Please enter both email and password';
+      this.toast.warning('Missing Credentials', 'Please enter both email and password');
       return;
     }
 
@@ -32,7 +34,6 @@ export class RegisterComponent {
     const role = this.userData.role === 'Admin' ? 'Patient' : this.userData.role;
 
     this.isLoading = true;
-    this.errorMessage = '';
 
     this.authService.register({
       email: this.userData.email,
@@ -51,8 +52,9 @@ export class RegisterComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Registration failed';
+        this.toast.error('Registration Failed', err.error?.message || 'Registration failed');
       }
     });
   }
 }
+

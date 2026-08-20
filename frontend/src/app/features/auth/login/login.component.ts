@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -13,25 +14,25 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class LoginComponent {
   credentials = { email: '', password: '' };
-  errorMessage = '';
   isLoading = false;
+
+  private toast = inject(ToastService);
 
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit() {
     if (!this.credentials.email || !this.credentials.password) {
-      this.errorMessage = 'Please enter both email and password';
+      this.toast.warning('Missing Credentials', 'Please enter both email and password');
       return;
     }
 
     this.isLoading = true;
-    this.errorMessage = '';
 
     this.authService.login(this.credentials).subscribe({
       next: (res) => {
         if (!res || !res.success) {
           this.isLoading = false;
-          this.errorMessage = res?.message || 'Login failed. Please verify your credentials.';
+          this.toast.error('Login Failed', res?.message || 'Please verify your credentials.');
           return;
         }
 
@@ -44,16 +45,16 @@ export class LoginComponent {
         this.router.navigate([target]).then(success => {
           this.isLoading = false;
           if (!success) {
-            this.errorMessage = 'Failed to navigate to dashboard. Please try again.';
+            this.toast.error('Navigation Error', 'Failed to navigate to dashboard. Please try again.');
           }
         }).catch(err => {
           this.isLoading = false;
-          this.errorMessage = 'Navigation error: ' + (err?.message || err);
+          this.toast.error('Navigation Error', err?.message || err);
         });
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.message || err.message || 'Login failed. Please check your network or server.';
+        this.toast.error('Login Failed', err.error?.message || err.message || 'Please check your network or server.');
       }
     });
   }

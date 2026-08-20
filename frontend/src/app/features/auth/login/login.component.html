@@ -35,8 +35,6 @@
         <h1>SmartCare Login</h1>
         <p class="auth-subtitle">Welcome back, Provider. Please verify your credentials.</p>
         
-        <div *ngIf="errorMessage" class="error-alert">{{ errorMessage }}</div>
-        
         <form (ngSubmit)="onSubmit()">
           
           <div class="form-group">

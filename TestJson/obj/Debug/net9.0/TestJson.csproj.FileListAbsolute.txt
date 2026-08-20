@@ -1,0 +1,15 @@
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/TestJson/bin/Debug/net9.0/TestJson
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/TestJson/bin/Debug/net9.0/TestJson.deps.json
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/TestJson/bin/Debug/net9.0/TestJson.runtimeconfig.json
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/TestJson/bin/Debug/net9.0/TestJson.dll
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/TestJson/bin/Debug/net9.0/TestJson.pdb
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/TestJson/obj/Debug/net9.0/TestJson.GeneratedMSBuildEditorConfig.editorconfig
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/TestJson/obj/Debug/net9.0/TestJson.AssemblyInfoInputs.cache
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/TestJson/obj/Debug/net9.0/TestJson.AssemblyInfo.cs
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/TestJson/obj/Debug/net9.0/TestJson.csproj.CoreCompileInputs.cache
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/TestJson/obj/Debug/net9.0/TestJson.sourcelink.json
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/TestJson/obj/Debug/net9.0/TestJson.dll
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/TestJson/obj/Debug/net9.0/refint/TestJson.dll
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/TestJson/obj/Debug/net9.0/TestJson.pdb
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/TestJson/obj/Debug/net9.0/TestJson.genruntimeconfig.cache
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/TestJson/obj/Debug/net9.0/ref/TestJson.dll

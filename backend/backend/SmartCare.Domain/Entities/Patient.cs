@@ -11,6 +11,7 @@ public sealed class Patient : AggregateRoot<PatientId>
     public DateTime DateOfBirth { get; private set; }
     public string PhoneNumber { get; private set; }
     public string Address { get; private set; }
+    public string? Gender { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
 
@@ -24,6 +25,7 @@ public sealed class Patient : AggregateRoot<PatientId>
         DateTime dateOfBirth,
         string phoneNumber,
         string address,
+        string? gender,
         DateTime createdAt,
         DateTime? updatedAt,
         IEnumerable<MedicalRecord>? medicalRecords = null) : base(id)
@@ -33,6 +35,7 @@ public sealed class Patient : AggregateRoot<PatientId>
         DateOfBirth = dateOfBirth;
         PhoneNumber = phoneNumber;
         Address = address;
+        Gender = gender;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
 
@@ -48,7 +51,8 @@ public sealed class Patient : AggregateRoot<PatientId>
         Email email,
         DateTime dateOfBirth,
         string phoneNumber,
-        string address)
+        string address,
+        string? gender = null)
     {
         if (dateOfBirth > DateTime.Today)
             return Result<Patient>.Failure(Error.InvalidInput);
@@ -59,7 +63,7 @@ public sealed class Patient : AggregateRoot<PatientId>
         if (string.IsNullOrWhiteSpace(address))
             return Result<Patient>.Failure(Error.InvalidInput);
 
-        var patient = new Patient(id, name, email, dateOfBirth, phoneNumber, address, DateTime.UtcNow, null);
+        var patient = new Patient(id, name, email, dateOfBirth, phoneNumber, address, gender, DateTime.UtcNow, null);
         
         patient.RaiseDomainEvent(new PatientCreatedEvent(patient.Id, patient.Email));
         
@@ -73,11 +77,12 @@ public sealed class Patient : AggregateRoot<PatientId>
         DateTime dateOfBirth,
         string phoneNumber,
         string address,
+        string? gender,
         DateTime createdAt,
         DateTime? updatedAt,
         IEnumerable<MedicalRecord>? medicalRecords = null)
     {
-        return new Patient(id, name, email, dateOfBirth, phoneNumber, address, createdAt, updatedAt, medicalRecords);
+        return new Patient(id, name, email, dateOfBirth, phoneNumber, address, gender, createdAt, updatedAt, medicalRecords);
     }
 
     public Result<MedicalRecord> AddMedicalRecord(
@@ -150,7 +155,7 @@ public sealed class Patient : AggregateRoot<PatientId>
             .AsReadOnly();
     }
 
-    public Result UpdatePersonalInformation(FullName name, Email email, string phoneNumber, string address)
+    public Result UpdatePersonalInformation(FullName name, Email email, string phoneNumber, string address, string? gender)
     {
         if (string.IsNullOrWhiteSpace(phoneNumber))
             return Result.Failure(Error.InvalidInput);
@@ -163,6 +168,7 @@ public sealed class Patient : AggregateRoot<PatientId>
         Email = email;
         PhoneNumber = phoneNumber;
         Address = address;
+        Gender = gender;
         UpdatedAt = DateTime.UtcNow;
 
         if (!oldEmail.Equals(email))

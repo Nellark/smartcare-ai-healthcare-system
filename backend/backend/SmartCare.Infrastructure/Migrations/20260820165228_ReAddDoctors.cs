@@ -1,12 +1,13 @@
-using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace SmartCare.Infrastructure.Migrations
 {
-    public partial class AddDoctors : Migration
+    /// <inheritdoc />
+    public partial class ReAddDoctors : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -51,6 +52,7 @@ namespace SmartCare.Infrastructure.Migrations
                 column: "Specialty");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

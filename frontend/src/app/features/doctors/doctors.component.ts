@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DoctorService } from '../../core/services/doctor.service';
 import { Doctor, UpsertDoctorRequest } from '../../core/models/doctor.model';
+import { ToastService } from '../../core/services/toast.service';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-doctors',
@@ -14,7 +16,6 @@ import { Doctor, UpsertDoctorRequest } from '../../core/models/doctor.model';
 export class DoctorsComponent implements OnInit {
   doctors: Doctor[] = [];
   isLoading = false;
-  errorMessage = '';
   searchTerm = '';
   editingDoctorId: string | null = null;
 
@@ -27,6 +28,8 @@ export class DoctorsComponent implements OnInit {
     licenseNumber: ''
   };
 
+  private toast = inject(ToastService);
+  
   constructor(private readonly doctorService: DoctorService) {}
 
   ngOnInit(): void {
@@ -35,7 +38,6 @@ export class DoctorsComponent implements OnInit {
 
   loadDoctors(): void {
     this.isLoading = true;
-    this.errorMessage = '';
 
     const request$ = this.searchTerm.trim()
       ? this.doctorService.searchBySpecialty(this.searchTerm.trim())
@@ -46,13 +48,13 @@ export class DoctorsComponent implements OnInit {
         if (response.success) {
           this.doctors = response.data ?? [];
         } else {
-          this.errorMessage = response.message || 'Failed to load doctors';
+          this.toast.error('Error', response.message || 'Failed to load doctors');
           this.doctors = [];
         }
         this.isLoading = false;
       },
       error: () => {
-        this.errorMessage = 'An error occurred while loading doctors';
+        this.toast.error('Error', 'An error occurred while loading doctors');
         this.doctors = [];
         this.isLoading = false;
       }
@@ -65,7 +67,6 @@ export class DoctorsComponent implements OnInit {
 
   resetForm(): void {
     this.editingDoctorId = null;
-    this.errorMessage = '';
     this.doctorForm = {
       firstName: '',
       lastName: '',
@@ -96,15 +97,15 @@ export class DoctorsComponent implements OnInit {
     request$.subscribe({
       next: (response) => {
         if (response.success) {
-          this.errorMessage = '';
+          this.toast.success('Success', 'Doctor saved successfully');
           this.loadDoctors();
           this.resetForm();
         } else {
-          this.errorMessage = response.message || 'Unable to save doctor';
+          this.toast.error('Error', response.message || 'Unable to save doctor');
         }
       },
       error: () => {
-        this.errorMessage = 'An error occurred while saving the doctor';
+        this.toast.error('Error', 'An error occurred while saving the doctor');
       }
     });
   }
@@ -117,13 +118,14 @@ export class DoctorsComponent implements OnInit {
     this.doctorService.delete(id).subscribe({
       next: (response) => {
         if (response.success) {
+          this.toast.success('Success', 'Doctor deleted successfully');
           this.loadDoctors();
         } else {
-          this.errorMessage = response.message || 'Unable to delete doctor';
+          this.toast.error('Error', response.message || 'Unable to delete doctor');
         }
       },
       error: () => {
-        this.errorMessage = 'An error occurred while deleting the doctor';
+        this.toast.error('Error', 'An error occurred while deleting the doctor');
       }
     });
   }

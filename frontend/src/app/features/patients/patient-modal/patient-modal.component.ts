@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { PatientService } from '../../../core/services/patient.service';
 import { CreatePatientRequest, Patient } from '../../../core/models/patient.model';
+import { ToastService } from '../../../core/services/toast.service';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-patient-modal',
@@ -21,8 +23,7 @@ export class PatientModalComponent {
   patientForm: FormGroup;
   isEditMode = false;
   isLoading = false;
-  errorMessage = '';
-
+  private toast = inject(ToastService);
   constructor(
     private fb: FormBuilder,
     private patientService: PatientService
@@ -55,7 +56,6 @@ export class PatientModalComponent {
 
   private resetForm(): void {
     this.patientForm.reset();
-    this.errorMessage = '';
     this.isLoading = false;
   }
 
@@ -88,7 +88,6 @@ export class PatientModalComponent {
     }
 
     this.isLoading = true;
-    this.errorMessage = '';
 
     const patientData: CreatePatientRequest = this.patientForm.value;
 
@@ -96,15 +95,16 @@ export class PatientModalComponent {
       this.patientService.update(this.patient.id, patientData).subscribe({
         next: (response) => {
           if (response.success) {
+            this.toast.success('Success', 'Patient updated successfully');
             this.patientSaved.emit(response.data);
             this.onClose();
           } else {
-            this.errorMessage = response.message || 'Failed to update patient';
+            this.toast.error('Error', response.message || 'Failed to update patient');
           }
           this.isLoading = false;
         },
         error: (error) => {
-          this.errorMessage = 'An error occurred while updating the patient';
+          this.toast.error('Error', 'An error occurred while updating the patient');
           this.isLoading = false;
         }
       });
@@ -112,15 +112,16 @@ export class PatientModalComponent {
       this.patientService.create(patientData).subscribe({
         next: (response) => {
           if (response.success) {
+            this.toast.success('Success', 'Patient created successfully');
             this.patientSaved.emit(response.data);
             this.onClose();
           } else {
-            this.errorMessage = response.message || 'Failed to create patient';
+            this.toast.error('Error', response.message || 'Failed to create patient');
           }
           this.isLoading = false;
         },
         error: (error) => {
-          this.errorMessage = 'An error occurred while creating the patient';
+          this.toast.error('Error', 'An error occurred while creating the patient');
           this.isLoading = false;
         }
       });

@@ -15,6 +15,7 @@ public static class PatientMapper
             DateOfBirth = patient.DateOfBirth,
             PhoneNumber = patient.PhoneNumber,
             Address = patient.Address,
+            Gender = patient.Gender,
             Age = patient.GetAge(),
             CreatedAt = patient.CreatedAt,
             UpdatedAt = patient.UpdatedAt,

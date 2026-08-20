@@ -34,6 +34,7 @@ export interface CreatePatientRequest {
   dateOfBirth: string;
   phoneNumber: string;
   address: string;
+  gender?: string;
 }
 
 export interface ApiResponse<T> {

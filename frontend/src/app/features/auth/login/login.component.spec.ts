@@ -1,14 +1,41 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router, provideRouter } from '@angular/router';
+import { of } from 'rxjs';
 
 import { LoginComponent } from './login.component';
+import { AuthService } from '../../../core/services/auth.service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+  let authServiceSpy: jasmine.SpyObj<AuthService>;
+  let routerSpy: jasmine.SpyObj<import('@angular/router').Router>;
 
   beforeEach(async () => {
+    authServiceSpy = jasmine.createSpyObj<AuthService>('AuthService', [
+      'login',
+      'isAdminRole',
+      'isPatientRole'
+    ]);
+    authServiceSpy.login.and.returnValue(of({
+      success: true,
+      data: {},
+      message: '',
+      errors: [],
+      timestamp: new Date().toISOString()
+    }));
+    authServiceSpy.isAdminRole.and.returnValue(false);
+    authServiceSpy.isPatientRole.and.returnValue(false);
+    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    routerSpy.navigate.and.returnValue(Promise.resolve(true));
+
     await TestBed.configureTestingModule({
-      imports: [LoginComponent]
+      imports: [LoginComponent],
+      providers: [
+        provideRouter([]),
+        { provide: AuthService, useValue: authServiceSpy },
+        { provide: Router, useValue: routerSpy }
+      ]
     })
     .compileComponents();
 

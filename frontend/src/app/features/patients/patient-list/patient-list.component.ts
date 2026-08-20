@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { PatientService } from '../../../core/services/patient.service';
 import { Patient } from '../../../core/models/patient.model';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-patient-list',
@@ -18,8 +19,6 @@ export class PatientListComponent implements OnInit, OnDestroy {
   patients = signal<Patient[]>([]);
   filteredPatients = signal<Patient[]>([]);
   isLoading = signal(false);
-  errorMessage = signal('');
-
   searchTerm: string = '';
 
   // pagination signals
@@ -83,7 +82,10 @@ export class PatientListComponent implements OnInit, OnDestroy {
   private readonly searchTermChanged$ = new Subject<string>();
   private readonly destroy$ = new Subject<void>();
 
-  constructor(private patientService: PatientService) {}
+  constructor(
+    private patientService: PatientService,
+    private toast: ToastService
+  ) {}
 
   ngOnInit(): void {
     this.loadPatients();
@@ -122,7 +124,6 @@ export class PatientListComponent implements OnInit, OnDestroy {
 
   loadPatients() {
     this.isLoading.set(true);
-    this.errorMessage.set('');
     
     this.patientService.getAll().subscribe({
       next: (response) => {
@@ -132,15 +133,15 @@ export class PatientListComponent implements OnInit, OnDestroy {
           this.filteredPatients.set(processed);
           this.currentPage.set(1);
         } else {
-          this.errorMessage.set(response.message || 'Failed to load patients');
+          this.toast.error('Error', response.message || 'Failed to load patients');
         }
         this.isLoading.set(false);
       },
       error: (error) => {
         if (error.status === 401 || error.status === 403) {
-          this.errorMessage.set('Session expired or insufficient permissions. Please log out and sign in again with a provider or admin account.');
+          this.toast.error('Access Denied', 'Session expired or insufficient permissions. Please log out and sign in again.');
         } else {
-          this.errorMessage.set('An error occurred while loading patients. Please ensure the backend API is running.');
+          this.toast.error('Error', 'An error occurred while loading patients. Please ensure the backend API is running.');
         }
         this.isLoading.set(false);
       }
@@ -194,13 +195,14 @@ export class PatientListComponent implements OnInit, OnDestroy {
       this.patientService.delete(id).subscribe({
         next: (response) => {
           if (response.success) {
+            this.toast.success('Patient Deleted', 'The patient was deleted successfully.');
             this.loadPatients();
           } else {
-            this.errorMessage.set(response.message || 'Failed to delete patient');
+            this.toast.error('Error', response.message || 'Failed to delete patient');
           }
         },
         error: (error) => {
-          this.errorMessage.set('An error occurred while deleting the patient');
+          this.toast.error('Error', 'An error occurred while deleting the patient');
         }
       });
     }

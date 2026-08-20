@@ -1,28 +1,76 @@
 <section class="admin-shell">
-  <div class="hero-card">
-    <div>
-      <p class="eyebrow">Administrative workspace</p>
-      <h2>Operations center</h2>
-      <p class="subtext">Monitor clinic performance, review urgent workflow items, and keep the care team moving.</p>
-    </div>
-    <button class="primary-btn" routerLink="/app/analytics">Open analytics</button>
+  <div class="shell-backdrop shell-backdrop-a"></div>
+  <div class="shell-backdrop shell-backdrop-b"></div>
+
+  <div *ngIf="isLoading" class="status-panel status-loading">
+    <div class="status-pill">Loading live admin data</div>
+    <p>Pulling dashboard totals, recent patients, and appointments from the API.</p>
   </div>
 
-  <div class="stats-grid">
+  <!-- Error message removed in favor of ToastService -->
+
+  <div class="status-strip">
+    <div class="status-strip-copy">
+      <span class="status-strip-label">Live operations</span>
+      <h3>Admin command center</h3>
+      <p>{{ lastRefreshedLabel }}</p>
+    </div>
+
+    <div class="status-strip-chips">
+      <div *ngFor="let chip of statusChips" class="status-chip" [ngClass]="chip.tone">
+        <span>{{ chip.label }}</span>
+        <strong>{{ chip.value }}</strong>
+      </div>
+      <button class="refresh-btn" type="button" (click)="refreshAll()" [disabled]="isRefreshing">
+        {{ isRefreshing ? 'Refreshing...' : 'Refresh live data' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="hero-card">
+    <div class="hero-copy">
+      <p class="eyebrow">Administrative workspace</p>
+      <h2>Operations center</h2>
+      <p class="subtext">
+        Monitor clinic performance, review urgent workflow items, and keep the care team moving from a single command view.
+      </p>
+
+      <div class="hero-meta">
+        <div class="meta-pill">
+          <span class="meta-label">Signed in as</span>
+          <strong>{{ currentUserName }}</strong>
+        </div>
+        <div class="meta-pill">
+          <span class="meta-label">Access</span>
+          <strong>{{ currentUserRole }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-actions">
+      <a class="primary-btn" routerLink="/app/analytics">Open analytics</a>
+      <a class="secondary-btn" routerLink="/app/billing">Review billing</a>
+    </div>
+  </div>
+
+  <div class="stats-grid" *ngIf="!isLoading">
     <article class="stat-card" *ngFor="let item of stats">
-      <div class="icon" [ngClass]="item.tone">{{ item.icon }}</div>
-      <div>
+      <div class="icon" [ngClass]="item.tone">
+        <span>{{ item.icon }}</span>
+      </div>
+      <div class="stat-copy">
         <p class="stat-title">{{ item.title }}</p>
         <h3>{{ item.value }}</h3>
-        <span>{{ item.change }}</span>
+        <span>{{ item.delta }}</span>
       </div>
     </article>
   </div>
 
-  <div class="content-grid">
+  <div class="content-grid" *ngIf="!isLoading">
     <div class="panel">
       <div class="panel-header">
         <h3>Quick actions</h3>
+        <span>Most used tools</span>
       </div>
       <div class="action-list">
         <a *ngFor="let action of quickActions" [routerLink]="action.path" class="action-item">
@@ -35,15 +83,76 @@
     <div class="panel">
       <div class="panel-header">
         <h3>Priority alerts</h3>
+        <span>Needs attention now</span>
       </div>
       <ul class="alert-list">
-        <li *ngFor="let alert of alerts">{{ alert }}</li>
+        <li *ngFor="let alert of alerts" class="alert-item" [ngClass]="alert.tone">
+          <span class="alert-tag">{{ alert.label }}</span>
+          <p>{{ alert.text }}</p>
+        </li>
       </ul>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h3>Work queue</h3>
+        <span>Live operational items</span>
+      </div>
+      <div class="queue-list">
+        <div *ngFor="let item of workstreams" class="queue-item">
+          <div>
+            <p>{{ item.label }}</p>
+            <span>{{ item.status }}</span>
+          </div>
+          <strong>{{ item.value }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-wide">
+      <div class="panel-header">
+        <h3>Live feed</h3>
+        <span>Recent patient and appointment activity</span>
+      </div>
+      <div class="feed-grid">
+        <div class="feed-column">
+          <h4>Recent patients</h4>
+          <div class="feed-list" *ngIf="recentPatients.length > 0; else noPatients">
+            <div class="feed-item" *ngFor="let patient of recentPatients | slice:0:4">
+              <div>
+                <strong>{{ formatPatientName(patient) }}</strong>
+                <p>{{ formatPatientMeta(patient) }}</p>
+              </div>
+              <span>New</span>
+            </div>
+          </div>
+          <ng-template #noPatients>
+            <p class="feed-empty">No recent patient registrations returned by the API.</p>
+          </ng-template>
+        </div>
+
+        <div class="feed-column">
+          <h4>Recent appointments</h4>
+          <div class="feed-list" *ngIf="recentAppointments.length > 0; else noAppointments">
+            <div class="feed-item" *ngFor="let appointment of recentAppointments | slice:0:4">
+              <div>
+                <strong>{{ appointment.reason || 'Appointment' }}</strong>
+                <p>{{ formatAppointmentMeta(appointment) }}</p>
+              </div>
+              <span>{{ appointment.durationMinutes }}m</span>
+            </div>
+          </div>
+          <ng-template #noAppointments>
+            <p class="feed-empty">No recent appointments returned by the API.</p>
+          </ng-template>
+        </div>
+      </div>
     </div>
 
     <div class="panel panel-wide">
       <div class="panel-header">
         <h3>Create new users</h3>
+        <span>Invite staff or onboard patients</span>
       </div>
       <app-admin-user-form></app-admin-user-form>
     </div>
@@ -51,6 +160,7 @@
     <div class="panel panel-wide">
       <div class="panel-header">
         <h3>System health</h3>
+        <span>Platform status</span>
       </div>
       <div class="health-list">
         <div *ngFor="let item of systemHealth" class="health-item">

@@ -13,7 +13,8 @@ public record CreatePatientCommand(
     string Email,
     DateTime DateOfBirth,
     string PhoneNumber,
-    string Address) : IRequest<ApiResponse<PatientDto>>;
+    string Address,
+    string? Gender) : IRequest<ApiResponse<PatientDto>>;
 
 public class CreatePatientCommandHandler : IRequestHandler<CreatePatientCommand, ApiResponse<PatientDto>>
 {
@@ -58,7 +59,8 @@ public class CreatePatientCommandHandler : IRequestHandler<CreatePatientCommand,
                 emailResult.Value,
                 request.DateOfBirth,
                 request.PhoneNumber,
-                request.Address);
+                request.Address,
+                request.Gender);
 
             if (!patientResult.IsSuccess)
             {

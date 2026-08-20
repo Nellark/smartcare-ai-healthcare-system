@@ -25,15 +25,14 @@ export class PatientFormComponent implements OnInit {
     email: '',
     dateOfBirth: '',
     phoneNumber: '',
-    address: ''
+    address: '',
+    gender: 'male'
   };
 
   isEditMode = false;
   patientId: string | null = null;
   isLoading = false;
   isSaving = false;
-  loadError = '';
-
   ngOnInit(): void {
     this.patientId = this.route.snapshot.paramMap.get('id');
     if (this.patientId) {
@@ -44,7 +43,6 @@ export class PatientFormComponent implements OnInit {
 
   loadPatient(id: string): void {
     this.isLoading = true;
-    this.loadError = '';
     this.patientService.getById(id).subscribe({
       next: (response) => {
         if (response.success && response.data) {
@@ -55,17 +53,20 @@ export class PatientFormComponent implements OnInit {
             email: d.email,
             dateOfBirth: d.dateOfBirth ? d.dateOfBirth.substring(0, 10) : '',
             phoneNumber: d.phoneNumber,
-            address: d.address
+            address: d.address,
+            gender: d.gender || 'male'
           };
         } else {
-          this.loadError = response.message || 'Failed to load patient data.';
+          this.toast.error('Error', response.message || 'Failed to load patient data.');
         }
         this.isLoading = false;
       },
       error: (err) => {
-        this.loadError = err.status === 401 || err.status === 403
-          ? 'Session expired. Please log out and sign in again.'
-          : 'Could not load patient. Ensure the backend is running.';
+        if (err.status === 401 || err.status === 403) {
+          this.toast.error('Access Denied', 'Session expired. Please log out and sign in again.');
+        } else {
+          this.toast.error('Error', 'Could not load patient. Ensure the backend is running.');
+        }
         this.isLoading = false;
       }
     });

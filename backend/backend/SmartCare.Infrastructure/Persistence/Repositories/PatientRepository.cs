@@ -145,6 +145,7 @@ public class PatientRepository : IPatientRepository
             entity.DateOfBirth,
             entity.PhoneNumber,
             entity.Address,
+            entity.Gender,
             entity.CreatedAt,
             entity.UpdatedAt,
             medicalRecords);
@@ -161,6 +162,7 @@ public class PatientRepository : IPatientRepository
             DateOfBirth = patient.DateOfBirth,
             PhoneNumber = patient.PhoneNumber,
             Address = patient.Address,
+            Gender = patient.Gender,
             CreatedAt = patient.CreatedAt,
             UpdatedAt = patient.UpdatedAt,
             MedicalRecords = patient.MedicalRecords.Select(mr => new MedicalRecordEntity
@@ -186,6 +188,7 @@ public class PatientRepository : IPatientRepository
         entity.DateOfBirth = patient.DateOfBirth;
         entity.PhoneNumber = patient.PhoneNumber;
         entity.Address = patient.Address;
+        entity.Gender = patient.Gender;
         entity.UpdatedAt = patient.UpdatedAt;
     }
 

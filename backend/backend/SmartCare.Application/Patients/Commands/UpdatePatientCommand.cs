@@ -12,7 +12,8 @@ public record UpdatePatientCommand(
     string LastName,
     string Email,
     string PhoneNumber,
-    string Address) : IRequest<ApiResponse<PatientDto>>;
+    string Address,
+    string? Gender) : IRequest<ApiResponse<PatientDto>>;
 
 public class UpdatePatientCommandHandler : IRequestHandler<UpdatePatientCommand, ApiResponse<PatientDto>>
 {
@@ -62,7 +63,8 @@ public class UpdatePatientCommandHandler : IRequestHandler<UpdatePatientCommand,
                 nameResult.Value,
                 emailResult.Value,
                 request.PhoneNumber,
-                request.Address);
+                request.Address,
+                request.Gender);
 
             if (!updateResult.IsSuccess)
             {
