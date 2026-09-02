@@ -105,8 +105,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.SectionName));
 builder.Services.AddSingleton<ITokenService, JwtTokenService>();
-builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Email"));
-builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<SmartCare.API.Services.IEmailService, SmartCare.API.Services.EmailService>();
 
 // Rate limiting: protect auth endpoints from brute-force and credential stuffing
 builder.Services.AddRateLimiter(options =>

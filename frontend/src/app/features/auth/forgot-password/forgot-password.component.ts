@@ -5,12 +5,17 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService, PasswordResetLink } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 
+interface PasswordRequirement {
+  label: string;
+  met: boolean;
+}
+
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './forgot-password.component.html',
-  styleUrls: ['../login/login.component.css'] // reuse login styles
+  styleUrls: ['../login/login.component.css', './forgot-password.component.css']
 })
 export class ForgotPasswordComponent implements OnInit {
   // Stage 1 fields
@@ -77,8 +82,35 @@ export class ForgotPasswordComponent implements OnInit {
     if (!/[A-Z]/.test(p)) errors.push('One uppercase letter');
     if (!/[a-z]/.test(p)) errors.push('One lowercase letter');
     if (!/\d/.test(p)) errors.push('One number');
-    if (!/[!@#$%^&*()\-_=+\[\]{}|;':",./<>?\\]/.test(p)) errors.push('One special character (!@#$%^&*)');
+    if (!/[!@#$%^&*()\-_=+\[\]{}|;':",.\/<>?\\]/.test(p)) errors.push('One special character (!@#$%^&*)');
     return errors;
+  }
+
+  get passwordStrength(): { level: 'weak' | 'fair' | 'strong' | 'none'; label: string } {
+    const p = this.newPassword;
+    if (!p) return { level: 'none', label: '' };
+    const score = [
+      p.length >= 8,
+      p.length >= 12,
+      /[A-Z]/.test(p),
+      /[a-z]/.test(p),
+      /\d/.test(p),
+      /[!@#$%^&*()\-_=+\[\]{}|;':",.\/<>?\\]/.test(p)
+    ].filter(Boolean).length;
+    if (score <= 2) return { level: 'weak', label: 'Weak' };
+    if (score <= 4) return { level: 'fair', label: 'Fair' };
+    return { level: 'strong', label: 'Strong' };
+  }
+
+  get passwordRequirementsList(): PasswordRequirement[] {
+    const p = this.newPassword;
+    return [
+      { label: 'At least 8 characters', met: p.length >= 8 },
+      { label: 'One uppercase letter (A–Z)', met: /[A-Z]/.test(p) },
+      { label: 'One lowercase letter (a–z)', met: /[a-z]/.test(p) },
+      { label: 'One number (0–9)', met: /\d/.test(p) },
+      { label: 'One special character (!@#$%^&*)', met: /[!@#$%^&*()\-_=+\[\]{}|;':",.\/<>?\\]/.test(p) },
+    ];
   }
 
   onSubmitRequest() {

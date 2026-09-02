@@ -218,6 +218,8 @@ public sealed class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
+            Console.WriteLine($"[EMAIL ERROR] {ex.GetType().Name}: {ex.Message}");
+            Console.WriteLine(ex.StackTrace);
             return StatusCode(StatusCodes.Status500InternalServerError,
                 ApiResponse<PasswordResetLinkResponse>.ErrorResult("Unable to send password reset email right now. Please try again later.", new List<string> { ex.Message }));
         }

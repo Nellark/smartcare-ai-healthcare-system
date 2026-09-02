@@ -137,3 +137,18 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# .NET build output
+**/bin/
+**/obj/
+
+# Sensitive config — contains SMTP credentials
+**/appsettings.Development.json
+
+# SQLite databases
+*.db
+*.db-shm
+*.db-wal
+
+# Logs
+**/logs/

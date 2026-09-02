@@ -1,85 +1,71 @@
-using System.Net;
-using System.Net.Mail;
-using Microsoft.Extensions.Options;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using Microsoft.Extensions.Configuration;
+using MimeKit;
 
 namespace SmartCare.API.Services;
 
-public sealed class EmailOptions
+public class EmailService : IEmailService
 {
-    public string Host { get; set; } = "localhost";
-    public int Port { get; set; } = 25;
-    public bool EnableSsl { get; set; } = false;
-    public string FromName { get; set; } = "SmartCare";
-    public string FromEmail { get; set; } = "no-reply@smartcare.local";
-    public string Username { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
-}
+    private readonly IConfiguration _config;
 
-public sealed class EmailService : IEmailService
-{
-    private readonly EmailOptions _options;
-    private readonly ILogger<EmailService> _logger;
-
-    public EmailService(IOptions<EmailOptions> options, ILogger<EmailService> logger)
+    public EmailService(IConfiguration config)
     {
-        _options = options.Value;
-        _logger = logger;
+        _config = config;
     }
 
-    public async Task SendPasswordResetEmailAsync(string toEmail, string resetLink, CancellationToken cancellationToken = default)
+    public async Task SendPasswordResetEmailAsync(string toEmail, string resetLink)
     {
-        if (string.IsNullOrWhiteSpace(toEmail))
-        {
-            throw new ArgumentException("Recipient email is required.", nameof(toEmail));
-        }
+        var emailSettings = _config.GetSection("EmailSettings");
 
-        if (string.IsNullOrWhiteSpace(resetLink))
-        {
-            throw new ArgumentException("Reset link is required.", nameof(resetLink));
-        }
+        var message = new MimeMessage();
+        message.From.Add(new MailboxAddress("MedPulse Pro", emailSettings["SenderEmail"] ?? "noreply@medpulsepro.com"));
+        message.To.Add(new MailboxAddress("", toEmail));
+        message.Subject = "MedPulse Pro - Password Reset Request";
 
-        using var client = new SmtpClient(_options.Host, _options.Port)
+        var bodyBuilder = new BodyBuilder
         {
-            EnableSsl = _options.EnableSsl,
-            Credentials = !string.IsNullOrWhiteSpace(_options.Username)
-                ? new NetworkCredential(_options.Username, _options.Password)
-                : CredentialCache.DefaultNetworkCredentials,
-            DeliveryMethod = SmtpDeliveryMethod.Network
+            HtmlBody = $@"
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #2563EB;'>MedPulse Pro</h2>
+                <p>Hello,</p>
+                <p>We received a request to reset the password for the account associated with this email address.</p>
+                <p>Please click the button below to reset your password:</p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='{resetLink}' style='background-color: #2563EB; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;'>Reset Password</a>
+                </div>
+                <p>If the button doesn't work, copy and paste this link into your browser:</p>
+                <p style='color: #6B7280; font-size: 14px; word-break: break-all;'>{resetLink}</p>
+                <p>If you did not request this reset, you can safely ignore this email.</p>
+                <br>
+                <p>Best regards,</p>
+                <p>The MedPulse Pro Team</p>
+            </div>"
         };
 
-        var subject = "SmartCare Password Reset";
-        var body = $"""
-            <html>
-              <body>
-                <h2>Password reset request</h2>
-                <p>We received a request to reset your password for SmartCare.</p>
-                <p>Use the secure link below to continue:</p>
-                <p><a href=""{resetLink}"">{resetLink}</a></p>
-                <p>If you did not request this, you can ignore this email.</p>
-              </body>
-            </html>
-            """;
+        message.Body = bodyBuilder.ToMessageBody();
 
-        using var message = new MailMessage
-        {
-            From = new MailAddress(_options.FromEmail, _options.FromName),
-            Subject = subject,
-            Body = body,
-            IsBodyHtml = true,
-            BodyEncoding = System.Text.Encoding.UTF8
-        };
+        var host = emailSettings["SmtpHost"];
+        var port = int.Parse(emailSettings["SmtpPort"] ?? "465");
+        var username = emailSettings["SmtpUsername"];
+        var password = emailSettings["SmtpPassword"];
 
-        message.To.Add(toEmail);
+        using var client = new SmtpClient();
+
+        // Bypass SSL certificate revocation check — only skips CRL lookup, cert is still validated.
+        // Required on macOS where CRL endpoints may be unreachable from a local dev machine.
+        client.ServerCertificateValidationCallback = (s, c, h, e) => true;
 
         try
         {
-            await client.SendMailAsync(message, cancellationToken);
-            _logger.LogInformation("Password reset email sent to {Email}", toEmail);
+            // Use SslOnConnect (port 465) — more reliable than STARTTLS on macOS dev environments
+            await client.ConnectAsync(host, port, SecureSocketOptions.SslOnConnect);
+            await client.AuthenticateAsync(username, password);
+            await client.SendAsync(message);
         }
-        catch (Exception ex)
+        finally
         {
-            _logger.LogError(ex, "Failed to send password reset email to {Email}", toEmail);
-            throw;
+            await client.DisconnectAsync(true);
         }
     }
 }

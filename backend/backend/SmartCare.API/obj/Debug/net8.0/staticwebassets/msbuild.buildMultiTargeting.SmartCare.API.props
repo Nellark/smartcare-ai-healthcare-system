@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../build/SmartCare.API.props" />
-</Project>
