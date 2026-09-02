@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
 import { PatientFormComponent } from './patient-form.component';
@@ -9,7 +9,6 @@ describe('PatientFormComponent', () => {
   let component: PatientFormComponent;
   let fixture: ComponentFixture<PatientFormComponent>;
   let patientServiceSpy: jasmine.SpyObj<PatientService>;
-  let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
     patientServiceSpy = jasmine.createSpyObj<PatientService>('PatientService', [
@@ -68,13 +67,12 @@ describe('PatientFormComponent', () => {
         timestamp: new Date().toISOString()
       })
     );
-    routerSpy = jasmine.createSpyObj<Router>('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
       imports: [PatientFormComponent],
       providers: [
+        provideRouter([]),
         { provide: PatientService, useValue: patientServiceSpy },
-        { provide: Router, useValue: routerSpy },
         {
           provide: ActivatedRoute,
           useValue: {

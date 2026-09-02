@@ -6,6 +6,11 @@ export interface MedicalRecord {
   notes: string;
   recordDate: string;
   doctorId: string;
+  recordType: string;
+  title: string;
+  provider: string;
+  status: string;
+  attachmentUrl?: string | null;
   createdAt: string;
   updatedAt?: string | null;
 }
@@ -17,4 +22,9 @@ export interface UpsertMedicalRecordRequest {
   notes: string;
   recordDate: string;
   doctorId: string;
+  recordType?: string;
+  title?: string;
+  provider?: string;
+  status?: string;
+  file?: File | null;
 }

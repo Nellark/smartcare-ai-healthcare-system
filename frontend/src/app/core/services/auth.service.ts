@@ -21,6 +21,12 @@ export interface ApiResponse<T> {
   data: T;
 }
 
+export interface PasswordResetLink {
+  email: string;
+  token: string;
+  resetLink: string;
+}
+
 type KnownRole = 'Patient' | 'Doctor' | 'Nurse' | 'Admin';
 
 @Injectable({
@@ -133,7 +139,10 @@ export class AuthService {
     return this.http.post<ApiResponse<LoginResponse>>(`${this.baseUrl}/login`, credentials)
       .pipe(
         tap(response => {
-          const token = response.data?.accessToken || (response.data as any)?.AccessToken || (response.data as any)?.token;
+          // Backend returns PascalCase: AccessToken. Support both casings defensively.
+          const token = (response.data as any)?.AccessToken
+                     || (response.data as any)?.accessToken
+                     || (response.data as any)?.token;
           if (response.success && token) {
             this.setToken(token);
           }
@@ -145,7 +154,10 @@ export class AuthService {
     return this.http.post<ApiResponse<LoginResponse>>(`${this.baseUrl}/register`, userData)
       .pipe(
         tap(response => {
-          const token = (response.data as any)?.accessToken || (response.data as any)?.AccessToken || (response.data as any)?.token;
+          // Backend returns PascalCase: AccessToken. Support both casings defensively.
+          const token = (response.data as any)?.AccessToken
+                     || (response.data as any)?.accessToken
+                     || (response.data as any)?.token;
           if (response.success && token) {
             this.setToken(token);
           }
@@ -159,6 +171,14 @@ export class AuthService {
         Authorization: `Bearer ${this.getToken()}`
       }
     });
+  }
+
+  forgotPassword(email: string): Observable<ApiResponse<PasswordResetLink | string>> {
+    return this.http.post<ApiResponse<PasswordResetLink | string>>(`${this.baseUrl}/forgot-password`, { email });
+  }
+
+  resetPassword(data: any): Observable<ApiResponse<string>> {
+    return this.http.post<ApiResponse<string>>(`${this.baseUrl}/reset-password`, data);
   }
 
   logout(): void {

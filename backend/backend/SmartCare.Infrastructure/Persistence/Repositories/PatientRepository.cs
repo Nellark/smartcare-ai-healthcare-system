@@ -131,6 +131,11 @@ public class PatientRepository : IPatientRepository
                     medicalRecordEntity.Notes,
                     medicalRecordEntity.RecordDate,
                     medicalRecordEntity.DoctorId,
+                    medicalRecordEntity.RecordType,
+                    medicalRecordEntity.Title,
+                    medicalRecordEntity.Provider,
+                    medicalRecordEntity.Status,
+                    medicalRecordEntity.AttachmentUrl,
                     medicalRecordEntity.CreatedAt,
                     medicalRecordEntity.UpdatedAt);
 
@@ -174,6 +179,11 @@ public class PatientRepository : IPatientRepository
                 Notes = mr.Notes,
                 RecordDate = mr.RecordDate,
                 DoctorId = mr.DoctorId,
+                RecordType = mr.RecordType,
+                Title = mr.Title,
+                Provider = mr.Provider,
+                Status = mr.Status,
+                AttachmentUrl = mr.AttachmentUrl,
                 CreatedAt = mr.CreatedAt,
                 UpdatedAt = mr.UpdatedAt
             }).ToList()
@@ -218,6 +228,14 @@ public class PatientRepository : IPatientRepository
                 existingEntity.Notes = domainMedicalRecord.Notes;
                 existingEntity.RecordDate = domainMedicalRecord.RecordDate;
                 existingEntity.DoctorId = domainMedicalRecord.DoctorId;
+                existingEntity.RecordType = domainMedicalRecord.RecordType;
+                existingEntity.Title = domainMedicalRecord.Title;
+                existingEntity.Provider = domainMedicalRecord.Provider;
+                existingEntity.Status = domainMedicalRecord.Status;
+                
+                if (domainMedicalRecord.AttachmentUrl != null)
+                    existingEntity.AttachmentUrl = domainMedicalRecord.AttachmentUrl;
+                    
                 existingEntity.UpdatedAt = domainMedicalRecord.UpdatedAt;
             }
             else
@@ -232,6 +250,11 @@ public class PatientRepository : IPatientRepository
                     Notes = domainMedicalRecord.Notes,
                     RecordDate = domainMedicalRecord.RecordDate,
                     DoctorId = domainMedicalRecord.DoctorId,
+                    RecordType = domainMedicalRecord.RecordType,
+                    Title = domainMedicalRecord.Title,
+                    Provider = domainMedicalRecord.Provider,
+                    Status = domainMedicalRecord.Status,
+                    AttachmentUrl = domainMedicalRecord.AttachmentUrl,
                     CreatedAt = domainMedicalRecord.CreatedAt,
                     UpdatedAt = domainMedicalRecord.UpdatedAt
                 };

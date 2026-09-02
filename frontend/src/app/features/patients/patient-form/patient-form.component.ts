@@ -88,12 +88,22 @@ export class PatientFormComponent implements OnInit {
             this.toast.success('Patient updated', `${this.patient.firstName} ${this.patient.lastName} has been updated.`);
             this.router.navigate(['/app/patients']);
           } else {
-            this.toast.error('Update failed', response.message);
+            this.toast.error('Update failed', response.message || 'Failed to update patient');
           }
         },
-        error: () => {
+        error: (error) => {
           this.isSaving = false;
-          this.toast.error('Update failed', 'Could not reach the API. Please ensure the backend is running.');
+          if (error.status === 401 || error.status === 403) {
+            this.toast.error('Access Denied', 'Session expired or insufficient permissions. Please log out and sign in again.');
+            return;
+          }
+          let errorMessage = 'Could not reach the API. Please ensure the backend is running.';
+          if (error.error && error.error.message) {
+            errorMessage = error.error.message;
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
+          this.toast.error('Update failed', errorMessage);
         }
       });
     } else {
@@ -104,12 +114,22 @@ export class PatientFormComponent implements OnInit {
             this.toast.success('Patient created', `${this.patient.firstName} ${this.patient.lastName} has been added.`);
             this.router.navigate(['/app/patients']);
           } else {
-            this.toast.error('Creation failed', response.message);
+            this.toast.error('Creation failed', response.message || 'Failed to create patient');
           }
         },
-        error: () => {
+        error: (error) => {
           this.isSaving = false;
-          this.toast.error('Creation failed', 'Could not reach the API. Please ensure the backend is running.');
+          if (error.status === 401 || error.status === 403) {
+            this.toast.error('Access Denied', 'Session expired or insufficient permissions. Please log out and sign in again.');
+            return;
+          }
+          let errorMessage = 'Could not reach the API. Please ensure the backend is running.';
+          if (error.error && error.error.message) {
+            errorMessage = error.error.message;
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
+          this.toast.error('Creation failed', errorMessage);
         }
       });
     }

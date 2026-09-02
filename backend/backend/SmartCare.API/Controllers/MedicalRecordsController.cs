@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using SmartCare.Application.Common.DTOs;
 using SmartCare.Application.MedicalRecords.Commands;
 using SmartCare.Application.MedicalRecords.Queries;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace SmartCare.API.Controllers;
 
@@ -14,11 +17,13 @@ public class MedicalRecordsController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly ILogger<MedicalRecordsController> _logger;
+    private readonly IWebHostEnvironment _environment;
 
-    public MedicalRecordsController(IMediator mediator, ILogger<MedicalRecordsController> logger)
+    public MedicalRecordsController(IMediator mediator, ILogger<MedicalRecordsController> logger, IWebHostEnvironment environment)
     {
         _mediator = mediator;
         _logger = logger;
+        _environment = environment;
     }
 
     [HttpPost]
@@ -36,6 +41,59 @@ public class MedicalRecordsController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error creating medical record");
+            return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse<MedicalRecordDto>.ErrorResult("An unexpected error occurred"));
+        }
+    }
+
+    [HttpPost("upload")]
+    [Authorize(Policy = "ManageMedicalRecords")]
+    [ProducesResponseType(typeof(ApiResponse<MedicalRecordDto>), StatusCodes.Status201Created)]
+    public async Task<ActionResult<ApiResponse<MedicalRecordDto>>> UploadMedicalRecord([FromForm] UploadMedicalRecordRequest request)
+    {
+        try
+        {
+            string? attachmentUrl = null;
+            if (request.File != null && request.File.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_environment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), "uploads");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + request.File.FileName;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await request.File.CopyToAsync(fileStream);
+                }
+
+                attachmentUrl = $"/uploads/{uniqueFileName}";
+            }
+
+            var command = new CreateMedicalRecordCommand(
+                request.PatientId,
+                request.Diagnosis ?? "",
+                request.Treatment ?? "",
+                request.Notes ?? "",
+                request.RecordDate,
+                request.DoctorId,
+                request.RecordType ?? "GENERAL",
+                request.Title ?? "Medical Record",
+                request.Provider ?? "",
+                request.Status ?? "COMPLETED",
+                attachmentUrl
+            );
+
+            var result = await _mediator.Send(command);
+            return result.Success
+                ? CreatedAtAction(nameof(GetMedicalRecordById), new { id = result.Data?.Id }, result)
+                : BadRequest(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error uploading medical record");
             return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse<MedicalRecordDto>.ErrorResult("An unexpected error occurred"));
         }
     }
@@ -117,4 +175,19 @@ public class MedicalRecordsController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse.ErrorResult("An unexpected error occurred"));
         }
     }
+}
+
+public class UploadMedicalRecordRequest
+{
+    public Guid PatientId { get; set; }
+    public string? Diagnosis { get; set; }
+    public string? Treatment { get; set; }
+    public string? Notes { get; set; }
+    public DateTime RecordDate { get; set; }
+    public string DoctorId { get; set; } = string.Empty;
+    public string? RecordType { get; set; }
+    public string? Title { get; set; }
+    public string? Provider { get; set; }
+    public string? Status { get; set; }
+    public IFormFile? File { get; set; }
 }

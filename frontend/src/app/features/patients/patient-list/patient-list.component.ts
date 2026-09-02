@@ -7,11 +7,12 @@ import { PatientService } from '../../../core/services/patient.service';
 import { Patient } from '../../../core/models/patient.model';
 import { ToastService } from '../../../core/services/toast.service';
 import { DeletePatientModalComponent } from '../delete-patient-modal/delete-patient-modal.component';
+import { PatientModalComponent } from '../patient-modal/patient-modal.component';
 
 @Component({
   selector: 'app-patient-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, DeletePatientModalComponent],
+  imports: [CommonModule, FormsModule, RouterModule, DeletePatientModalComponent, PatientModalComponent],
   templateUrl: './patient-list.component.html',
   styleUrls: ['./patient-list.component.css']
 })
@@ -21,6 +22,9 @@ export class PatientListComponent implements OnInit, OnDestroy {
   filteredPatients = signal<Patient[]>([]);
   isLoading = signal(false);
   searchTerm: string = '';
+
+  isPatientModalVisible = false;
+  patientToEdit: Patient | null = null;
 
   // pagination signals
   currentPage = signal(1);
@@ -225,6 +229,24 @@ export class PatientListComponent implements OnInit, OnDestroy {
         this.toast.error('Error', errorMessage);
       }
     });
+  }
+
+  openPatientModal(patient?: Patient) {
+    if (patient) {
+      this.patientToEdit = patient;
+    } else {
+      this.patientToEdit = null;
+    }
+    this.isPatientModalVisible = true;
+  }
+
+  closePatientModal() {
+    this.isPatientModalVisible = false;
+    this.patientToEdit = null;
+  }
+
+  onPatientSaved(patient: Patient) {
+    this.loadPatients();
   }
 
   formatDate(dateString: string): string {

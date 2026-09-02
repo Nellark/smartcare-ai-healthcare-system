@@ -121,6 +121,25 @@ public class SmartCareDbContext : DbContext
             entity.Property(e => e.RecordDate)
                 .IsRequired();
 
+            entity.Property(e => e.RecordType)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            entity.Property(e => e.Title)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(e => e.Provider)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(e => e.Status)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            entity.Property(e => e.AttachmentUrl)
+                .HasMaxLength(1000);
+
             entity.Property(e => e.CreatedAt)
                 .IsRequired();
 

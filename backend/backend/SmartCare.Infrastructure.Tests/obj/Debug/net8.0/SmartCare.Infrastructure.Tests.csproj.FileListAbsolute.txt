@@ -8,7 +8,6 @@
 /Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure.Tests/bin/Debug/net8.0/SmartCare.Infrastructure.Tests.dll
 /Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure.Tests/bin/Debug/net8.0/SmartCare.Infrastructure.Tests.pdb
 /Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure.Tests/bin/Debug/net8.0/AutoMapper.dll
-/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure.Tests/bin/Debug/net8.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 /Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure.Tests/bin/Debug/net8.0/FluentValidation.dll
 /Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure.Tests/bin/Debug/net8.0/FluentValidation.DependencyInjectionExtensions.dll
 /Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure.Tests/bin/Debug/net8.0/Humanizer.dll
@@ -215,3 +214,7 @@
 /Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure.Tests/obj/Debug/net8.0/SmartCare.Infrastructure.Tests.pdb
 /Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure.Tests/obj/Debug/net8.0/SmartCare.Infrastructure.Tests.genruntimeconfig.cache
 /Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure.Tests/obj/Debug/net8.0/ref/SmartCare.Infrastructure.Tests.dll
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure.Tests/bin/Debug/net8.0/Microsoft.IdentityModel.Abstractions.dll
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure.Tests/bin/Debug/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure.Tests/bin/Debug/net8.0/Microsoft.IdentityModel.Logging.dll
+/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.Infrastructure.Tests/bin/Debug/net8.0/Microsoft.IdentityModel.Tokens.dll

@@ -14,7 +14,12 @@ public record UpdateMedicalRecordCommand(
     string Treatment,
     string Notes,
     DateTime RecordDate,
-    string DoctorId) : IRequest<ApiResponse<MedicalRecordDto>>;
+    string DoctorId,
+    string RecordType,
+    string Title,
+    string Provider,
+    string Status,
+    string? AttachmentUrl) : IRequest<ApiResponse<MedicalRecordDto>>;
 
 public sealed class UpdateMedicalRecordCommandHandler : IRequestHandler<UpdateMedicalRecordCommand, ApiResponse<MedicalRecordDto>>
 {
@@ -58,7 +63,8 @@ public sealed class UpdateMedicalRecordCommandHandler : IRequestHandler<UpdateMe
                 return ApiResponse<MedicalRecordDto>.ErrorResult("Access denied");
             }
 
-            medicalRecord.UpdateDetails(request.Diagnosis, request.Treatment, request.Notes, request.DoctorId);
+            medicalRecord.UpdateDetails(request.Diagnosis, request.Treatment, request.Notes, request.DoctorId,
+                request.RecordType, request.Title, request.Provider, request.Status, request.AttachmentUrl);
             medicalRecord.UpdateRecordDate(request.RecordDate);
 
             await _medicalRecordRepository.UpdateAsync(medicalRecord, cancellationToken);

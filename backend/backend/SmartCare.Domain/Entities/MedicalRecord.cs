@@ -11,6 +11,11 @@ public sealed class MedicalRecord : Entity<MedicalRecordId>
     public string Notes { get; private set; }
     public DateTime RecordDate { get; private set; }
     public string DoctorId { get; private set; }
+    public string RecordType { get; private set; }
+    public string Title { get; private set; }
+    public string Provider { get; private set; }
+    public string Status { get; private set; }
+    public string? AttachmentUrl { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
 
@@ -22,6 +27,11 @@ public sealed class MedicalRecord : Entity<MedicalRecordId>
         string notes,
         DateTime recordDate,
         string doctorId,
+        string recordType,
+        string title,
+        string provider,
+        string status,
+        string? attachmentUrl,
         DateTime createdAt,
         DateTime? updatedAt) : base(id)
     {
@@ -31,6 +41,11 @@ public sealed class MedicalRecord : Entity<MedicalRecordId>
         Notes = notes;
         RecordDate = recordDate;
         DoctorId = doctorId;
+        RecordType = recordType;
+        Title = title;
+        Provider = provider;
+        Status = status;
+        AttachmentUrl = attachmentUrl;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
@@ -42,7 +57,12 @@ public sealed class MedicalRecord : Entity<MedicalRecordId>
         string treatment,
         string notes,
         DateTime recordDate,
-        string doctorId)
+        string doctorId,
+        string recordType = "CLINICAL NOTE",
+        string title = "Medical Record",
+        string provider = "",
+        string status = "COMPLETED",
+        string? attachmentUrl = null)
     {
         if (string.IsNullOrWhiteSpace(diagnosis))
             throw new ArgumentException("Diagnosis cannot be empty", nameof(diagnosis));
@@ -53,7 +73,8 @@ public sealed class MedicalRecord : Entity<MedicalRecordId>
         if (string.IsNullOrWhiteSpace(doctorId))
             throw new ArgumentException("Doctor ID cannot be empty", nameof(doctorId));
 
-        return new MedicalRecord(id, patientId, diagnosis, treatment, notes, recordDate, doctorId, DateTime.UtcNow, null);
+        return new MedicalRecord(id, patientId, diagnosis, treatment, notes, recordDate, doctorId, 
+            recordType, title, provider, status, attachmentUrl, DateTime.UtcNow, null);
     }
 
     public static MedicalRecord Rehydrate(
@@ -64,13 +85,20 @@ public sealed class MedicalRecord : Entity<MedicalRecordId>
         string notes,
         DateTime recordDate,
         string doctorId,
+        string recordType,
+        string title,
+        string provider,
+        string status,
+        string? attachmentUrl,
         DateTime createdAt,
         DateTime? updatedAt)
     {
-        return new MedicalRecord(id, patientId, diagnosis, treatment, notes, recordDate, doctorId, createdAt, updatedAt);
+        return new MedicalRecord(id, patientId, diagnosis, treatment, notes, recordDate, doctorId, 
+            recordType, title, provider, status, attachmentUrl, createdAt, updatedAt);
     }
 
-    public void UpdateDetails(string diagnosis, string treatment, string notes, string doctorId)
+    public void UpdateDetails(string diagnosis, string treatment, string notes, string doctorId, 
+        string recordType, string title, string provider, string status, string? attachmentUrl)
     {
         if (string.IsNullOrWhiteSpace(diagnosis))
             throw new ArgumentException("Diagnosis cannot be empty", nameof(diagnosis));
@@ -85,6 +113,14 @@ public sealed class MedicalRecord : Entity<MedicalRecordId>
         Treatment = treatment;
         Notes = notes;
         DoctorId = doctorId;
+        RecordType = recordType;
+        Title = title;
+        Provider = provider;
+        Status = status;
+        
+        if (attachmentUrl != null)
+            AttachmentUrl = attachmentUrl;
+            
         UpdatedAt = DateTime.UtcNow;
     }
 

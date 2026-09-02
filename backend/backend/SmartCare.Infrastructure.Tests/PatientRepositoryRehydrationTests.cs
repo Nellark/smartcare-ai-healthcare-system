@@ -69,7 +69,7 @@ public sealed class PatientRepositoryRehydrationTests
             Assert.Equal("Yonela", patient!.Name.FirstName);
             Assert.Equal("Kulati", patient.Name.LastName);
             Assert.Equal("nelakulati@gmail.com", patient.Email.Value);
-            Assert.Equal(1, patient.MedicalRecords.Count);
+            Assert.Single(patient.MedicalRecords);
             Assert.Empty(patient.GetDomainEvents());
 
             var medicalRecord = Assert.Single(patient.MedicalRecords);

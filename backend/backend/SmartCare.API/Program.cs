@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SmartCare.Application;
@@ -10,10 +11,12 @@ using SmartCare.API.Auth;
 using SmartCare.Infrastructure;
 using SmartCare.API.Middleware;
 using SmartCare.API.Health;
+using SmartCare.API.Services;
 using SmartCare.Infrastructure.Persistence;
 using Serilog;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -102,6 +105,42 @@ builder.Services.AddCors(options =>
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.SectionName));
 builder.Services.AddSingleton<ITokenService, JwtTokenService>();
+builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Email"));
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+// Rate limiting: protect auth endpoints from brute-force and credential stuffing
+builder.Services.AddRateLimiter(options =>
+{
+    // Login: max 5 attempts per IP per minute (sliding window)
+    options.AddSlidingWindowLimiter("auth-login", limiterOptions =>
+    {
+        limiterOptions.Window = TimeSpan.FromMinutes(1);
+        limiterOptions.SegmentsPerWindow = 6;
+        limiterOptions.PermitLimit = 5;
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit = 0;
+    });
+
+    // Register: max 3 new accounts per IP per hour
+    options.AddSlidingWindowLimiter("auth-register", limiterOptions =>
+    {
+        limiterOptions.Window = TimeSpan.FromHours(1);
+        limiterOptions.SegmentsPerWindow = 6;
+        limiterOptions.PermitLimit = 3;
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit = 0;
+    });
+
+    // Return 429 with a Retry-After header
+    options.OnRejected = async (context, cancellationToken) =>
+    {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.Headers.RetryAfter = "60";
+        await context.HttpContext.Response.WriteAsJsonAsync(
+            new { success = false, message = "Too many requests. Please try again later." },
+            cancellationToken);
+    };
+});
 
 
 builder.Services.AddAuthentication(options =>
@@ -154,20 +193,20 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("ViewDashboard", policy => policy.RequireAuthenticatedUser());
-    options.AddPolicy("ViewDoctors", policy => policy.RequireAuthenticatedUser());
-    options.AddPolicy("ManageDoctors", policy => policy.RequireAuthenticatedUser());
-    options.AddPolicy("DeleteDoctors", policy => policy.RequireAuthenticatedUser());
-    options.AddPolicy("ViewAppointments", policy => policy.RequireAuthenticatedUser());
-    options.AddPolicy("ManageAppointments", policy => policy.RequireAuthenticatedUser());
-    options.AddPolicy("DeleteAppointments", policy => policy.RequireAuthenticatedUser());
-    options.AddPolicy("ViewMedicalRecords", policy => policy.RequireAuthenticatedUser());
-    options.AddPolicy("ManageMedicalRecords", policy => policy.RequireAuthenticatedUser());
-    options.AddPolicy("DeleteMedicalRecords", policy => policy.RequireAuthenticatedUser());
-    options.AddPolicy("ViewPatientDetails", policy => policy.RequireAuthenticatedUser());
-    options.AddPolicy("ViewPatientList", policy => policy.RequireAuthenticatedUser());
-    options.AddPolicy("ManagePatients", policy => policy.RequireAuthenticatedUser());
-    options.AddPolicy("DeletePatients", policy => policy.RequireAuthenticatedUser());
+    options.AddPolicy("ViewDashboard", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor, AppRoles.Nurse, AppRoles.Patient));
+    options.AddPolicy("ViewDoctors", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor, AppRoles.Nurse, AppRoles.Patient));
+    options.AddPolicy("ManageDoctors", policy => policy.RequireRole(AppRoles.Admin));
+    options.AddPolicy("DeleteDoctors", policy => policy.RequireRole(AppRoles.Admin));
+    options.AddPolicy("ViewAppointments", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor, AppRoles.Nurse, AppRoles.Patient));
+    options.AddPolicy("ManageAppointments", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor, AppRoles.Nurse));
+    options.AddPolicy("DeleteAppointments", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor));
+    options.AddPolicy("ViewMedicalRecords", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor, AppRoles.Nurse, AppRoles.Patient));
+    options.AddPolicy("ManageMedicalRecords", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor, AppRoles.Nurse));
+    options.AddPolicy("DeleteMedicalRecords", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor));
+    options.AddPolicy("ViewPatientDetails", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor, AppRoles.Nurse, AppRoles.Patient));
+    options.AddPolicy("ViewPatientList", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor, AppRoles.Nurse));
+    options.AddPolicy("ManagePatients", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor, AppRoles.Nurse));
+    options.AddPolicy("DeletePatients", policy => policy.RequireRole(AppRoles.Admin));
 });
 
 // Add application and infrastructure layers
@@ -200,8 +239,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
+app.UseStaticFiles();
 app.UseCors("AllowFrontend");
 
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

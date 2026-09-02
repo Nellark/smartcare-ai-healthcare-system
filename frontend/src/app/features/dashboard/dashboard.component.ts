@@ -7,6 +7,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
 import { Patient, CreatePatientRequest } from '../../core/models/patient.model';
 import { DeletePatientModalComponent } from '../patients/delete-patient-modal/delete-patient-modal.component';
+import { PatientModalComponent } from '../patients/patient-modal/patient-modal.component';
 
 interface DashboardPatient {
   id: string;
@@ -23,7 +24,7 @@ interface DashboardPatient {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, DeletePatientModalComponent],
+  imports: [CommonModule, FormsModule, RouterModule, DeletePatientModalComponent, PatientModalComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -35,16 +36,7 @@ export class DashboardComponent implements OnInit {
   searchQuery = '';
   statusFilter = 'All';
   isLoading = true;
-  isModalOpen = false;
-
-  newPatient = {
-    fullName: '',
-    email: '',
-    dateOfBirth: '',
-    gender: 'male',
-    phoneNumber: '',
-    address: ''
-  };
+  isPatientModalVisible = false;
 
   currentPage = 1;
   pageSize = 10;
@@ -224,70 +216,18 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  openModal(): void {
-    this.isModalOpen = true;
+  openPatientModal(): void {
+    this.isPatientModalVisible = true;
   }
 
-  closeModal(): void {
-    this.isModalOpen = false;
+  closePatientModal(): void {
+    this.isPatientModalVisible = false;
   }
 
-  registerPatient(): void {
-    if (!this.newPatient.fullName || !this.newPatient.email || !this.newPatient.dateOfBirth) {
-      this.toast.warning('Missing fields', 'Please fill out all required fields.');
-      return;
-    }
-
-    const nameParts = this.newPatient.fullName.trim().split(/\s+/);
-    const firstName = nameParts[0];
-    const lastName = nameParts.slice(1).join(' ') || 'Patient';
-
-    let dobIso = this.newPatient.dateOfBirth;
-    if (dobIso.includes('/')) {
-      const parts = dobIso.split('/');
-      if (parts.length === 3) {
-        const month = parts[0].padStart(2, '0');
-        const day = parts[1].padStart(2, '0');
-        const year = parts[2];
-        dobIso = `${year}-${month}-${day}`;
-      }
-    }
-
-    const requestData: CreatePatientRequest = {
-      firstName,
-      lastName,
-      email: this.newPatient.email,
-      dateOfBirth: dobIso,
-      phoneNumber: this.newPatient.phoneNumber || 'N/A',
-      address: this.newPatient.address || 'Sandton, Johannesburg',
-      gender: this.newPatient.gender
-    };
-
-    this.patientService.create(requestData).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.toast.success('Patient registered', `${firstName} ${lastName} has been added successfully.`);
-          this.closeModal();
-          this.loadPatients();
-
-          // Reset form
-          this.newPatient = {
-            fullName: '',
-            email: '',
-            dateOfBirth: '',
-            gender: 'male',
-            phoneNumber: '',
-            address: ''
-          };
-        } else {
-          this.toast.error('Registration failed', response.message);
-        }
-      },
-      error: () => {
-        this.toast.error('Registration failed', 'Could not reach the API. Make sure the backend is running and you are logged in.');
-      }
-    });
+  onPatientSaved(patient: Patient): void {
+    this.loadPatients();
   }
+
 
   setPage(page: number | string): void {
     if (typeof page === 'number' && page >= 1 && page <= this.totalPages) {

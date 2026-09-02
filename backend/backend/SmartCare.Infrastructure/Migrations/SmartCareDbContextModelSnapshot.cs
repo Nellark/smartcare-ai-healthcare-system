@@ -129,6 +129,10 @@ namespace SmartCare.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("AttachmentUrl")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
@@ -150,7 +154,27 @@ namespace SmartCare.Infrastructure.Migrations
                     b.Property<Guid>("PatientId")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Provider")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("RecordDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RecordType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Treatment")
@@ -241,6 +265,12 @@ namespace SmartCare.Infrastructure.Migrations
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ResetToken")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ResetTokenExpiry")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Role")

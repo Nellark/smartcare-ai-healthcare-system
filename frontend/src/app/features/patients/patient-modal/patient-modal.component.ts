@@ -23,6 +23,7 @@ export class PatientModalComponent {
   patientForm: FormGroup;
   isEditMode = false;
   isLoading = false;
+  errorMessage = '';
   private toast = inject(ToastService);
   constructor(
     private fb: FormBuilder,
@@ -38,6 +39,7 @@ export class PatientModalComponent {
       email: ['', [Validators.required, Validators.email]],
       dateOfBirth: ['', [Validators.required]],
       phoneNumber: ['', [Validators.required, Validators.maxLength(20)]],
+      gender: ['male', [Validators.required]],
       address: ['', [Validators.required, Validators.maxLength(200)]]
     });
   }
@@ -67,6 +69,7 @@ export class PatientModalComponent {
         email: this.patient.email,
         dateOfBirth: this.formatDateForInput(this.patient.dateOfBirth),
         phoneNumber: this.patient.phoneNumber,
+        gender: this.patient.gender || 'male',
         address: this.patient.address
       });
     }
@@ -142,5 +145,6 @@ export class PatientModalComponent {
   get email() { return this.patientForm.get('email'); }
   get dateOfBirth() { return this.patientForm.get('dateOfBirth'); }
   get phoneNumber() { return this.patientForm.get('phoneNumber'); }
+  get gender() { return this.patientForm.get('gender'); }
   get address() { return this.patientForm.get('address'); }
 }

@@ -30,8 +30,8 @@
 
 .form-control:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(2, 108, 124, 0.25);
 }
 
 .form-control.invalid {
@@ -78,12 +78,12 @@
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background-color: var(--color-primary);
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: var(--color-primary-dark);
 }
 
 .btn-secondary {
@@ -98,4 +98,25 @@
 textarea.form-control {
   resize: vertical;
   min-height: 80px;
+}
+
+.select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.select-wrapper select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.5rem;
+  cursor: pointer;
+  width: 100%;
+}
+
+.select-icon {
+  position: absolute;
+  right: 0.85rem;
+  color: #64748B;
+  pointer-events: none;
 }

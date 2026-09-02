@@ -31,6 +31,24 @@ export class MedicalRecordService {
     return this.http.post<ApiResponse<MedicalRecord>>(this.baseUrl, record);
   }
 
+  upload(record: UpsertMedicalRecordRequest): Observable<ApiResponse<MedicalRecord>> {
+    const formData = new FormData();
+    formData.append('patientId', record.patientId);
+    formData.append('diagnosis', record.diagnosis);
+    formData.append('treatment', record.treatment);
+    formData.append('notes', record.notes);
+    formData.append('recordDate', record.recordDate);
+    formData.append('doctorId', record.doctorId);
+    
+    if (record.recordType) formData.append('recordType', record.recordType);
+    if (record.title) formData.append('title', record.title);
+    if (record.provider) formData.append('provider', record.provider);
+    if (record.status) formData.append('status', record.status);
+    if (record.file) formData.append('file', record.file);
+
+    return this.http.post<ApiResponse<MedicalRecord>>(`${this.baseUrl}/upload`, formData);
+  }
+
   update(id: string, record: UpsertMedicalRecordRequest): Observable<ApiResponse<MedicalRecord>> {
     return this.http.put<ApiResponse<MedicalRecord>>(`${this.baseUrl}/${id}`, record);
   }

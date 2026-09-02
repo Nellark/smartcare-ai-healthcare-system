@@ -4,9 +4,9 @@ namespace SmartCare.Infrastructure.Persistence.Entities;
 
 public class AppointmentEntity : IAuditableEntity
 {
-    public AppointmentId Id { get; set; }
-    public PatientId PatientId { get; set; }
-    public DoctorId DoctorId { get; set; }
+    public AppointmentId Id { get; set; } = default!;
+    public PatientId PatientId { get; set; } = default!;
+    public DoctorId DoctorId { get; set; } = default!;
     public DateTime ScheduledAt { get; set; }
     public int DurationMinutes { get; set; }
     public string Reason { get; set; } = string.Empty;

@@ -13,7 +13,12 @@ public record CreateMedicalRecordCommand(
     string Treatment,
     string Notes,
     DateTime RecordDate,
-    string DoctorId) : IRequest<ApiResponse<MedicalRecordDto>>;
+    string DoctorId,
+    string RecordType,
+    string Title,
+    string Provider,
+    string Status,
+    string? AttachmentUrl) : IRequest<ApiResponse<MedicalRecordDto>>;
 
 public sealed class CreateMedicalRecordCommandHandler : IRequestHandler<CreateMedicalRecordCommand, ApiResponse<MedicalRecordDto>>
 {
@@ -57,7 +62,12 @@ public sealed class CreateMedicalRecordCommandHandler : IRequestHandler<CreateMe
                 request.Treatment,
                 request.Notes,
                 request.RecordDate,
-                request.DoctorId);
+                request.DoctorId,
+                request.RecordType,
+                request.Title,
+                request.Provider,
+                request.Status,
+                request.AttachmentUrl);
 
             await _medicalRecordRepository.AddAsync(medicalRecord, cancellationToken);
             await _medicalRecordRepository.SaveChangesAsync(cancellationToken);

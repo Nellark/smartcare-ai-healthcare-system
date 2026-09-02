@@ -61,6 +61,14 @@ public sealed class MedicalRecordRepository : IMedicalRecordRepository
         entity.Notes = medicalRecord.Notes;
         entity.RecordDate = medicalRecord.RecordDate;
         entity.DoctorId = medicalRecord.DoctorId;
+        entity.RecordType = medicalRecord.RecordType;
+        entity.Title = medicalRecord.Title;
+        entity.Provider = medicalRecord.Provider;
+        entity.Status = medicalRecord.Status;
+        
+        if (medicalRecord.AttachmentUrl != null)
+            entity.AttachmentUrl = medicalRecord.AttachmentUrl;
+            
         entity.UpdatedAt = medicalRecord.UpdatedAt;
     }
 
@@ -86,6 +94,11 @@ public sealed class MedicalRecordRepository : IMedicalRecordRepository
             entity.Notes,
             entity.RecordDate,
             entity.DoctorId,
+            entity.RecordType,
+            entity.Title,
+            entity.Provider,
+            entity.Status,
+            entity.AttachmentUrl,
             entity.CreatedAt,
             entity.UpdatedAt);
     }
@@ -101,6 +114,11 @@ public sealed class MedicalRecordRepository : IMedicalRecordRepository
             Notes = medicalRecord.Notes,
             RecordDate = medicalRecord.RecordDate,
             DoctorId = medicalRecord.DoctorId,
+            RecordType = medicalRecord.RecordType,
+            Title = medicalRecord.Title,
+            Provider = medicalRecord.Provider,
+            Status = medicalRecord.Status,
+            AttachmentUrl = medicalRecord.AttachmentUrl,
             CreatedAt = medicalRecord.CreatedAt,
             UpdatedAt = medicalRecord.UpdatedAt
         };

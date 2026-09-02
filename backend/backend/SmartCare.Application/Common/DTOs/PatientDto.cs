@@ -25,6 +25,11 @@ public class MedicalRecordDto
     public string Notes { get; set; } = string.Empty;
     public DateTime RecordDate { get; set; }
     public string DoctorId { get; set; } = string.Empty;
+    public string RecordType { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
+    public string Provider { get; set; } = string.Empty;
+    public string Status { get; set; } = string.Empty;
+    public string? AttachmentUrl { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 }

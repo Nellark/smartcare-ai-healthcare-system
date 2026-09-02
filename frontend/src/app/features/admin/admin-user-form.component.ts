@@ -12,7 +12,7 @@ import { AuthService } from '../../core/services/auth.service';
       <div class="field-grid">
         <div class="field">
           <label for="admin-email">Email</label>
-          <input id="admin-email" type="email" [(ngModel)]="email" name="email" placeholder="name@clinic.com" required />
+          <input id="admin-email" type="email" [(ngModel)]="email" name="email" placeholder="nelakulati@gmail.com" required />
         </div>
 
         <div class="field">

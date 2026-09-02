@@ -13,7 +13,10 @@ public static class DependencyInjection
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 
         // Add AutoMapper
-        services.AddAutoMapper(typeof(DependencyInjection).Assembly);
+        services.AddAutoMapper(cfg =>
+        {
+            cfg.AddProfile<SmartCare.Application.Common.Mappings.MappingProfile>();
+        });
 
         // Add FluentValidation
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);

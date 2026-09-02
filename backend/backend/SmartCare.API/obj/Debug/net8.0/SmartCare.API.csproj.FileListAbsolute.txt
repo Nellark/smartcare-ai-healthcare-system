@@ -50,7 +50,6 @@
 /Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.API/bin/Debug/net8.0/SmartCare.API.dll
 /Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.API/bin/Debug/net8.0/SmartCare.API.pdb
 /Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.API/bin/Debug/net8.0/AutoMapper.dll
-/Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.API/bin/Debug/net8.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 /Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.API/bin/Debug/net8.0/FluentValidation.dll
 /Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.API/bin/Debug/net8.0/FluentValidation.DependencyInjectionExtensions.dll
 /Users/yonelakulati/Desktop/smartcare-ai-healthcare-system/backend/backend/SmartCare.API/bin/Debug/net8.0/Humanizer.dll

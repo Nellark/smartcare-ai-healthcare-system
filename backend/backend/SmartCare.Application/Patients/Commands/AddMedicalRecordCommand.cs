@@ -12,7 +12,12 @@ public record AddMedicalRecordCommand(
     string Treatment,
     string Notes,
     DateTime RecordDate,
-    string DoctorId) : IRequest<ApiResponse<MedicalRecordDto>>;
+    string DoctorId,
+    string RecordType,
+    string Title,
+    string Provider,
+    string Status,
+    string? AttachmentUrl) : IRequest<ApiResponse<MedicalRecordDto>>;
 
 public class AddMedicalRecordCommandHandler : IRequestHandler<AddMedicalRecordCommand, ApiResponse<MedicalRecordDto>>
 {
@@ -57,7 +62,12 @@ public class AddMedicalRecordCommandHandler : IRequestHandler<AddMedicalRecordCo
                 request.Treatment,
                 request.Notes,
                 request.RecordDate,
-                request.DoctorId);
+                request.DoctorId,
+                request.RecordType,
+                request.Title,
+                request.Provider,
+                request.Status,
+                request.AttachmentUrl);
 
             if (!addResult.IsSuccess)
             {

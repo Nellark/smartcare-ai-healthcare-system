@@ -91,12 +91,18 @@ public sealed class Patient : AggregateRoot<PatientId>
         string treatment,
         string notes,
         DateTime recordDate,
-        string doctorId)
+        string doctorId,
+        string recordType,
+        string title,
+        string provider,
+        string status,
+        string? attachmentUrl)
     {
         if (string.IsNullOrWhiteSpace(doctorId))
             return Result<MedicalRecord>.Failure(Error.InvalidInput);
 
-        var medicalRecord = MedicalRecord.Create(recordId, Id, diagnosis, treatment, notes, recordDate, doctorId);
+        var medicalRecord = MedicalRecord.Create(recordId, Id, diagnosis, treatment, notes, recordDate, doctorId,
+            recordType, title, provider, status, attachmentUrl);
         _medicalRecords.Add(medicalRecord);
         
         UpdatedAt = DateTime.UtcNow;
@@ -111,13 +117,18 @@ public sealed class Patient : AggregateRoot<PatientId>
         string diagnosis,
         string treatment,
         string notes,
-        string doctorId)
+        string doctorId,
+        string recordType,
+        string title,
+        string provider,
+        string status,
+        string? attachmentUrl)
     {
         var medicalRecord = _medicalRecords.FirstOrDefault(mr => mr.Id == recordId);
         if (medicalRecord == null)
             return Result<MedicalRecord>.Failure(Error.NotFound);
 
-        medicalRecord.UpdateDetails(diagnosis, treatment, notes, doctorId);
+        medicalRecord.UpdateDetails(diagnosis, treatment, notes, doctorId, recordType, title, provider, status, attachmentUrl);
         UpdatedAt = DateTime.UtcNow;
         
         RaiseDomainEvent(new MedicalRecordUpdatedEvent(Id, medicalRecord.Id, doctorId));

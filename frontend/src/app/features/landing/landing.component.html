@@ -23,14 +23,12 @@
         
         <div class="hero-buttons">
           <a routerLink="/register" class="btn btn-primary-lg">Start Free Trial</a>
-          <button class="btn btn-outline-lg">
+          <button class="btn btn-outline-lg" (click)="startDemo()" [disabled]="isLoadingDemo">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
+              <circle cx="12" cy="12" r="10"></circle>
+              <polygon points="10 8 16 12 10 16 10 8"></polygon>
             </svg>
-            Book Demo
+            View Demo
           </button>
         </div>
 

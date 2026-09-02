@@ -15,10 +15,15 @@ import { ToastService } from '../../../core/services/toast.service';
 export class LoginComponent {
   credentials = { email: '', password: '' };
   isLoading = false;
+  showPassword = false;
 
   private toast = inject(ToastService);
 
   constructor(private authService: AuthService, private router: Router) {}
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 
   onSubmit() {
     if (!this.credentials.email || !this.credentials.password) {

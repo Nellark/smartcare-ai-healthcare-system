@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SmartCare.Infrastructure.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a6c067c1f25c6fa8e678db5b864b8880fff85947")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9cfa16332b34b54da760a26eadbadda459fba0df")]
 [assembly: System.Reflection.AssemblyProductAttribute("SmartCare.Infrastructure.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SmartCare.Infrastructure.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
