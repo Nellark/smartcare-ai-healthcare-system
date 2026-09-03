@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 
@@ -12,14 +12,23 @@ import { ToastService } from '../../../core/services/toast.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   credentials = { email: '', password: '' };
   isLoading = false;
   showPassword = false;
 
   private toast = inject(ToastService);
+  private route = inject(ActivatedRoute);
 
   constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['expired'] === '1') {
+        this.toast.warning('Session Expired', 'Your session has expired. Please sign in again.');
+      }
+    });
+  }
 
   togglePassword() {
     this.showPassword = !this.showPassword;
