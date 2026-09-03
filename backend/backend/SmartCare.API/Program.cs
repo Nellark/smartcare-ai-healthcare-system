@@ -208,7 +208,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("ViewPatientDetails", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor, AppRoles.Nurse, AppRoles.Patient));
     options.AddPolicy("ViewPatientList", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor, AppRoles.Nurse));
     options.AddPolicy("ManagePatients", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor, AppRoles.Nurse));
-    options.AddPolicy("DeletePatients", policy => policy.RequireRole(AppRoles.Admin));
+    options.AddPolicy("DeletePatients", policy => policy.RequireRole(AppRoles.Admin, AppRoles.Doctor));
 });
 
 // Add application and infrastructure layers

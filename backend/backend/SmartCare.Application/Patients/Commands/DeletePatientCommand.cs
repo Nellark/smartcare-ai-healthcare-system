@@ -31,13 +31,6 @@ public class DeletePatientCommandHandler : IRequestHandler<DeletePatientCommand,
                 return ApiResponse.ErrorResult("Patient not found");
             }
 
-            // Check if patient can be deleted
-            var canDeleteResult = await _patientDomainService.CanPatientBeDeletedAsync(patientId, cancellationToken);
-            if (!canDeleteResult.IsSuccess || !canDeleteResult.Value)
-            {
-                return ApiResponse.ErrorResult("Patient cannot be deleted due to existing medical records");
-            }
-
             await _patientRepository.DeleteAsync(patientId, cancellationToken);
             await _patientRepository.SaveChangesAsync(cancellationToken);
 
