@@ -1,66 +1,379 @@
-<div class="onboarding-page">
-  <div class="onboarding-container glass-panel">
-    <div class="progress-bar">
-      <div class="progress-fill" [style.width]="step === 1 ? '50%' : '100%'"></div>
-    </div>
-    
-    <!-- Step 1: Personal Info -->
-    <div *ngIf="step === 1" class="step-content fade-in">
-      <h2>Welcome to SmartCare 👋</h2>
-      <p>Let's get to know you better. What's your name?</p>
-      
-      <div class="form-group mt-4">
-        <label>Full Name</label>
-        <input type="text" [(ngModel)]="onboardingData.fullName" placeholder="Yonela Kulati">
-      </div>
-      
-      <button class="btn btn-primary btn-block mt-4" (click)="nextStep()" [disabled]="!onboardingData.fullName">
-        Continue
-      </button>
-    </div>
+<div class="ob-page">
 
-    <!-- Step 2: Clinic Info -->
-    <div *ngIf="step === 2" class="step-content fade-in">
-      <h2>Clinic Details 🏥</h2>
-      <p>Tell us about your practice.</p>
-      
-      <div class="form-group mt-4">
-        <label>Clinic Name</label>
-        <input type="text" [(ngModel)]="onboardingData.clinicName" placeholder="e.g. City General">
-      </div>
+  <!-- Top Nav -->
+  <nav class="ob-nav">
+    <div class="ob-brand">
+      <img src="/assets/images/logo.png" alt="MedPulse Pro" class="ob-logo">
+      <span>MedPulse Pro</span>
+    </div>
+    <div class="ob-nav-links">
+      <a href="#">Product</a>
+      <a href="#">Solutions</a>
+      <a href="#">Pricing</a>
+    </div>
+    <a routerLink="/login" class="ob-signin-btn">Sign In</a>
+  </nav>
 
-      <div class="form-group">
-        <label>Specialization</label>
-        <input type="text" [(ngModel)]="onboardingData.specialization" placeholder="e.g. Cardiology, General Practice">
+  <!-- Step Progress Bar -->
+  <div class="ob-stepper">
+    <div class="ob-step" *ngFor="let s of steps; let i = index"
+         [class.active]="step === i + 1"
+         [class.completed]="step > i + 1">
+      <div class="ob-step-circle">
+        <svg *ngIf="step > i + 1" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span *ngIf="step <= i + 1">{{ i + 1 }}</span>
       </div>
-      
-      <button class="btn btn-primary btn-block mt-4" (click)="completeOnboarding()" [disabled]="!onboardingData.clinicName || !onboardingData.specialization || isSubmitting">
-        {{ isSubmitting ? 'Submitting...' : 'Submit Application' }}
-      </button>
+      <div class="ob-step-label">{{ s }}</div>
+      <div class="ob-step-line" *ngIf="i < steps.length - 1"></div>
     </div>
   </div>
 
-  <!-- Success Modal -->
-  <div class="modal-overlay" *ngIf="showSuccessModal">
-    <div class="modal-content success-modal fade-in">
-      <div class="success-icon-container">
-        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" class="success-check">
-          <circle cx="12" cy="12" r="10" fill="#16a34a" stroke="none"></circle>
-          <path d="M8 12.5l3 3 5-6" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+  <!-- ══════════════ STEP 1: Clinical Specialty ══════════════ -->
+  <div class="ob-body" *ngIf="step === 1">
+    <div class="ob-sidebar">
+      <div class="ob-avatar-wrapper">
+        <div class="ob-avatar-circle">
+          <img *ngIf="photoPreview" [src]="photoPreview" alt="Profile" class="ob-avatar-img">
+          <svg *ngIf="!photoPreview" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#94a3b8" stroke-width="1.5">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <label class="ob-camera-btn" title="Upload photo">
+          <input type="file" accept="image/*" (change)="onPhotoChange($event)" hidden>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="white" stroke-width="2">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+        </label>
+      </div>
+      <h2 class="ob-sidebar-title">Set Up Your Profile</h2>
+      <p class="ob-sidebar-text">Help patients find you by selecting your primary area of clinical expertise. This will be visible on your public provider card.</p>
+      <div class="ob-hipaa-badge">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--color-primary)" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+        Your data is secured by MedPulse HIPAA Encryption.
+      </div>
+    </div>
+
+    <div class="ob-main">
+      <h1 class="ob-title">Select Your Clinical Specialty</h1>
+      <p class="ob-subtitle">Choose the specialty that best represents your primary practice.</p>
+      <div class="ob-specialty-grid">
+        <div class="ob-specialty-card" *ngFor="let sp of specialties"
+             [class.selected]="onboardingData.specialty === sp.name"
+             (click)="onboardingData.specialty = sp.name">
+          <div class="ob-specialty-icon">{{ sp.icon }}</div>
+          <h3>{{ sp.name }}</h3>
+          <p>{{ sp.desc }}</p>
+        </div>
+      </div>
+      <div class="ob-step-actions">
+        <span class="ob-skip" (click)="nextStep()">Skip for now</span>
+        <button class="ob-btn-primary" (click)="nextStep()">
+          Continue to Step 2 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ STEP 2: Personal Information ══════════════ -->
+  <div class="ob-body ob-body-centered" *ngIf="step === 2">
+    <div class="ob-form-card">
+      <h1 class="ob-title">Personal Information</h1>
+      <p class="ob-subtitle">Please provide your personal details and primary contact information.</p>
+
+      <div class="ob-photo-row">
+        <div class="ob-avatar-sm">
+          <img *ngIf="photoPreview" [src]="photoPreview" alt="Profile" class="ob-avatar-img">
+          <svg *ngIf="!photoPreview" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#94a3b8" stroke-width="1.5">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <label class="ob-upload-btn">
+          <input type="file" accept="image/*" (change)="onPhotoChange($event)" hidden>
+          Upload Photo
+        </label>
+        <span class="ob-remove-link" *ngIf="photoPreview" (click)="photoPreview = null">Remove</span>
+        <span class="ob-upload-hint">Upload a professional headshot (JPG, PNG max 5MB).</span>
+      </div>
+
+      <div class="ob-row">
+        <div class="ob-field">
+          <label>First Name</label>
+          <input type="text" [(ngModel)]="onboardingData.firstName" placeholder="e.g. Yonela">
+        </div>
+        <div class="ob-field">
+          <label>Last Name</label>
+          <input type="text" [(ngModel)]="onboardingData.lastName" placeholder="e.g. Kulati">
+        </div>
+      </div>
+
+      <div class="ob-row">
+        <div class="ob-field">
+          <label>Professional Title / Suffix</label>
+          <select [(ngModel)]="onboardingData.title">
+            <option value="">Select credential...</option>
+            <option>MD</option>
+            <option>DO</option>
+            <option>MBBS</option>
+            <option>RN</option>
+            <option>NP</option>
+            <option>PA</option>
+            <option>PhD</option>
+          </select>
+        </div>
+        <div class="ob-field">
+          <label>Date of Birth</label>
+          <input type="date" [(ngModel)]="onboardingData.dob">
+        </div>
+      </div>
+
+      <div class="ob-row">
+        <div class="ob-field">
+          <label>Personal Email Address</label>
+          <input type="email" [(ngModel)]="onboardingData.personalEmail" placeholder="e.g. yonela.kulati@example.com">
+        </div>
+        <div class="ob-field">
+          <label>Mobile Phone Number</label>
+          <input type="tel" [(ngModel)]="onboardingData.phone" placeholder="e.g. +27 78 646 5551">
+        </div>
+      </div>
+
+      <div class="ob-section-label">Legal Residential / Practice Address</div>
+      <div class="ob-field ob-field-full">
+        <label>Street Address</label>
+        <input type="text" [(ngModel)]="onboardingData.street" placeholder="e.g. 12 Hospital Drive">
+      </div>
+      <div class="ob-row ob-row-3">
+        <div class="ob-field">
+          <label>City</label>
+          <input type="text" [(ngModel)]="onboardingData.city" placeholder="e.g. Cape Town">
+        </div>
+        <div class="ob-field">
+          <label>Province</label>
+          <select [(ngModel)]="onboardingData.province">
+            <option value="">Select province...</option>
+            <option>Western Cape</option>
+            <option>Eastern Cape</option>
+            <option>Gauteng</option>
+            <option>KwaZulu-Natal</option>
+            <option>Limpopo</option>
+            <option>Mpumalanga</option>
+            <option>North West</option>
+            <option>Northern Cape</option>
+            <option>Free State</option>
+          </select>
+        </div>
+        <div class="ob-field">
+          <label>Postal Code</label>
+          <input type="text" [(ngModel)]="onboardingData.postalCode" placeholder="e.g. 8001">
+        </div>
+      </div>
+
+      <div class="ob-step-actions">
+        <button class="ob-btn-back" (click)="step = 1">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          Back
+        </button>
+        <div class="ob-right-actions">
+          <span class="ob-skip" (click)="nextStep()">Cancel &amp; Exit</span>
+          <button class="ob-btn-primary" (click)="nextStep()">
+            Continue to Step 3 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+        </div>
+      </div>
+      <div class="ob-hipaa-inline">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--color-primary)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        HIPAA Compliant Data Handling
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ STEP 3: Work History ══════════════ -->
+  <div class="ob-body ob-body-centered" *ngIf="step === 3">
+    <div class="ob-form-card">
+      <h1 class="ob-title">Professional Work History</h1>
+      <p class="ob-subtitle">Please list your clinical experience from the last 10 years.</p>
+
+      <div class="ob-section-box">
+        <div class="ob-section-header">
+          <span class="ob-section-label">Clinical Experience</span>
+          <span class="ob-add-link">+ Add Entry</span>
+        </div>
+        <div class="ob-exp-card">
+          <div class="ob-row">
+            <div class="ob-field">
+              <label>Hospital / Clinic Name</label>
+              <input type="text" [(ngModel)]="onboardingData.hospitalName" placeholder="e.g. Groote Schuur Hospital">
+            </div>
+            <div class="ob-field">
+              <label>Role / Position</label>
+              <input type="text" [(ngModel)]="onboardingData.role" placeholder="e.g. Senior Attending Physician">
+            </div>
+          </div>
+          <div class="ob-row">
+            <div class="ob-field">
+              <label>Start Date</label>
+              <input type="date" [(ngModel)]="onboardingData.startDate">
+            </div>
+            <div class="ob-field">
+              <label>End Date</label>
+              <input type="date" [(ngModel)]="onboardingData.endDate" [disabled]="onboardingData.currentlyWork">
+            </div>
+          </div>
+          <label class="ob-checkbox-label">
+            <input type="checkbox" [(ngModel)]="onboardingData.currentlyWork"> I currently work here
+          </label>
+          <div class="ob-row" style="margin-top:0.75rem">
+            <div class="ob-field ob-field-full">
+              <label>Clinical Responsibilities &amp; Scope</label>
+              <textarea [(ngModel)]="onboardingData.responsibilities" rows="2" placeholder="e.g. Inpatient rounds, surgical procedures, and emergency department coverage..."></textarea>
+            </div>
+            <div class="ob-field">
+              <label>Affiliation Status</label>
+              <select [(ngModel)]="onboardingData.affiliationStatus">
+                <option>Primary Admitting</option>
+                <option>Attending Physician</option>
+                <option>Consulting</option>
+                <option>Courtesy Staff</option>
+                <option>Affiliate</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ob-section-box" style="margin-top:1.5rem">
+        <div class="ob-section-label" style="margin-bottom:1rem">Professional References</div>
+        <div class="ob-references-grid">
+          <div>
+            <div class="ob-ref-label">REFERENCE 1</div>
+            <div class="ob-field"><label>Full Name</label><input type="text" [(ngModel)]="onboardingData.ref1Name" placeholder="Dr. Sarah Jenkins"></div>
+            <div class="ob-field"><label>Contact Info (Phone or Email)</label><input type="text" [(ngModel)]="onboardingData.ref1Contact" placeholder="sarah.jenkins@example.com"></div>
+          </div>
+          <div>
+            <div class="ob-ref-label">REFERENCE 2</div>
+            <div class="ob-field"><label>Full Name</label><input type="text" [(ngModel)]="onboardingData.ref2Name" placeholder="Dr. Marcus Thorne"></div>
+            <div class="ob-field"><label>Contact Info (Phone or Email)</label><input type="text" [(ngModel)]="onboardingData.ref2Contact" placeholder="+27 (55) 012-3456"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ob-step-actions">
+        <button class="ob-btn-back" (click)="step = 2">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          Back
+        </button>
+        <button class="ob-btn-primary" (click)="nextStep()">
+          Continue to Step 4 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+      </div>
+      <div class="ob-hipaa-inline">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--color-primary)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        HIPAA Compliant Data Handling
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ STEP 4: Review & Submit ══════════════ -->
+  <div class="ob-body ob-body-centered" *ngIf="step === 4">
+    <div class="ob-form-card">
+      <h1 class="ob-title">Final Review &amp; Submission</h1>
+      <p class="ob-subtitle">Please review your information before submitting your application.</p>
+
+      <div class="ob-review-section">
+        <div class="ob-review-header">
+          <span>Clinical Specialty</span>
+          <span class="ob-edit-link" (click)="step = 1">Edit</span>
+        </div>
+        <div class="ob-review-item"><span>Specialty</span><strong>{{ onboardingData.specialty || '—' }}</strong></div>
+      </div>
+
+      <div class="ob-review-section">
+        <div class="ob-review-header">
+          <span>Personal Information</span>
+          <span class="ob-edit-link" (click)="step = 2">Edit</span>
+        </div>
+        <div class="ob-review-row">
+          <div class="ob-review-item"><span>Name</span><strong>{{ (onboardingData.firstName + ' ' + onboardingData.lastName).trim() || '—' }}</strong></div>
+          <div class="ob-review-item"><span>Title</span><strong>{{ onboardingData.title || '—' }}</strong></div>
+          <div class="ob-review-item"><span>Email</span><strong>{{ onboardingData.personalEmail || '—' }}</strong></div>
+          <div class="ob-review-item"><span>Phone</span><strong>{{ onboardingData.phone || '—' }}</strong></div>
+        </div>
+      </div>
+
+      <div class="ob-review-section">
+        <div class="ob-review-header">
+          <span>Work History</span>
+          <span class="ob-edit-link" (click)="step = 3">Edit</span>
+        </div>
+        <div class="ob-review-row">
+          <div class="ob-review-item"><span>Hospital</span><strong>{{ onboardingData.hospitalName || '—' }}</strong></div>
+          <div class="ob-review-item"><span>Role</span><strong>{{ onboardingData.role || '—' }}</strong></div>
+        </div>
+      </div>
+
+      <div class="ob-certification-card">
+        <label class="ob-checkbox-label">
+          <input type="checkbox" [(ngModel)]="onboardingData.certified">
+          <div class="ob-cert-text">
+            I certify that the information provided is accurate to the best of my knowledge and complies with the healthcare provider integrity standards of <strong>MedPulse Pro</strong>.
+            <div class="ob-cert-subtext">Submitting false or misleading information is a violation and subject to revocation of provider privileges.</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="ob-step-actions">
+        <button class="ob-btn-back" (click)="step = 3">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          Back
+        </button>
+        <div class="ob-right-actions">
+          <button class="ob-btn-draft" type="button" (click)="saveDraft()">Save as Draft</button>
+          <button class="ob-btn-primary" (click)="completeOnboarding()" [disabled]="isSubmitting || !onboardingData.certified">
+            <span *ngIf="isSubmitting" class="ob-spinner"></span>
+            {{ isSubmitting ? 'Submitting...' : 'Submit Application' }}
+            <svg *ngIf="!isSubmitting" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ SUCCESS MODAL ══════════════ -->
+  <div class="ob-modal-overlay" *ngIf="showSuccessModal">
+    <div class="ob-success-modal">
+      <div class="ob-success-icon">
+        <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="white" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
       </div>
-      
       <h2>Application<br>Received</h2>
-      
-      <p class="success-message">
-        Your application is being reviewed by our compliance team. This process typically takes 3-5 business days.
-      </p>
-      
-      <button class="btn btn-navy btn-block mt-4" (click)="goToDashboard()">
-        Go to Dashboard
-      </button>
-      
-      <p class="app-id">Application ID: #MPP-9482-AD</p>
+      <p>Your application is being reviewed by our clinical team. This process typically takes 3–5 business days.</p>
+      <button class="ob-btn-primary ob-full-btn" (click)="goToDashboard()">Go to Dashboard</button>
+      <span class="ob-app-id">Application ID: #YK-{{ appId }}</span>
     </div>
   </div>
+
+  <!-- Footer -->
+  <footer class="ob-footer">
+    <div class="ob-brand ob-footer-brand">
+      <img src="/assets/images/logo.png" alt="MedPulse Pro" class="ob-logo" style="width:18px;height:18px">
+      <strong>MedPulse Pro</strong>
+    </div>
+    <div class="ob-footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Security</a>
+      <a href="#">Compliance</a>
+      <a href="#">Contact</a>
+    </div>
+    <p class="ob-footer-copy">© 2024 MedPulse Pro. HIPAA Compliant. SOC2 Certified.</p>
+  </footer>
+
 </div>
