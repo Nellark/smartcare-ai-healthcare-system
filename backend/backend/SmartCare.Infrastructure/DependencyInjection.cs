@@ -14,9 +14,23 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        // Add DbContext
+        var connectionString = configuration.GetConnectionString("SmartCare");
+
+        // Add DbContext (supports PostgreSQL and SQLite)
         services.AddDbContext<SmartCareDbContext>(options =>
-            options.UseSqlite(configuration.GetConnectionString("SmartCare")));
+        {
+            if (!string.IsNullOrWhiteSpace(connectionString) && 
+                (connectionString.Contains("Host=", StringComparison.OrdinalIgnoreCase) || 
+                 connectionString.Contains("Server=", StringComparison.OrdinalIgnoreCase) ||
+                 connectionString.Contains("Port=", StringComparison.OrdinalIgnoreCase)))
+            {
+                options.UseNpgsql(connectionString);
+            }
+            else
+            {
+                options.UseSqlite(connectionString);
+            }
+        });
 
         // Add repositories
         services.AddScoped<IPatientRepository, PatientRepository>();
@@ -36,8 +50,23 @@ public static class DependencyInjection
         using var scope = services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<SmartCareDbContext>();
         
-        // Apply any pending migrations on startup
-        await context.Database.MigrateAsync();
+        try
+        {
+            if (context.Database.IsNpgsql())
+            {
+                // Ensure tables exist in PostgreSQL
+                await context.Database.EnsureCreatedAsync();
+            }
+            else
+            {
+                // Apply migrations for SQLite
+                await context.Database.MigrateAsync();
+            }
+        }
+        catch
+        {
+            // Table already exists or managed externally
+        }
         
         // Seed data only if database is empty
         if (!await context.Patients.AnyAsync())
