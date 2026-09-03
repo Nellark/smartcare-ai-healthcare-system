@@ -110,22 +110,22 @@ builder.Services.AddScoped<SmartCare.API.Services.IEmailService, SmartCare.API.S
 // Rate limiting: protect auth endpoints from brute-force and credential stuffing
 builder.Services.AddRateLimiter(options =>
 {
-    // Login: max 5 attempts per IP per minute (sliding window)
+    // Login: max 20 attempts per IP per minute
     options.AddSlidingWindowLimiter("auth-login", limiterOptions =>
     {
         limiterOptions.Window = TimeSpan.FromMinutes(1);
         limiterOptions.SegmentsPerWindow = 6;
-        limiterOptions.PermitLimit = 5;
+        limiterOptions.PermitLimit = 20;
         limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
         limiterOptions.QueueLimit = 0;
     });
 
-    // Register: max 3 new accounts per IP per hour
+    // Register: max 20 new accounts per IP per hour
     options.AddSlidingWindowLimiter("auth-register", limiterOptions =>
     {
         limiterOptions.Window = TimeSpan.FromHours(1);
         limiterOptions.SegmentsPerWindow = 6;
-        limiterOptions.PermitLimit = 3;
+        limiterOptions.PermitLimit = 20;
         limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
         limiterOptions.QueueLimit = 0;
     });
@@ -151,6 +151,9 @@ builder.Services.AddAuthentication(options =>
     {
         var jwtSettings = builder.Configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()
             ?? throw new InvalidOperationException("JWT settings are missing.");
+
+        // Prevent ASP.NET from remapping short claim names (e.g. "role") to long URI forms
+        options.MapInboundClaims = false;
 
         options.TokenValidationParameters = new TokenValidationParameters
         {
