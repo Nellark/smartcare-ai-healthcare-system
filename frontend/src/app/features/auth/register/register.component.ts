@@ -114,10 +114,9 @@ export class RegisterComponent {
 
         if (normalizedRole === 'admin') {
           this.router.navigate(['/app/admin']);
-        } else if (normalizedRole === 'patient') {
-          this.router.navigate(['/app/patient-dashboard']);
         } else {
-          this.router.navigate(['/app/dashboard']);
+          // All new users (Patient, Doctor, Nurse) go through onboarding first
+          this.router.navigate(['/onboarding']);
         }
       },
       error: (err) => {

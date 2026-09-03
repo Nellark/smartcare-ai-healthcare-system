@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-onboarding',
@@ -21,6 +22,8 @@ export class OnboardingComponent {
   isSubmitting = false;
   showSuccessModal = false;
 
+  private authService = inject(AuthService);
+
   constructor(private router: Router) {}
 
   nextStep() {
@@ -29,14 +32,18 @@ export class OnboardingComponent {
 
   completeOnboarding() {
     this.isSubmitting = true;
-    // Simulate API call
     setTimeout(() => {
       this.isSubmitting = false;
       this.showSuccessModal = true;
     }, 800);
   }
-  
+
   goToDashboard() {
-    this.router.navigate(['/app/dashboard']);
+    // Route based on role — Patients go to patient dashboard, everyone else to provider dashboard
+    if (this.authService.isPatientRole()) {
+      this.router.navigate(['/app/patient-dashboard']);
+    } else {
+      this.router.navigate(['/app/dashboard']);
+    }
   }
 }
