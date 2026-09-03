@@ -16,20 +16,20 @@ export class OnboardingComponent {
   step = 1;
   isSubmitting = false;
   showSuccessModal = false;
-  photoPreview: string | null = null;
+  photoPreview: string | null = '/assets/images/doctor-avatar.png';
   appId = Math.floor(1000 + Math.random() * 9000);
 
   steps = ['Clinical Specialty', 'Personal Info', 'Work History', 'Review'];
 
   specialties = [
-    { icon: '🫀', name: 'Cardiology', desc: 'Diagnosis and treatment of heart and vascular disorders.' },
-    { icon: '🩺', name: 'Internal Medicine', desc: 'Comprehensive medical care for adult diseases.' },
-    { icon: '🧠', name: 'Neurology', desc: 'Management of disorders affecting the brain and nerves.' },
-    { icon: '🔬', name: 'General Surgery', desc: 'Surgical procedures focus on abdominal contents.' },
-    { icon: '🦴', name: 'Orthopaedics', desc: 'Treatment of musculoskeletal system conditions.' },
-    { icon: '👁️', name: 'Ophthalmology', desc: 'Diagnosis and treatment of eye disorders.' },
-    { icon: '🧬', name: 'Oncology', desc: 'Prevention, diagnosis, and treatment of cancer.' },
-    { icon: '🤱', name: 'Paediatrics', desc: 'Medical care for infants, children, and adolescents.' },
+    { id: 'cardiology', name: 'Cardiology', desc: 'Diagnosis and treatment of heart and vascular disorders.' },
+    { id: 'internal', name: 'Internal Medicine', desc: 'Comprehensive medical care for adult diseases.' },
+    { id: 'neurology', name: 'Neurology', desc: 'Management of disorders affecting the brain and nerves.' },
+    { id: 'surgery', name: 'General Surgery', desc: 'Surgical procedures focus on abdominal contents.' },
+    { id: 'ortho', name: 'Orthopaedics', desc: 'Treatment of musculoskeletal system conditions.' },
+    { id: 'ophthalmology', name: 'Ophthalmology', desc: 'Diagnosis and treatment of eye disorders.' },
+    { id: 'oncology', name: 'Oncology', desc: 'Prevention, diagnosis, and treatment of cancer.' },
+    { id: 'paediatrics', name: 'Paediatrics', desc: 'Medical care for infants, children, and adolescents.' },
   ];
 
   onboardingData = {
