@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -265,5 +266,57 @@ public sealed class AuthController : ControllerBase
         await _dbContext.SaveChangesAsync();
 
         return Ok(ApiResponse<string>.SuccessResult(string.Empty, "Password has been successfully reset"));
+    }
+
+    [Authorize]
+    [HttpPost("change-password")]
+    [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<ApiResponse<string>>> ChangePassword([FromBody] ChangePasswordRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.CurrentPassword) || string.IsNullOrWhiteSpace(request.NewPassword))
+        {
+            return BadRequest(ApiResponse<string>.ErrorResult("Current and new passwords are required"));
+        }
+
+        var passwordValidation = PasswordPolicy.Validate(request.NewPassword);
+        if (!passwordValidation.IsValid)
+        {
+            return BadRequest(ApiResponse<string>.ErrorResult("Password does not meet security requirements", passwordValidation.Errors));
+        }
+
+        if (request.CurrentPassword == request.NewPassword)
+        {
+            return BadRequest(ApiResponse<string>.ErrorResult("New password must be different from your current password"));
+        }
+
+        var currentUserEmail = User.FindFirstValue(ClaimTypes.Email)
+            ?? User.FindFirstValue("email")
+            ?? User.Identity?.Name;
+
+        if (string.IsNullOrWhiteSpace(currentUserEmail))
+        {
+            return Unauthorized(ApiResponse<string>.ErrorResult("Your session is no longer valid. Please sign in again."));
+        }
+
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == currentUserEmail.ToLower());
+        if (user == null)
+        {
+            return Unauthorized(ApiResponse<string>.ErrorResult("User account not found"));
+        }
+
+        var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.CurrentPassword);
+        if (verificationResult == PasswordVerificationResult.Failed)
+        {
+            return BadRequest(ApiResponse<string>.ErrorResult("Current password is incorrect"));
+        }
+
+        user.PasswordHash = _passwordHasher.HashPassword(user, request.NewPassword);
+        user.ResetToken = null;
+        user.ResetTokenExpiry = null;
+        await _dbContext.SaveChangesAsync();
+
+        return Ok(ApiResponse<string>.SuccessResult(string.Empty, "Password has been successfully updated"));
     }
 }

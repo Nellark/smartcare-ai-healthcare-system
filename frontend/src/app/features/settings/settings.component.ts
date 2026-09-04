@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../core/services/auth.service';
 import { ProfileService } from '../../core/services/profile.service';
 
 interface UserSettings {
@@ -26,6 +27,7 @@ interface UserSettings {
 })
 export class SettingsComponent implements OnInit {
   private profileService = inject(ProfileService);
+  private authService = inject(AuthService);
 
   profile: UserSettings = {
     fullName: '',
@@ -43,6 +45,16 @@ export class SettingsComponent implements OnInit {
 
   isSaving = false;
   saveSuccess = false;
+  showPasswordForm = false;
+  isChangingPassword = false;
+  passwordChangeError = '';
+  passwordChangeSuccess = false;
+
+  passwordForm = {
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  };
 
   ngOnInit() {
     const userProfile = this.profileService.currentProfile();
@@ -75,6 +87,78 @@ export class SettingsComponent implements OnInit {
         this.saveSuccess = false;
       }, 3000);
     }, 800);
+  }
+
+  togglePasswordChangePanel() {
+    this.showPasswordForm = !this.showPasswordForm;
+    if (!this.showPasswordForm) {
+      this.passwordForm = {
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      };
+    }
+    this.passwordChangeError = '';
+    this.passwordChangeSuccess = false;
+  }
+
+  validatePasswordChange(): string | null {
+    if (!this.passwordForm.currentPassword.trim()) {
+      return 'Current password is required.';
+    }
+
+    if (!this.passwordForm.newPassword.trim()) {
+      return 'New password is required.';
+    }
+
+    if (this.passwordForm.newPassword !== this.passwordForm.confirmPassword) {
+      return 'New password and confirmation must match.';
+    }
+
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,128}$/;
+    if (!passwordPattern.test(this.passwordForm.newPassword)) {
+      return 'Use at least 8 characters with uppercase, lowercase, a number, and a special character.';
+    }
+
+    if (this.passwordForm.currentPassword === this.passwordForm.newPassword) {
+      return 'New password must be different from your current password.';
+    }
+
+    return null;
+  }
+
+  changePassword() {
+    const validationMessage = this.validatePasswordChange();
+    if (validationMessage) {
+      this.passwordChangeError = validationMessage;
+      this.passwordChangeSuccess = false;
+      return;
+    }
+
+    this.isChangingPassword = true;
+    this.passwordChangeError = '';
+
+    this.authService.changePassword({
+      currentPassword: this.passwordForm.currentPassword,
+      newPassword: this.passwordForm.newPassword
+    }).subscribe({
+      next: (response) => {
+        this.isChangingPassword = false;
+        this.passwordChangeSuccess = true;
+        this.profile.passwordLastChanged = 'Last changed just now';
+        this.passwordForm = {
+          currentPassword: '',
+          newPassword: '',
+          confirmPassword: ''
+        };
+        this.showPasswordForm = false;
+      },
+      error: (error) => {
+        this.isChangingPassword = false;
+        this.passwordChangeSuccess = false;
+        this.passwordChangeError = error?.error?.message || 'Unable to update password right now. Please try again.';
+      }
+    });
   }
 
   toggle2FA() {

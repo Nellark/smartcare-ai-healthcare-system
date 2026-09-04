@@ -257,6 +257,40 @@
   color: #014D59;
 }
 
+.password-form {
+  margin-top: 16px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.password-form .form-group {
+  gap: 8px;
+}
+
+.password-form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.message {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.error-message {
+  color: #B91C1C;
+}
+
+.success-message {
+  color: #065F46;
+}
+
 /* CSS Toggle Switch using Teal */
 .toggle-switch {
   width: 44px;

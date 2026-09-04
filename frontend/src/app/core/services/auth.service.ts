@@ -27,6 +27,11 @@ export interface PasswordResetLink {
   resetLink: string;
 }
 
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
 type KnownRole = 'Patient' | 'Doctor' | 'Nurse' | 'Admin';
 
 @Injectable({
@@ -179,6 +184,10 @@ export class AuthService {
 
   resetPassword(data: any): Observable<ApiResponse<string>> {
     return this.http.post<ApiResponse<string>>(`${this.baseUrl}/reset-password`, data);
+  }
+
+  changePassword(data: ChangePasswordRequest): Observable<ApiResponse<string>> {
+    return this.http.post<ApiResponse<string>>(`${this.baseUrl}/change-password`, data);
   }
 
   logout(): void {

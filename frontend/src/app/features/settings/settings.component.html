@@ -86,7 +86,36 @@
               <h3>Password Management</h3>
               <p>{{ profile.passwordLastChanged }}</p>
             </div>
-            <button class="btn-link">Change</button>
+            <button class="btn-link" type="button" (click)="togglePasswordChangePanel()">
+              {{ showPasswordForm ? 'Cancel' : 'Change' }}
+            </button>
+          </div>
+
+          <div *ngIf="showPasswordForm" class="password-form">
+            <div class="form-group">
+              <label>CURRENT PASSWORD</label>
+              <input type="password" class="form-control" [(ngModel)]="passwordForm.currentPassword" placeholder="Enter your current password">
+            </div>
+
+            <div class="form-group">
+              <label>NEW PASSWORD</label>
+              <input type="password" class="form-control" [(ngModel)]="passwordForm.newPassword" placeholder="Create a new password">
+            </div>
+
+            <div class="form-group">
+              <label>CONFIRM PASSWORD</label>
+              <input type="password" class="form-control" [(ngModel)]="passwordForm.confirmPassword" placeholder="Re-enter your new password">
+            </div>
+
+            <div class="password-form-actions">
+              <button class="btn btn-update" type="button" (click)="changePassword()" [disabled]="isChangingPassword">
+                <span *ngIf="!isChangingPassword">Save Password</span>
+                <span *ngIf="isChangingPassword">Updating...</span>
+              </button>
+            </div>
+
+            <p *ngIf="passwordChangeError" class="message error-message">{{ passwordChangeError }}</p>
+            <p *ngIf="passwordChangeSuccess" class="message success-message">Your password has been updated successfully.</p>
           </div>
 
           <!-- 2FA -->
