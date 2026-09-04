@@ -19,15 +19,15 @@ public class EmailService : IEmailService
         var emailSettings = _config.GetSection("EmailSettings");
 
         var message = new MimeMessage();
-        message.From.Add(new MailboxAddress("MedPulse Pro", emailSettings["SenderEmail"] ?? "noreply@medpulsepro.com"));
+        message.From.Add(new MailboxAddress("SmartCare", emailSettings["SenderEmail"] ?? "noreply@smartcare.com"));
         message.To.Add(new MailboxAddress("", toEmail));
-        message.Subject = "MedPulse Pro - Password Reset Request";
+        message.Subject = "SmartCare - Password Reset Request";
 
         var bodyBuilder = new BodyBuilder
         {
             HtmlBody = $@"
             <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
-                <h2 style='color: #2563EB;'>MedPulse Pro</h2>
+                <h2 style='color: #2563EB;'>SmartCare</h2>
                 <p>Hello,</p>
                 <p>We received a request to reset the password for the account associated with this email address.</p>
                 <p>Please click the button below to reset your password:</p>
@@ -39,7 +39,7 @@ public class EmailService : IEmailService
                 <p>If you did not request this reset, you can safely ignore this email.</p>
                 <br>
                 <p>Best regards,</p>
-                <p>The MedPulse Pro Team</p>
+                <p>The SmartCare Team</p>
             </div>"
         };
 
