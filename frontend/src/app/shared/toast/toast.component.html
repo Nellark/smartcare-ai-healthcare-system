@@ -1,0 +1,20 @@
+<div class="toast-viewport" aria-live="polite" aria-atomic="false">
+  <div
+    *ngFor="let toast of toastService.toasts(); trackBy: trackById"
+    class="toast toast--{{ toast.type }}"
+    role="alert"
+  >
+    <div class="toast-icon" [innerHTML]="iconFor(toast.type)"></div>
+    <div class="toast-body">
+      <p class="toast-title">{{ toast.title }}</p>
+      <p class="toast-message" *ngIf="toast.message">{{ toast.message }}</p>
+    </div>
+    <button class="toast-close" (click)="toastService.dismiss(toast.id)" aria-label="Dismiss">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    <div class="toast-progress" [style.animation-duration.ms]="toast.duration"></div>
+  </div>
+</div>

@@ -1,0 +1,171 @@
+<div class="billing-page">
+  
+  <!-- Header -->
+  <div class="page-header">
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" placeholder="Search records or payments...">
+    </div>
+    
+    <div class="header-titles mt-32">
+      <h1 class="main-title">Billing & Payments</h1>
+      <p class="subtitle">Manage your accounts, review insurance claims, and process secure payments.</p>
+    </div>
+  </div>
+
+  <!-- Top Cards -->
+  <div class="top-cards-row mt-32">
+    <!-- Balance Due -->
+    <div class="dashboard-card billing-card shadow-card">
+      <div class="card-header-small">
+        <span class="header-label">TOTAL BALANCE DUE</span>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#026C7C" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+      </div>
+      <div class="billing-amount">
+        <h2>{{ totalBalance }}</h2>
+        <p>Due by {{ dueDate }}</p>
+      </div>
+      <a href="#" class="btn-text blue-text mt-auto font-bold">View Itemized Invoice &rarr;</a>
+    </div>
+
+    <!-- Next Payment -->
+    <div class="dashboard-card billing-card shadow-card">
+      <div class="card-header-small">
+        <span class="header-label">NEXT PAYMENT DATE</span>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#D97706" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+      </div>
+      <div class="billing-amount">
+        <h2>{{ nextPaymentDate }}</h2>
+        <p>Scheduled Auto-pay: {{ autoPayAmount }}</p>
+      </div>
+      <a href="#" class="btn-text gold-text mt-auto font-bold"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> Manage Auto-pay</a>
+    </div>
+
+    <!-- Quick Action -->
+    <div class="dashboard-card billing-card quick-action-card">
+      <span class="header-label text-white">QUICK ACTION</span>
+      <h3 class="text-white mt-12 mb-auto" style="font-size: 20px; line-height: 1.3;">Settle your outstanding balances instantly.</h3>
+      <button class="btn-make-payment">Make a Payment</button>
+    </div>
+  </div>
+
+  <!-- Main Grid Layout -->
+  <div class="billing-grid mt-48">
+    
+    <!-- LEFT COLUMN -->
+    <div class="left-col">
+      <div class="section-header">
+        <h2>Transaction History</h2>
+        <a href="#" class="btn-text blue-text uppercase text-sm font-bold">DOWNLOAD STATEMENTS</a>
+      </div>
+
+      <div class="transaction-table mt-16">
+        <div class="table-header">
+          <div class="th-date">DATE</div>
+          <div class="th-desc">DESCRIPTION</div>
+          <div class="th-status">INSURANCE STATUS</div>
+          <div class="th-amt">AMOUNT</div>
+          <div class="th-action"></div>
+        </div>
+        
+        <div class="table-row" *ngFor="let tx of transactions">
+          <div class="td-date">
+            <span class="date-month">{{ tx.date.split(' ')[0] }}</span>
+            <span class="date-day">{{ tx.date.split(' ')[1] }}</span>
+            <span class="date-year">{{ tx.year }}</span>
+          </div>
+          <div class="td-desc">
+            <h4 class="tx-title">{{ tx.title }}</h4>
+            <span class="tx-inv">{{ tx.invoiceId }}</span>
+          </div>
+          <div class="td-status">
+            <span class="badge" [ngClass]="{
+              'badge-processing': tx.status === 'PROCESSING',
+              'badge-paid': tx.status === 'PAID BY INSURANCE',
+              'badge-overdue': tx.status === 'OVERDUE',
+              'badge-completed': tx.status === 'COMPLETED'
+            }">{{ tx.status }}</span>
+            <span class="badge badge-yellow mt-4" *ngIf="tx.status === 'PAID BY INSURANCE'">INSURANCE</span>
+          </div>
+          <div class="td-amt">
+            <span class="tx-amount" [ngClass]="{
+              'text-blue': tx.amount === 'R0.00',
+              'text-red': tx.status === 'OVERDUE'
+            }">{{ tx.amount }}</span>
+          </div>
+          <div class="td-action">
+            <button class="icon-btn-small">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </div>
+        
+        <div class="table-footer">
+          <a href="#" class="btn-text blue-text font-bold">Load Full History</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-col">
+      
+      <!-- Payment Methods -->
+      <div class="mb-32">
+        <h2 class="section-title mb-16">Payment Methods</h2>
+        <div class="payment-method-card mb-12 relative">
+          <div class="card-brand visa">VISA</div>
+          <div class="card-details ml-16">
+            <h4>Primary Card <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#3B82F6" stroke-width="2" style="display:inline; margin-left: 4px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></h4>
+            <p>Ends in •••• 4242</p>
+            <span class="exp-date">Exp 12/26</span>
+          </div>
+          <a href="#" class="btn-text blue-text text-sm ml-auto absolute right-16 top-16">Edit</a>
+        </div>
+        
+        <button class="btn-dashed w-full">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Add New Method
+        </button>
+      </div>
+
+      <!-- Insurance -->
+      <div class="dashboard-card shadow-card mb-32">
+        <h3 class="card-title text-xl mb-24 font-serif">Insurance</h3>
+        
+        <span class="header-label mb-8 block">CURRENT PROVIDER</span>
+        <h4 class="text-lg font-bold text-slate-900 mb-8">{{ insurance.provider }}</h4>
+        <p class="text-sm text-slate-500 mb-32">ID: {{ insurance.id }}</p>
+        
+        <div class="insurance-stats mb-32 flex border-t border-b py-16 border-slate-100">
+          <div class="stat-item flex-1">
+            <span class="header-label block mb-4">CO-PAY</span>
+            <span class="font-bold text-slate-900">{{ insurance.copay }}</span>
+          </div>
+          <div class="stat-item flex-1">
+            <span class="header-label block mb-4">DEDUCTIBLE</span>
+            <span class="font-bold text-slate-900">{{ insurance.deductible }}</span>
+          </div>
+        </div>
+        
+        <button class="btn-secondary w-full justify-center">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          Update Policy Docs
+        </button>
+      </div>
+
+      <!-- Resources -->
+      <div>
+        <span class="header-label mb-16 block">RESOURCES</span>
+        <div class="resource-link border-b border-slate-100 py-16 flex justify-between items-center cursor-pointer">
+          <span class="text-sm font-bold text-slate-900">Financial Assistance</span>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </div>
+        <div class="resource-link border-b border-slate-100 py-16 flex justify-between items-center cursor-pointer">
+          <span class="text-sm font-bold text-slate-900">Request Payment Plan</span>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,122 @@
+<div class="page-container">
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <a class="back-link" routerLink="/app/patients">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Back to Patients
+      </a>
+      <h1 class="page-title">{{ isEditMode ? 'Edit Patient' : 'New Patient' }}</h1>
+      <p class="page-subtitle">{{ isEditMode ? 'Update the patient\'s information below.' : 'Fill in the details to register a new patient.' }}</p>
+    </div>
+  </div>
+
+  <!-- Loading skeleton -->
+  <div class="loading-card" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading patient data…</p>
+  </div>
+
+  <!-- Form card -->
+  <div class="form-card" *ngIf="!isLoading">
+
+    <div class="form-section">
+      <h2 class="section-title">Personal Information</h2>
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label for="firstName">First Name <span class="required">*</span></label>
+          <input
+            id="firstName"
+            type="text"
+            [(ngModel)]="patient.firstName"
+            placeholder="Yonela"
+            autocomplete="given-name"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name <span class="required">*</span></label>
+          <input
+            id="lastName"
+            type="text"
+            [(ngModel)]="patient.lastName"
+            placeholder="Kulati"
+            autocomplete="family-name"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address <span class="required">*</span></label>
+          <input
+            id="email"
+            type="email"
+            [(ngModel)]="patient.email"
+            placeholder="nelakulati@gmail.com"
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="dob">Date of Birth</label>
+          <input
+            id="dob"
+            type="date"
+            [(ngModel)]="patient.dateOfBirth"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <div class="select-wrapper">
+            <select id="gender" [(ngModel)]="patient.gender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+            <svg class="select-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input
+            id="phone"
+            type="tel"
+            [(ngModel)]="patient.phoneNumber"
+            placeholder="0786465551"
+            autocomplete="tel"
+          />
+        </div>
+
+        <div class="form-group full-width">
+          <label for="address">Address</label>
+          <input
+            id="address"
+            type="text"
+            [(ngModel)]="patient.address"
+            placeholder="e.g. 12 Park Ave, Sandton, Johannesburg"
+            autocomplete="street-address"
+          />
+        </div>
+
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-cancel" (click)="cancel()" [disabled]="isSaving">Cancel</button>
+      <button class="btn-save" (click)="save()" [disabled]="isSaving">
+        <svg *ngIf="isSaving" class="btn-spinner" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10" opacity="1"></path></svg>
+        <svg *ngIf="!isSaving" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        {{ isSaving ? 'Saving…' : (isEditMode ? 'Update Patient' : 'Save Patient') }}
+      </button>
+    </div>
+
+  </div>
+
+</div>

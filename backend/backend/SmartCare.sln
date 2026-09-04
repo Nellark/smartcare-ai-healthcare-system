@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCare.Domain", "SmartCa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCare.Infrastructure", "SmartCare.Infrastructure\SmartCare.Infrastructure.csproj", "{BBEFF512-0B8B-43BF-BF34-637CE294729D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCare.Infrastructure.Tests", "SmartCare.Infrastructure.Tests\SmartCare.Infrastructure.Tests.csproj", "{8AD06F17-5B1B-4D0A-9C8D-5B3B3F4A5B1A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{BBEFF512-0B8B-43BF-BF34-637CE294729D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBEFF512-0B8B-43BF-BF34-637CE294729D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBEFF512-0B8B-43BF-BF34-637CE294729D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AD06F17-5B1B-4D0A-9C8D-5B3B3F4A5B1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AD06F17-5B1B-4D0A-9C8D-5B3B3F4A5B1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AD06F17-5B1B-4D0A-9C8D-5B3B3F4A5B1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AD06F17-5B1B-4D0A-9C8D-5B3B3F4A5B1A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

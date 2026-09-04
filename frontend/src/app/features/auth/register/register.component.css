@@ -1,0 +1,458 @@
+.auth-layout-split {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* LEFT SIDE - IMAGE PANEL */
+.split-image-panel {
+  flex: 1;
+  position: relative;
+  background: url('/assets/images/auth_register_bg.jpg') center/cover no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+}
+
+.testimonial-card {
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.859);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  padding: 2.5rem;
+  max-width: 480px;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.1);
+  margin-top: auto;
+  margin-bottom: 2rem;
+  align-self: flex-start;
+}
+
+.testimonial-card h1 {
+  color: white; /* In the mockup the title is large and white, placed outside the card */
+  /* Wait, in mockup, the title "Empowering the future of digital care." is white text directly on the image, above the card! */
+}
+
+/* Let's fix the layout based on mockup */
+.testimonial-card {
+  margin-top: 1.5rem;
+  margin-left: 14rem;
+  padding: 2rem;
+  border-radius: 12px;
+  background: #e5e7eb9f; /* Light gray in mockup */
+  backdrop-filter: none;
+  box-shadow: none;
+  border: none;
+}
+
+.split-image-panel h1 {
+  position: relative;
+  z-index: 2;
+  color: white;
+  font-size: 3.5rem;
+  line-height: 1.1;
+  margin-top: auto;
+  align-self: flex-start;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.badge {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 1.5rem;
+  align-self: flex-start;
+}
+
+.testimonial-content {
+  color: var(--color-text-primary);
+}
+
+.stars {
+  color: #3B82F6;
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.testimonial-content p {
+  font-size: 1rem;
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  color: var(--color-text-primary);
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.author-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #94A3B8; /* Placeholder for image */
+  background-image: url('https://i.pravatar.cc/100?img=32'); /* sample avatar */
+  background-size: cover;
+}
+
+.author-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--color-primary-dark);
+}
+
+.author-title {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+
+/* RIGHT SIDE - FORM PANEL */
+.split-form-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  position: relative;
+}
+
+.role-selector {
+  display: flex;
+  background-color: #F1F5F9;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 2rem;
+}
+
+.role-selector button {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.role-selector button.active {
+  background: white;
+  color: var(--color-primary-dark);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.auth-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2.5rem 3.5rem;
+}
+
+.auth-header .brand {
+  font-family: var(--font-family-heading);
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--color-primary-dark);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-dark);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.sign-in-link {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.sign-in-link a {
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin-left: 0.25rem;
+}
+
+.auth-form-container {
+  max-width: 540px;
+  width: 100%;
+  margin: auto;
+  padding: 2rem 3.5rem;
+}
+
+.auth-form-container h2 {
+  font-size: 2.2rem;
+  color: var(--color-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+  color: var(--color-text-secondary);
+  margin-bottom: 2.5rem;
+  font-size: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.half-width {
+  flex: 1;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  color: #94A3B8;
+  pointer-events: none;
+}
+
+.input-icon.left {
+  left: 1rem;
+}
+
+.input-with-icon input {
+  width: 100%;
+  padding: 0.875rem 1rem 0.875rem 2.75rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+  transition: all 0.2s;
+}
+
+.input-with-icon.right-icon input {
+  padding-right: 2.75rem;
+}
+
+.input-with-icon input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(2, 108, 124, 0.1);
+}
+
+.icon-button-right {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: #94A3B8;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-hint {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  background: var(--color-primary-dark);
+  color: white;
+  border: none;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-primary:hover {
+  background: #01343c;
+}
+
+.auth-footer-inline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #E2E8F0;
+  font-size: 0.75rem;
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.auth-footer-inline .links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.auth-footer-inline a {
+  color: var(--color-primary-dark);
+  text-decoration: none;
+}
+
+.auth-page-footer {
+  width: 100%;
+  padding: 1rem;
+  text-align: center;
+  background: #F8FAFC;
+  color: #64748B;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-top: 1px solid #E2E8F0;
+}
+
+/* Responsive */
+@media (max-width: 1000px) {
+  .split-image-panel {
+    display: none;
+  }
+}
+
+/* Password Strength Bar */
+.password-strength-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.strength-segments {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.seg {
+  height: 4px;
+  flex: 1;
+  border-radius: 4px;
+  background: #E2E8F0;
+  transition: background 0.3s;
+}
+
+.seg.active.weak   { background: #EF4444; }
+.seg.active.fair   { background: #F59E0B; }
+.seg.active.strong { background: #22C55E; }
+
+.strength-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  min-width: 38px;
+  text-align: right;
+}
+
+.strength-label.weak   { color: #EF4444; }
+.strength-label.fair   { color: #F59E0B; }
+.strength-label.strong { color: #22C55E; }
+
+/* Password Requirements List */
+.password-requirements {
+  list-style: none;
+  padding: 0.6rem 0 0 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3rem 1rem;
+}
+
+.password-requirements li {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.password-requirements li.met   { color: #22C55E; }
+.password-requirements li.unmet { color: #94A3B8; }
+
+.req-icon {
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  width: 14px;
+  text-align: center;
+}
+
+/* Inline error banner */
+.inline-error {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #FFF1F2;
+  border: 1px solid #FECDD3;
+  color: #BE123C;
+  font-size: 0.78rem;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.55rem 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Loading spinner on button */
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-right: 0.4rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

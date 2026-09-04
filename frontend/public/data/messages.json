@@ -1,0 +1,77 @@
+[
+  {
+    "id": "conv1",
+    "participantId": "dr_vance",
+    "participantName": "Dr. Helena Vance",
+    "participantRole": "CHIEF CARDIOVASCULAR SURGEON",
+    "participantAvatar": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=150&auto=format&fit=crop",
+    "isOnline": true,
+    "lastMessage": "Sent an attachment: Lab_Report_22.pdf",
+    "lastMessageTime": "10:24 AM",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": "m1",
+        "senderId": "dr_vance",
+        "text": "Good morning, James. I've reviewed your latest blood panels from yesterday. Your glucose levels are showing a positive trend. How have you been feeling after the dosage adjustment?",
+        "timestamp": "10:12 AM",
+        "isRead": true
+      },
+      {
+        "id": "m2",
+        "senderId": "user1",
+        "text": "Thank you, Doctor. I've noticed much more consistent energy levels throughout the day. I am attaching the daily log for your review.",
+        "timestamp": "10:18 AM",
+        "isRead": true
+      },
+      {
+        "id": "m3",
+        "senderId": "dr_vance",
+        "text": "That's excellent news. I've also uploaded your updated care plan. Let's schedule a brief follow-up next Tuesday to discuss the next phase.",
+        "timestamp": "10:24 AM",
+        "isRead": true,
+        "attachment": {
+          "name": "Updated_Care_Plan.pdf",
+          "size": "2.4 MB",
+          "type": "PDF DOCUMENT"
+        }
+      }
+    ]
+  },
+  {
+    "id": "conv2",
+    "participantId": "pharmacy",
+    "participantName": "Pharmacy Support",
+    "participantRole": "PHARMACY",
+    "participantAvatar": "https://ui-avatars.com/api/?name=P+S&background=E6F4F1&color=026C7C",
+    "isOnline": false,
+    "lastMessage": "Your prescription for Lisinopril is ready for ...",
+    "lastMessageTime": "YESTERDAY",
+    "unreadCount": 1,
+    "messages": []
+  },
+  {
+    "id": "conv3",
+    "participantId": "dr_thorne",
+    "participantName": "Dr. Marcus Thorne",
+    "participantRole": "PHYSIOTHERAPIST",
+    "participantAvatar": "https://images.unsplash.com/photo-1537368910025-702850356d5a?q=80&w=150&auto=format&fit=crop",
+    "isOnline": false,
+    "lastMessage": "Thank you for the update on your physiothe...",
+    "lastMessageTime": "TUESDAY",
+    "unreadCount": 0,
+    "messages": []
+  },
+  {
+    "id": "conv4",
+    "participantId": "billing",
+    "participantName": "Billing Department",
+    "participantRole": "ADMINISTRATION",
+    "participantAvatar": "https://ui-avatars.com/api/?name=B+D&background=F1F5F9&color=64748B",
+    "isOnline": false,
+    "lastMessage": "Your quarterly statement is now available.",
+    "lastMessageTime": "OCT 12",
+    "unreadCount": 0,
+    "messages": []
+  }
+]

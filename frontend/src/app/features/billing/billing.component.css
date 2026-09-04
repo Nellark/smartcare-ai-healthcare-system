@@ -1,0 +1,395 @@
+/* --- BASE STYLES & UTILS --- */
+.billing-page {
+  padding: 32px;
+  background-color: #F8FAFC;
+  min-height: calc(100vh - 80px);
+}
+
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mt-32 { margin-top: 32px; }
+.mt-48 { margin-top: 48px; }
+.mt-auto { margin-top: auto; }
+.mb-8 { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.mb-32 { margin-bottom: 32px; }
+.mb-auto { margin-bottom: auto; }
+.ml-16 { margin-left: 16px; }
+.ml-auto { margin-left: auto; }
+.py-16 { padding-top: 16px; padding-bottom: 16px; }
+
+.flex { display: flex; }
+.flex-1 { flex: 1; }
+.flex-col { flex-direction: column; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.items-center { align-items: center; }
+.w-full { width: 100%; }
+.block { display: block; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.right-16 { right: 16px; }
+.top-16 { top: 16px; }
+.cursor-pointer { cursor: pointer; }
+
+.font-serif { font-family: 'Playfair Display', serif; }
+.font-bold { font-weight: 700; }
+.text-sm { font-size: 13px; }
+.text-lg { font-size: 18px; }
+.text-xl { font-size: 20px; }
+.text-slate-500 { color: #64748B; }
+.text-slate-900 { color: #0F172A; }
+.text-white { color: #FFFFFF; }
+.text-blue { color: #3B82F6 !important; }
+.text-red { color: #EF4444 !important; }
+.uppercase { text-transform: uppercase; }
+
+.border-t { border-top: 1px solid #F1F5F9; }
+.border-b { border-bottom: 1px solid #F1F5F9; }
+
+/* --- HEADER --- */
+.page-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #F1F5F9;
+  border-radius: 8px;
+  padding: 12px 16px;
+  width: 400px;
+  color: #64748B;
+}
+
+.search-bar input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  margin-left: 12px;
+  font-size: 14px;
+  color: #0F172A;
+}
+
+.header-titles .main-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 8px 0;
+}
+
+.header-titles .subtitle {
+  font-size: 14px;
+  color: #475569;
+  margin: 0;
+}
+
+/* --- TOP CARDS ROW --- */
+.top-cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.dashboard-card {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.shadow-card {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.card-header-small {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #64748B;
+  text-transform: uppercase;
+}
+
+.billing-amount h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 8px 0;
+}
+
+.billing-amount p {
+  font-size: 13px;
+  color: #64748B;
+  margin: 0;
+}
+
+.btn-text {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.blue-text { color: #026C7C; } /* Switched from #3B82F6 to Teal */
+.gold-text { color: #D97706; display: flex; align-items: center; gap: 6px; }
+
+/* Quick Action Card */
+.quick-action-card {
+  background-color: #026C7C; /* Teal instead of Blue */
+  padding: 32px;
+}
+
+.quick-action-card .header-label {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.btn-make-payment {
+  background-color: #FFFFFF;
+  color: #026C7C;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.btn-make-payment:hover {
+  background-color: #F8FAFC;
+}
+
+/* --- MAIN GRID --- */
+.billing-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 48px;
+}
+
+/* Section Headers */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.section-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0;
+}
+
+/* Transaction Table */
+.transaction-table {
+  background: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.table-header {
+  display: flex;
+  padding: 16px 24px;
+  border-bottom: 1px solid #F1F5F9;
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748B;
+  letter-spacing: 1px;
+}
+
+.table-row {
+  display: flex;
+  padding: 24px;
+  border-bottom: 1px solid #F1F5F9;
+  align-items: center;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.th-date, .td-date { width: 80px; flex-shrink: 0; }
+.th-desc, .td-desc { flex: 2; min-width: 0; padding-right: 24px; }
+.th-status, .td-status { flex: 1.5; min-width: 0; padding-right: 24px; display: flex; flex-direction: column; align-items: flex-start; }
+.th-amt, .td-amt { width: 100px; flex-shrink: 0; text-align: right; }
+.th-action, .td-action { width: 48px; flex-shrink: 0; display: flex; justify-content: flex-end; }
+
+/* Date Formatting */
+.td-date {
+  display: flex;
+  flex-direction: column;
+}
+
+.date-month { font-size: 13px; color: #64748B; }
+.date-day { font-size: 16px; font-weight: 700; color: #0F172A; line-height: 1.2; }
+.date-year { font-size: 11px; color: #94A3B8; }
+
+/* Desc Formatting */
+.tx-title {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.tx-inv {
+  font-size: 12px;
+  color: #94A3B8;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.badge-processing { background-color: #F1F5F9; color: #475569; }
+.badge-paid { background-color: #FEF3C7; color: #B45309; }
+.badge-overdue { background-color: #FEE2E2; color: #EF4444; }
+.badge-completed { background-color: #F1F5F9; color: #475569; }
+.badge-yellow { background-color: #FEF3C7; color: #B45309; }
+
+/* Amount Formatting */
+.tx-amount {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+/* Icons */
+.icon-btn-small {
+  background: transparent;
+  border: none;
+  color: #94A3B8;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn-small:hover { color: #0F172A; }
+
+.table-footer {
+  padding: 16px;
+  text-align: center;
+  background-color: #FFFFFF;
+}
+
+/* Payment Methods */
+.payment-method-card {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background: #FFFFFF;
+}
+
+.card-brand {
+  width: 48px;
+  height: 32px;
+  background: #0F172A;
+  color: #FFFFFF;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.card-details h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0F172A;
+  display: flex;
+  align-items: center;
+}
+
+.card-details p {
+  margin: 0 0 4px 0;
+  font-size: 12px;
+  color: #64748B;
+}
+
+.exp-date {
+  font-size: 11px;
+  color: #94A3B8;
+}
+
+.btn-dashed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  border: 1px dashed #CBD5E1;
+  background: transparent;
+  border-radius: 8px;
+  color: #64748B;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-dashed:hover {
+  background-color: #F8FAFC;
+  border-color: #94A3B8;
+  color: #475569;
+}
+
+/* Secondary Button */
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: #F1F5F9;
+  border: none;
+  border-radius: 4px;
+  color: #026C7C;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: #E2E8F0;
+}

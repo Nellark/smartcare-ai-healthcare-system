@@ -1,0 +1,447 @@
+/* ==========================================================================
+   APPOINTMENTS PAGE REDESIGN
+   ========================================================================== */
+
+.appointments-page {
+  padding: 32px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #1E293B;
+  background-color: #F9FAFB; /* Off-white page background */
+  min-height: 100vh;
+}
+
+/* --- HEADER --- */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 48px;
+}
+
+.header-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #026C7C;
+  text-transform: uppercase;
+}
+
+.main-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: #026C7C; /* Primary Teal */
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(2, 108, 124, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: #014D59;
+}
+
+/* --- SECTIONS --- */
+.section {
+  margin-bottom: 48px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.section-header h2 {
+  font-size: 20px;
+  font-weight: 500;
+  color: #1E293B;
+  margin: 0;
+}
+
+/* --- BADGES --- */
+.badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.badge-yellow {
+  background-color: #FEF08A;
+  color: #854D0E;
+}
+
+.badge-light {
+  background-color: #F1F5F9;
+  color: #026C7C; /* Using primary color for text */
+}
+
+.badge-green {
+  background-color: #ECFDF5;
+  color: #059669;
+}
+
+.badge-gray {
+  background-color: #F1F5F9;
+  color: #64748B;
+}
+
+/* --- SCHEDULED VISITS CARDS --- */
+.visits-container {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding-bottom: 16px; /* Space for shadow */
+}
+
+.visit-card {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  overflow: hidden;
+  display: flex;
+  flex-shrink: 0;
+}
+
+/* Full Card (Image Left, Content Right) */
+.full-card {
+  width: 600px;
+  height: 320px;
+}
+
+.card-image {
+  width: 240px;
+  background-size: cover;
+  background-position: center;
+}
+
+.card-content {
+  flex: 1;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.btn-more {
+  background: none;
+  border: none;
+  color: #94A3B8;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.btn-more:hover {
+  color: #026C7C;
+}
+
+.card-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+}
+
+.card-desc {
+  font-size: 14px;
+  color: #64748B;
+  line-height: 1.5;
+  margin: 0 0 auto 0; /* push bottom content down */
+}
+
+.card-bottom {
+  display: flex;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.info-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background-color: #F8FAFC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #026C7C; /* Primary color */
+}
+
+.info-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-text .label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94A3B8;
+  letter-spacing: 0.5px;
+}
+
+.info-text .value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0F172A;
+}
+
+/* Compact Card */
+.compact-card {
+  width: 300px;
+  height: 320px;
+  background-color: #F8FAFC;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05); /* subtle inner border */
+  flex-direction: column;
+  padding: 32px;
+}
+
+.compact-icon-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: white;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.compact-card .card-title {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.compact-card .card-desc {
+  margin-bottom: 24px;
+}
+
+.compact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: auto;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #E2E8F0;
+  padding-bottom: 8px;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94A3B8;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1E293B;
+}
+
+.btn-outline-white {
+  background-color: white;
+  color: #026C7C; /* Primary color */
+  border: 1px solid #E2E8F0;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.btn-outline-white:hover {
+  border-color: #026C7C;
+  background-color: #F8FAFC;
+}
+
+/* --- APPOINTMENT HISTORY --- */
+.link-action {
+  font-size: 11px;
+  font-weight: 700;
+  color: #026C7C; /* Primary color */
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  margin-left: auto;
+}
+
+.link-action:hover {
+  text-decoration: underline;
+}
+
+.history-table {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  padding: 24px;
+}
+
+.th-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  padding: 0 16px 16px 16px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.th-col {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94A3B8;
+  letter-spacing: 1px;
+}
+
+.tr-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  align-items: center;
+  padding: 20px 16px;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.tr-row:last-child {
+  border-bottom: none;
+}
+
+.td-col {
+  font-size: 14px;
+  color: #334155;
+  font-weight: 500;
+}
+
+.col-service {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.service-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #F8FAFC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748B;
+}
+
+.service-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.service-name {
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.service-doc {
+  font-size: 12px;
+  color: #64748B;
+}
+
+.doc-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #026C7C; /* Primary color */
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.doc-link:hover {
+  text-decoration: underline;
+}
+
+/* --- PATIENT PREPAREDNESS BANNER --- */
+.preparedness-banner {
+  background-color: #014D59; /* Darker primary teal variant */
+  border-radius: 16px;
+  padding: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 48px;
+  color: white;
+}
+
+.banner-content h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+.banner-content p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  max-width: 600px;
+}
+
+.btn-white {
+  background-color: white;
+  color: #014D59;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.btn-white:hover {
+  background-color: #F8FAFC;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .preparedness-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+}

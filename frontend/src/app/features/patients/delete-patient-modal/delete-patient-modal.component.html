@@ -1,0 +1,38 @@
+<app-modal
+  [isVisible]="isVisible"
+  title="Delete Patient"
+  width="500px"
+  (close)="onClose()">
+  
+  <div class="delete-modal-content" *ngIf="patient">
+    <p class="warning-text">
+      Are you sure you want to delete <strong>{{ patient.firstName }} {{ patient.lastName }}</strong>?
+    </p>
+    <p class="sub-text">
+      This action cannot be undone. All associated data will be permanently removed.
+    </p>
+    
+    <div class="form-group">
+      <label for="deleteReason">Reason for deletion <span class="required">*</span></label>
+      <select id="deleteReason" class="form-control" [(ngModel)]="selectedReason" [disabled]="isDeleting">
+        <option value="" disabled>Select a reason...</option>
+        <option *ngFor="let reason of reasons" [value]="reason">{{ reason }}</option>
+      </select>
+    </div>
+    
+    <div class="form-group mt-3" *ngIf="selectedReason === 'Other'">
+      <label for="otherReason">Please specify <span class="required">*</span></label>
+      <input type="text" id="otherReason" class="form-control" [(ngModel)]="otherReason" placeholder="Enter reason" [disabled]="isDeleting">
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="onClose()" [disabled]="isDeleting">Cancel</button>
+    <button class="btn btn-danger" 
+            (click)="onDelete()" 
+            [disabled]="isDeleting || !selectedReason || (selectedReason === 'Other' && !otherReason.trim())">
+      <span *ngIf="isDeleting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      {{ isDeleting ? 'Deleting...' : 'Yes, Delete Patient' }}
+    </button>
+  </div>
+</app-modal>

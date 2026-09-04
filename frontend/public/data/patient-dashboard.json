@@ -1,0 +1,46 @@
+{
+  "vitals": [
+    { "label": "Blood Pressure", "value": "118/76", "unit": "mmHg" },
+    { "label": "Heart Rate", "value": "72", "unit": "bpm" }
+  ],
+  "prescriptions": [
+    { "name": "Lisinopril", "dosage": "10mg", "frequency": "Once daily, morning" },
+    { "name": "Atorvastatin", "dosage": "20mg", "frequency": "Once daily, evening" }
+  ],
+  "nextAppointment": {
+    "doctor": "Dr. Sarah Richardson",
+    "title": "Annual Comprehensive Wellness Review",
+    "date": "June 22, 10:30 AM",
+    "location": "Main Campus, Wing B"
+  },
+  "recentActivity": [
+    { "type": "Lab results are ready for review", "description": "BLOOD PANEL", "timeAgo": "45M AGO", "color": "blue", "actionLabel": "VIEW REPORT" },
+    { "type": "Prescription renewed", "description": "LISINOPRIL", "timeAgo": "4H AGO", "color": "gold" },
+    { "type": "Message from Dr. Richardson", "description": "PATIENT PORTAL", "timeAgo": "YESTERDAY", "color": "gray", "actionLabel": "REPLY TO MESSAGE" }
+  ],
+  "activityProgress": {
+    "stepGoal": "8,420",
+    "calories": "420",
+    "activeMin": "45"
+  },
+  "resources": [
+    {
+      "category": "NUTRITION",
+      "title": "The Gut-Heart Connection: Recent Findings",
+      "description": "New clinical studies suggest that microbiome health plays a critical role in cardiovascular...",
+      "imageUrl": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=800&auto=format&fit=crop"
+    },
+    {
+      "category": "MENTAL WELLNESS",
+      "title": "Cognitive Reserve and Aging",
+      "description": "Understanding how mental stimulation builds resilience against cognitive decline in later...",
+      "imageUrl": "https://images.unsplash.com/photo-1559757175-5700dde675bc?q=80&w=800&auto=format&fit=crop"
+    },
+    {
+      "category": "TECHNOLOGY",
+      "title": "Integrating Wearable Data into Your Care",
+      "description": "Learn how to securely share your daily activity metrics with your SmartCare provider team.",
+      "imageUrl": "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?q=80&w=800&auto=format&fit=crop"
+    }
+  ]
+}

@@ -1,0 +1,218 @@
+<div class="dashboard-page">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>Welcome, {{ currentUserEmail.split('@')[0] | titlecase }}</h1>
+      <p>{{ currentUserRole }} portal &mdash; {{ totalEntries | number }} registered patients in the system.</p>
+    </div>
+    <div class="page-header-right">
+      <button class="btn-filters">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+        </svg>
+        Filters
+      </button>
+      <button class="btn-new-patient" (click)="openPatientModal()">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="8.5" cy="7" r="4"></circle>
+          <line x1="20" y1="8" x2="20" y2="14"></line>
+          <line x1="23" y1="11" x2="17" y2="11"></line>
+        </svg>
+        New Patient
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-body">
+        <div class="stat-label">ACTIVE PATIENTS</div>
+        <div class="stat-value">{{ activePatients | number }}</div>
+      </div>
+      <div class="stat-icon green">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-body">
+        <div class="stat-label">IN-PATIENT</div>
+        <div class="stat-value">{{ inPatients }}</div>
+      </div>
+      <div class="stat-icon teal">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 4v16"></path>
+          <path d="M2 8h18a2 2 0 0 1 2 2v10"></path>
+          <path d="M2 17h20"></path>
+          <path d="M6 8v9"></path>
+        </svg>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-body">
+        <div class="stat-label">TOTAL RECORDS</div>
+        <div class="stat-value">{{ totalEntries | number }}</div>
+      </div>
+      <div class="stat-icon teal">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+          <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+          <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+        </svg>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-body">
+        <div class="stat-label">PENDING REVIEWS</div>
+        <div class="stat-value">{{ pendingReviews }}</div>
+      </div>
+      <div class="stat-icon red">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading / Error States -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading patients...</p>
+  </div>
+  <!-- Error State removed in favor of Toast -->
+
+  <!-- Patients Table -->
+  <div class="table-card" *ngIf="!isLoading">
+    <!-- Toolbar -->
+    <div class="table-toolbar">
+      <div class="table-search">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" [(ngModel)]="searchQuery" placeholder="Search by name, ID, or physician...">
+      </div>
+      <div class="table-filter-group">
+        <div class="filter-select">
+          <select [(ngModel)]="statusFilter">
+            <option value="All">Status: All</option>
+            <option value="Active">Active</option>
+            <option value="Pending">Pending</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <table class="directory-table">
+      <thead>
+        <tr>
+          <th>PATIENT NAME</th>
+          <th>DATE OF BIRTH</th>
+          <th>GENDER</th>
+          <th>LAST VISIT</th>
+          <th>STATUS</th>
+          <th>ACTIONS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let patient of paginatedPatients">
+          <td>
+            <div class="patient-cell">
+              <div class="avatar-wrap" *ngIf="patient.avatarUrl">
+                <img [src]="patient.avatarUrl" [alt]="patient.name" class="patient-avatar">
+              </div>
+              <div class="avatar-initials" *ngIf="!patient.avatarUrl">{{ getInitials(patient.name) }}</div>
+              <div class="patient-meta">
+                <span class="patient-name">{{ patient.name }}</span>
+                <span class="patient-id">ID: {{ patient.displayId }}</span>
+              </div>
+            </div>
+          </td>
+          <td class="cell-dob">{{ patient.dateOfBirth }}</td>
+          <td>{{ patient.gender }}</td>
+          <td>{{ patient.lastVisit }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="patient.status.toLowerCase()">{{ patient.status }}</span>
+          </td>
+          <td class="actions-col">
+            <div class="row-actions">
+              <a class="icon-action-btn" title="Edit Patient" [routerLink]="['/app/patients', 'edit', patient.id]">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              </a>
+              <button class="icon-action-btn delete-btn" title="Delete Patient" (click)="openDeleteModal(patient)">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="paginatedPatients.length === 0">
+          <td colspan="6" class="empty-state-cell">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <line x1="23" y1="11" x2="17" y2="11"></line>
+              </svg>
+              <h3>No Patients Found</h3>
+              <p *ngIf="searchQuery || statusFilter !== 'All'">No patients match your search criteria. Try clearing filters or search query.</p>
+              <p *ngIf="!searchQuery && statusFilter === 'All'">There are no patients registered in the system yet.</p>
+              <button class="btn-new-patient mt-16" (click)="openPatientModal()" *ngIf="!searchQuery && statusFilter === 'All'">
+                Register First Patient
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="table-pagination">
+      <span class="pagination-info">Showing {{ displayedFrom }} to {{ displayedTo }} of {{ totalEntries | number }} entries</span>
+      <div class="pagination-controls">
+        <button class="page-nav-btn" (click)="prevPage()" [disabled]="currentPage === 1">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <ng-container *ngFor="let page of pageNumbers">
+          <button *ngIf="page !== '...'" class="page-btn" [class.active]="page === currentPage" (click)="setPage(page)">{{ page }}</button>
+          <span *ngIf="page === '...'" class="page-ellipsis">...</span>
+        </ng-container>
+        <button class="page-nav-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<app-patient-modal 
+  [isVisible]="isPatientModalVisible" 
+  (close)="closePatientModal()" 
+  (patientSaved)="onPatientSaved($event)">
+</app-patient-modal>
+
+<!-- Delete Patient Modal -->
+<app-delete-patient-modal
+  [isVisible]="isDeleteModalVisible"
+  [patient]="patientToDelete"
+  (close)="closeDeleteModal()"
+  (confirmDelete)="confirmDeletePatient($event)">
+</app-delete-patient-modal>
